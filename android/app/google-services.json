@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "578088673767",
+    "project_id": "totalis-f20af",
+    "storage_bucket": "totalis-f20af.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:578088673767:android:c9da5233712e72c70f9d42",
+        "android_client_info": {
+          "package_name": "com.totalis.admin.io"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "578088673767-9f1g6i9f1525d5m32vb5hk8ungoccfps.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.totalis.admin.io",
+            "certificate_hash": "f9a647773addfeed722a37c27e1ce5a0fd81d80f"
+          }
+        },
+        {
+          "client_id": "578088673767-0ijahfvt73mtio55nv56ivnr5d424c01.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9qriI8yZV8iXl0nIHofL5Syx6zIF5Ahw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "578088673767-0ijahfvt73mtio55nv56ivnr5d424c01.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
