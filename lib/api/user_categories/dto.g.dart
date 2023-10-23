@@ -11,13 +11,13 @@ UserCategoryRequestModel _$UserCategoryRequestModelFromJson(
     UserCategoryRequestModel(
       user_id: json['user_id'] as int?,
       category_id: json['category_id'] as int?,
-      is_favorite: json['is_favorite'] as bool?,
-      muted_day: json['muted_day'] as String?,
-      muted_for: json['muted_for'] as int?,
-      chat_summary_long: json['chat_summary_long'] as String?,
-      chat_summary_short: json['chat_summary_short'] as String?,
-      used_chat: json['used_chat'] as bool?,
-      is_read: json['is_read'] as bool?,
+      is_favorite: json['is_favorite'] as bool? ?? false,
+      muted_day: json['muted_day'] as String? ?? '',
+      muted_for: json['muted_for'] as int? ?? 0,
+      chat_summary_long: json['chat_summary_long'] as String? ?? '',
+      chat_summary_short: json['chat_summary_short'] as String? ?? '',
+      used_chat: json['used_chat'] as bool? ?? false,
+      is_read: json['is_read'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$UserCategoryRequestModelToJson(

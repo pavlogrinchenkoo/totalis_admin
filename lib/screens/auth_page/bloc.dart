@@ -37,7 +37,7 @@ class LoginBloc extends BlocBaseWithState<ScreenState> {
     final idToken = await credentialResult.user?.getIdToken();
     await _request.setTokenId(idToken);
 
-    final newUser = await _userRequest.createAdmin(AdminRequestModel(
+    final newUser = await _userRequest.create(AdminRequestModel(
         name: credentialResult.user!.displayName,
         mail: credentialResult.user!.email,
         firebase_uid: credentialResult.user?.uid));

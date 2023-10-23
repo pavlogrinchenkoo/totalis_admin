@@ -37,21 +37,33 @@ class _UserCategoriesPageState extends State<UserCategoriesPage> {
           } else {
             return Scaffold(
                 body: Container(
-              padding: const EdgeInsets.only(top: 80, left: 80),
+              padding: const EdgeInsets.only(top: 80, left: 80, right: 40),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(children: [
                     Text('User categories', style: BS.sb32),
                     Space.w52,
-                    CustomButton(title: 'New user category', onTap: () {}),
+                    CustomButton(
+                        title: 'New user category',
+                        onTap: () =>
+                            _bloc.openChange(context, UserCategoryModel())),
                   ]),
                   Space.h24,
-                  CustomSheetsWidget(
-                      onChangeIsFavorite:
-                          (UserCategoryModel? item, bool value) =>
-                              _bloc.changeIsFavorite(item, value),
-                      items: state.userCategories)
+                  Expanded(
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        CustomSheetsWidget(
+                            onChangeIsFavorite:
+                                (UserCategoryModel? item, bool value) =>
+                                    _bloc.changeIsFavorite(item, value),
+                            items: state.userCategories,
+                            openChange: (item) =>
+                                _bloc.openChange(context, item)),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ));

@@ -19,13 +19,13 @@ class UserCategoryRequestModel {
   UserCategoryRequestModel({
     this.user_id,
     this.category_id,
-    this.is_favorite,
-    this.muted_day,
-    this.muted_for,
-    this.chat_summary_long,
-    this.chat_summary_short,
-    this.used_chat,
-    this.is_read,
+    this.is_favorite = false,
+    this.muted_day = '',
+    this.muted_for = 0,
+    this.chat_summary_long = '',
+    this.chat_summary_short = '',
+    this.used_chat = false,
+    this.is_read  = true,
   });
 
   factory UserCategoryRequestModel.fromJson(Map<String, dynamic> json) =>

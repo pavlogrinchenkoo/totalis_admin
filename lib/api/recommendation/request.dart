@@ -1,4 +1,3 @@
-import 'package:totalis_admin/api/check_ins/dto.dart';
 import 'package:totalis_admin/api/recommendation/dto.dart';
 import 'package:totalis_admin/api/request.dart';
 

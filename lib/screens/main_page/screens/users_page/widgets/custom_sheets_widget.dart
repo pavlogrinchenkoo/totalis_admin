@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:totalis_admin/api/user/dto.dart';
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_checkbox.dart';
+import 'package:totalis_admin/utils/spaces.dart';
+import 'package:totalis_admin/widgets/custom_open_icon.dart';
 import 'package:totalis_admin/widgets/sheets_text.dart';
 
 class CustomSheetsWidget extends StatefulWidget {
   const CustomSheetsWidget(
-      {required this.items, super.key, required this.onChangeIsTester});
+      {required this.items,
+      super.key,
+      required this.onChangeIsTester,
+      required this.openChange});
 
   final List<UserModel?> items;
   final void Function(UserModel? item, bool isTester) onChangeIsTester;
+  final void Function(UserModel? item) openChange;
 
   @override
   State<CustomSheetsWidget> createState() => _CustomSheetsWidgetState();
@@ -45,7 +51,16 @@ class _CustomSheetsWidgetState extends State<CustomSheetsWidget> {
           for (final item in widget.items)
             DataRow(
               cells: <DataCell>[
-                DataCell(SheetText(text: item?.id)),
+                DataCell(InkWell(
+                    borderRadius: BRadius.r6,
+                    onTap: () => widget.openChange(item),
+                    child: Row(
+                      children: [
+                        Expanded(child: SheetText(text: item?.id)),
+                        Space.w16,
+                        const CustomOpenIcon()
+                      ],
+                    ))),
                 DataCell(SheetText(
                     text:
                         '${item?.first_name ?? ''} ${item?.last_name ?? ''}')),

@@ -35,6 +35,7 @@ class Request {
         final hasToken = await getTokenFromFirebase();
         if (hasToken != null && hasToken.isNotEmpty) {
           Response response = await dio.get(baseUrl + url);
+          dio.options.headers['Authorization'] = token ?? await getTokenId();
           return response.data;
         } else {
           return null;
@@ -60,6 +61,7 @@ class Request {
         final hasToken = await getTokenFromFirebase();
         if (hasToken != null && hasToken.isNotEmpty) {
           Response response = await dio.get(baseUrl + url);
+          dio.options.headers['Authorization'] = token ?? await getTokenId();
           return response.data;
         } else {
           return null;

@@ -8,13 +8,13 @@ class AdminRequest {
   final Request _request = Request();
   static const userKey = 'user';
 
-  Future<AdminModel?> createAdmin(AdminRequestModel body) async {
+  Future<AdminModel?> create(AdminRequestModel body) async {
     final res = await _request.post('api/admin/admins/create', body);
     if (res == null) return null;
     return AdminModel.fromJson(res);
   }
 
-  Future<AdminModel?> changeAdmin(AdminModel? item) async {
+  Future<AdminModel?> change(AdminModel? item) async {
     final res = await _request.post('api/admin/admins/change', item);
     if (res == null) return null;
     return AdminModel.fromJson(res);

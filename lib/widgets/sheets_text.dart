@@ -8,6 +8,9 @@ class SheetText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text((text ?? "").toString(), style: BS.reg16);
+    return Container(
+        constraints: const BoxConstraints(maxWidth: 200),
+        child: Text((text ?? "").toString(),
+            style: BS.reg16, maxLines: 2, overflow: TextOverflow.ellipsis));
   }
 }

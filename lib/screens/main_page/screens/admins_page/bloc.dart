@@ -4,7 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:totalis_admin/api/admin/dto.dart';
 import 'package:totalis_admin/api/admin/request.dart';
 import 'package:totalis_admin/routers/routes.dart';
-import 'package:totalis_admin/screens/main_page/screens/admins_page/widgets/chage_page.dart';
+import 'package:totalis_admin/widgets/chage_page.dart';
 import 'package:totalis_admin/utils/bloc_base.dart';
 
 class AdminsBloc extends BlocBaseWithState<ScreenState> {
@@ -27,7 +27,7 @@ class AdminsBloc extends BlocBaseWithState<ScreenState> {
     if (item == null) return;
     final newAdmin = item;
     newAdmin.enabled = enabled;
-    final changed = await _adminRequest.changeAdmin(newAdmin);
+    final changed = await _adminRequest.change(newAdmin);
     if (changed?.id == null) return;
     final admins = [...currentState.admins];
     final index = admins.indexWhere((admin) => admin?.id == newAdmin.id);
@@ -39,7 +39,7 @@ class AdminsBloc extends BlocBaseWithState<ScreenState> {
     if (item == null) return;
     final newAdmin = item;
     newAdmin.super_admin = enabled;
-    final changed = await _adminRequest.changeAdmin(newAdmin);
+    final changed = await _adminRequest.change(newAdmin);
     replaceItem(changed, newAdmin);
   }
 
@@ -51,7 +51,7 @@ class AdminsBloc extends BlocBaseWithState<ScreenState> {
           title: 'Email',
           type: FieldType.email,
           controller: TextEditingController(text: item?.mail),
-          disable: true),
+          enable: true),
       FieldModel(
           title: 'Enabled', type: FieldType.checkbox, value: item?.enabled),
       FieldModel(
@@ -60,8 +60,8 @@ class AdminsBloc extends BlocBaseWithState<ScreenState> {
           value: item?.super_admin),
       FieldModel(
           title: 'Firebase uid',
-          type: FieldType.checkbox,
-          disable: true,
+          type: FieldType.text,
+          enable: false,
           controller: TextEditingController(text: item?.firebase_uid)),
     ];
     context.router.push(ChangeRoute(
@@ -81,7 +81,7 @@ class AdminsBloc extends BlocBaseWithState<ScreenState> {
         enabled: fields.firstWhere((i) => i.title == 'Enabled').value,
         super_admin: fields.firstWhere((i) => i.title == 'Super admin').value);
 
-    final res = await _adminRequest.changeAdmin(newModel);
+    final res = await _adminRequest.change(newModel);
     replaceItem(res, newModel);
     if (context.mounted) context.router.pop();
   }
@@ -106,24 +106,3 @@ class ScreenState {
         loading: loading ?? this.loading, admins: admins ?? this.admins);
   }
 }
-
-class FieldModel {
-  String? title;
-  TextEditingController? controller;
-  bool? value;
-  FieldType? type;
-  bool? disable;
-
-  FieldModel(
-      {this.title = '',
-      this.controller,
-      this.value,
-      this.type = FieldType.text,
-      this.disable = false}) {
-    if (type == FieldType.text && controller == null) {
-      controller = TextEditingController();
-    }
-  }
-}
-
-enum FieldType { checkbox, text, email }

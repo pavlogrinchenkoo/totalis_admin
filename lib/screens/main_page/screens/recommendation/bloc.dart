@@ -1,5 +1,4 @@
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:totalis_admin/api/check_ins/dto.dart';
 import 'package:totalis_admin/api/recommendation/dto.dart';
 import 'package:totalis_admin/api/recommendation/request.dart';
 import 'package:totalis_admin/utils/bloc_base.dart';

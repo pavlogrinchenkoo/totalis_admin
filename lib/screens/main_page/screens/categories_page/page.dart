@@ -44,13 +44,17 @@ class _CategoriesPageState extends State<CategoriesPage> {
                   Row(children: [
                     Text('Categories', style: BS.sb32),
                     Space.w52,
-                    CustomButton(title: 'New category', onTap: () {}),
+                    CustomButton(
+                        title: 'New category',
+                        onTap: () =>
+                            _bloc.openChange(context, CategoryModel())),
                   ]),
                   Space.h24,
                   CustomSheetsWidget(
                       onChangeIsFavorite: (CategoryModel? item, bool value) =>
                           _bloc.changeIsHome(item, value),
-                      items: state.categories)
+                      items: state.categories,
+                      openChange: (item) => _bloc.openChange(context, item)),
                 ],
               ),
             ));

@@ -57,19 +57,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AdminsPage(),
       );
     },
-    ChangeRoute.name: (routeData) {
-      final args = routeData.argsAs<ChangeRouteArgs>(
-          orElse: () => const ChangeRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ChangePage(
-          fields: args.fields,
-          title: args.title,
-          onSave: args.onSave,
-          key: args.key,
-        ),
-      );
-    },
     UsersRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -86,6 +73,19 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const CategoriesPage(),
+      );
+    },
+    ChangeRoute.name: (routeData) {
+      final args = routeData.argsAs<ChangeRouteArgs>(
+          orElse: () => const ChangeRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ChangePage(
+          fields: args.fields,
+          title: args.title,
+          onSave: args.onSave,
+          key: args.key,
+        ),
       );
     },
   };
@@ -190,6 +190,48 @@ class AdminsRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [UsersPage]
+class UsersRoute extends PageRouteInfo<void> {
+  const UsersRoute({List<PageRouteInfo>? children})
+      : super(
+          UsersRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'UsersRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [UserCategoriesPage]
+class UserCategoriesRoute extends PageRouteInfo<void> {
+  const UserCategoriesRoute({List<PageRouteInfo>? children})
+      : super(
+          UserCategoriesRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'UserCategoriesRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [CategoriesPage]
+class CategoriesRoute extends PageRouteInfo<void> {
+  const CategoriesRoute({List<PageRouteInfo>? children})
+      : super(
+          CategoriesRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'CategoriesRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [ChangePage]
 class ChangeRoute extends PageRouteInfo<ChangeRouteArgs> {
   ChangeRoute({
@@ -234,46 +276,4 @@ class ChangeRouteArgs {
   String toString() {
     return 'ChangeRouteArgs{fields: $fields, title: $title, onSave: $onSave, key: $key}';
   }
-}
-
-/// generated route for
-/// [UsersPage]
-class UsersRoute extends PageRouteInfo<void> {
-  const UsersRoute({List<PageRouteInfo>? children})
-      : super(
-          UsersRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'UsersRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [UserCategoriesPage]
-class UserCategoriesRoute extends PageRouteInfo<void> {
-  const UserCategoriesRoute({List<PageRouteInfo>? children})
-      : super(
-          UserCategoriesRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'UserCategoriesRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [CategoriesPage]
-class CategoriesRoute extends PageRouteInfo<void> {
-  const CategoriesRoute({List<PageRouteInfo>? children})
-      : super(
-          CategoriesRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'CategoriesRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
 }
