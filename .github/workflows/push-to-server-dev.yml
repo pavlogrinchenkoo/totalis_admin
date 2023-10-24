@@ -1,0 +1,18 @@
+name: Push service to server dev
+on:
+  push:
+    branches: [ dev. main ]
+jobs:
+  Push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup ssh
+        run: set -eu && mkdir "$HOME/.ssh" && echo "${{ secrets.SSH_PRIVATE_KEY }}" > "$HOME/.ssh/key" && chmod 600 "$HOME/.ssh/key"
+
+      - name: Update repositories, build and rerun service in docker compose
+        run: ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no vova24848@34.139.170.74 '
+          cd deployment/totalis/repository/totalis_admin;
+          git pull;
+          cd ../..;
+          sudo docker compose up --build -d totalis-admin;
+          '
