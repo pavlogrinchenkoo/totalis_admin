@@ -34,7 +34,6 @@ RUN flutter pub get
 RUN flutter build web --base-href /admin/
 
 # once heare the app will be compiled and ready to deploy
-
 # use nginx to deploy
 FROM nginx:1.25.2-alpine
 COPY nginx.conf /etc/nginx/nginx.conf
