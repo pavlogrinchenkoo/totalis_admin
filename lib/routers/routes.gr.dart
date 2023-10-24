@@ -51,6 +51,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const CoachesPage(),
       );
     },
+    MessageRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const MessagePage(),
+      );
+    },
     AdminsRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -171,6 +177,20 @@ class CoachesRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'CoachesRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [MessagePage]
+class MessageRoute extends PageRouteInfo<void> {
+  const MessageRoute({List<PageRouteInfo>? children})
+      : super(
+          MessageRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'MessageRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

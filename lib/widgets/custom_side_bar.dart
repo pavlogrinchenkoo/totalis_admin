@@ -1,3 +1,4 @@
+import 'package:build_context_provider/build_context_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:totalis_admin/generated/assets.gen.dart';
 import 'package:totalis_admin/style.dart';
@@ -29,6 +30,7 @@ class CustomSideBar extends StatelessWidget {
       color: BC.green,
       padding: const EdgeInsets.only(top: 85, left: 20),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        const ListenerThatRunsFunctionsWithBuildContext(),
         Text('TOTALIS : ADMIN', style: BS.sb24.apply(color: BC.white)),
         Space.h80,
         Container(

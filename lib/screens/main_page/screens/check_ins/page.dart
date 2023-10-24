@@ -1,5 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:totalis_admin/api/check_ins/dto.dart';
+import 'package:totalis_admin/api/check_ins/request.dart';
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
@@ -31,7 +33,7 @@ class _CheckInsPageState extends State<CheckInsPage> {
     return CustomStreamBuilder(
         bloc: _bloc,
         builder: (context, ScreenState state) {
-          if (state.loading && state.checkin.isEmpty) {
+          if (state.loading && state.checkins.isEmpty) {
             return const CustomProgressIndicator();
           } else {
             return Scaffold(
@@ -43,10 +45,14 @@ class _CheckInsPageState extends State<CheckInsPage> {
                   Row(children: [
                     Text('Check-ins', style: BS.sb32),
                     Space.w52,
-                    CustomButton(title: 'New check-in', onTap: () {}),
+                    CustomButton(
+                        title: 'New check-in',
+                        onTap: () => _bloc.openChange(context, CheckInModel())),
                   ]),
                   Space.h24,
-                  CustomSheetsWidget(items: state.checkin)
+                  CustomSheetsWidget(
+                      items: state.checkins,
+                      openChange: (item) => _bloc.openChange(context, item))
                 ],
               ),
             ));

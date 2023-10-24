@@ -38,6 +38,7 @@ class _MainPageState extends State<MainPage> {
               CheckInsRoute(),
               RecommendationRoute(),
               VariableRoute(),
+              MessageRoute(),
             ],
             bodyBuilder: (_, tabsRouter) {
               return CustomSideBar(

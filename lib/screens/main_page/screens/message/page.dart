@@ -1,6 +1,6 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
-import 'package:totalis_admin/api/coaches/dto.dart';
+import 'package:totalis_admin/api/variable/dto.dart';
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
@@ -11,19 +11,19 @@ import 'bloc.dart';
 import 'widgets/custom_sheets_widget.dart';
 
 @RoutePage()
-class CoachesPage extends StatefulWidget {
-  const CoachesPage({super.key});
+class MessagePage extends StatefulWidget {
+  const MessagePage({super.key});
 
   @override
-  State<CoachesPage> createState() => _CoachesPageState();
+  State<MessagePage> createState() => _MessagePageState();
 }
 
-class _CoachesPageState extends State<CoachesPage> {
-  final CoachesBloc _bloc = CoachesBloc();
+class _MessagePageState extends State<MessagePage> {
+  final MessageBloc _bloc = MessageBloc();
 
   @override
   void initState() {
-    _bloc.init();
+    // _bloc.init();
     super.initState();
   }
 
@@ -32,7 +32,7 @@ class _CoachesPageState extends State<CoachesPage> {
     return CustomStreamBuilder(
         bloc: _bloc,
         builder: (context, ScreenState state) {
-          if (state.loading && state.coaches.isEmpty) {
+          if (state.loading && state.variables.isEmpty) {
             return const CustomProgressIndicator();
           } else {
             return Scaffold(
@@ -42,16 +42,11 @@ class _CoachesPageState extends State<CoachesPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(children: [
-                    Text('Coaches', style: BS.sb32),
-                    Space.w52,
-                    CustomButton(
-                        title: 'New coach',
-                        onTap: () => _bloc.openChange(context, CoachesModel())),
+                    Text('Messages', style: BS.sb32),
                   ]),
                   Space.h24,
-                  CustomSheetsWidget(
-                      items: state.coaches,
-                      openChange: (item) => _bloc.openChange(context, item))
+                  Text('Empty', style: BS.sb20),
+                  // CustomSheetsWidget(items: state.variables)
                 ],
               ),
             ));

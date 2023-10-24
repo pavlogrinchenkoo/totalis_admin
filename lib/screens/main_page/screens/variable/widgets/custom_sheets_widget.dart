@@ -4,9 +4,11 @@ import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/widgets/sheets_text.dart';
 
 class CustomSheetsWidget extends StatefulWidget {
-  const CustomSheetsWidget({required this.items, super.key});
+  const CustomSheetsWidget(
+      {required this.items, required this.openChange, super.key});
 
   final List<VariableModel?> items;
+  final void Function(VariableModel? item) openChange;
 
   @override
   State<CustomSheetsWidget> createState() => _CustomSheetsWidgetState();

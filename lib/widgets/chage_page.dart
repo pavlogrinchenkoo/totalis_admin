@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_downloader_web/image_downloader_web.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_checkbox.dart';
 import 'package:totalis_admin/utils/spaces.dart';
@@ -45,7 +50,10 @@ class ChangePage extends StatelessWidget {
                     Space.h24,
                   ]),
             ),
-            CustomButton(title: 'Save', onTap: onSave),
+            Center(
+                child: SizedBox(
+                    width: 400,
+                    child: CustomButton(title: 'Save', onTap: onSave))),
           ],
         ),
       ),
@@ -84,6 +92,8 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
           Text(widget.field?.title ?? '', style: BS.reg16),
           Space.h8,
           CupertinoTextField(
+            minLines: 5,
+            maxLines: 5,
             controller: widget.field?.controller,
             enabled: widget.field?.enable,
           ),
@@ -113,6 +123,17 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
           ),
         ],
       );
+    } else if (widget.field?.type == FieldType.avatar) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(widget.field?.title ?? '', style: BS.reg16),
+          Space.h8,
+          _AvatarWidget(
+              base64: widget.field?.base64 ?? '',
+              onChange: (image) => widget.field?.base64 = image),
+        ],
+      );
     } else {
       return const SizedBox();
     }
@@ -124,23 +145,111 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
   }
 }
 
+class _AvatarWidget extends StatefulWidget {
+  const _AvatarWidget({this.base64 = '', super.key, required this.onChange});
+
+  final String base64;
+  final void Function(String image) onChange;
+
+  @override
+  State<_AvatarWidget> createState() => _AvatarWidgetState();
+}
+
+class _AvatarWidgetState extends State<_AvatarWidget> {
+  late Uint8List bytesImage;
+
+  @override
+  void initState() {
+    bytesImage = const Base64Decoder().convert(widget.base64);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        width: 165,
+        height: 140,
+        decoration:
+            BoxDecoration(border: Border.all(width: 1, color: BC.black)),
+        child: Row(
+          children: [
+            Expanded(
+                child: bytesImage.isNotEmpty
+                    ? Image.memory(bytesImage,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity)
+                    : Container(color: BC.gray)),
+            Container(
+              color: BC.green,
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                        splashRadius: 10,
+                        onPressed: () => _trashPhoto(),
+                        icon: Icon(Icons.delete_outline, color: BC.white)),
+                    IconButton(
+                        splashRadius: 10,
+                        onPressed: () => _downloadPhoto(),
+                        icon: Icon(Icons.download, color: BC.white)),
+                    IconButton(
+                        splashRadius: 10,
+                        onPressed: () => _uploadPhoto(),
+                        icon: Icon(Icons.change_circle_outlined,
+                            color: BC.white)),
+                  ]),
+            )
+          ],
+        ));
+  }
+
+  _trashPhoto() {
+    widget.onChange(base64.encode(Uint8List(0)));
+    setState(() {
+      bytesImage = Uint8List(0);
+    });
+  }
+
+  _downloadPhoto() async {
+    if (bytesImage.isNotEmpty) {
+      await WebImageDownloader.downloadImageFromUInt8List(
+          uInt8List: bytesImage);
+    }
+  }
+
+  _uploadPhoto() async {
+    Uint8List? bytesFromPicker = await ImagePickerWeb.getImageAsBytes();
+    if (bytesFromPicker != null) {
+      widget.onChange(base64.encode(bytesFromPicker));
+      setState(() {
+        bytesImage = bytesFromPicker;
+      });
+    }
+  }
+}
+
 class FieldModel {
   String? title;
   TextEditingController? controller;
+  String? base64;
   bool? value;
   FieldType? type;
   bool? enable;
+  bool required;
 
   FieldModel(
       {this.title = '',
       this.controller,
+      this.base64,
       this.value,
       this.type = FieldType.text,
-      this.enable = true}) {
+      this.enable = true,
+      this.required = false}) {
     if (type == FieldType.text && controller == null) {
       controller = TextEditingController();
     }
   }
 }
 
-enum FieldType { checkbox, text, bigText, email }
+enum FieldType { checkbox, text, bigText, email, avatar }

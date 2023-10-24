@@ -1,5 +1,6 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:totalis_admin/api/recommendation/dto.dart';
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
@@ -43,10 +44,15 @@ class _RecommendationPageState extends State<RecommendationPage> {
                   Row(children: [
                     Text('Recommendations', style: BS.sb32),
                     Space.w52,
-                    CustomButton(title: 'New recommendation', onTap: () {}),
+                    CustomButton(
+                        title: 'New recommendation',
+                        onTap: () =>
+                            _bloc.openChange(context, RecommendationModel())),
                   ]),
                   Space.h24,
-                  CustomSheetsWidget(items: state.recommendations)
+                  CustomSheetsWidget(
+                      items: state.recommendations,
+                      openChange: (item) => _bloc.openChange(context, item))
                 ],
               ),
             ));

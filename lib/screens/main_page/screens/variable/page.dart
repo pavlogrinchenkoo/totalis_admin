@@ -1,5 +1,6 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:totalis_admin/api/variable/dto.dart';
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
@@ -43,10 +44,11 @@ class _VariablePageState extends State<VariablePage> {
                   Row(children: [
                     Text('Variables', style: BS.sb32),
                     Space.w52,
-                    CustomButton(title: 'New variable', onTap: () {}),
+                    CustomButton(title: 'New variable',  onTap: () =>
+                        _bloc.openChange(context, VariableModel())),
                   ]),
                   Space.h24,
-                  CustomSheetsWidget(items: state.variables)
+                  CustomSheetsWidget(items: state.variables, openChange: (item) => _bloc.openChange(context, item))
                 ],
               ),
             ));

@@ -1,8 +1,10 @@
 import 'dart:convert';
-
+import 'package:auto_route/auto_route.dart';
+import 'package:build_context_provider/build_context_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:totalis_admin/routers/routes.dart';
 
 class Request {
   Request() {
@@ -11,9 +13,10 @@ class Request {
 
   final dio = Dio();
 
-  static const String baseUrl = 'http://34.139.170.74/';
+  static const String baseUrl = 'https://app.totalis.care/';
   static const String tokenKey = 'tokenKey';
   String? token;
+  int attempt = 0;
 
   Future<dynamic> get(String url) async {
     final headers = {
@@ -32,14 +35,8 @@ class Request {
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
-        final hasToken = await getTokenFromFirebase();
-        if (hasToken != null && hasToken.isNotEmpty) {
-          Response response = await dio.get(baseUrl + url);
-          dio.options.headers['Authorization'] = token ?? await getTokenId();
-          return response.data;
-        } else {
-          return null;
-        }
+        logout();
+        return null;
       }
       return null;
     }
@@ -58,21 +55,19 @@ class Request {
       return response.data;
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
-        final hasToken = await getTokenFromFirebase();
-        if (hasToken != null && hasToken.isNotEmpty) {
-          Response response = await dio.get(baseUrl + url);
-          dio.options.headers['Authorization'] = token ?? await getTokenId();
-          return response.data;
-        } else {
-          return null;
-        }
+        logout();
+        return null;
       }
     }
+    return null;
   }
 
   Future<String> getTokenId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString(tokenKey);
+    if (token == null) {
+      getTokenFromFirebase();
+    }
     return token ?? '';
   }
 
@@ -86,5 +81,17 @@ class Request {
     final idToken = await FirebaseAuth.instance.currentUser?.getIdToken();
     setTokenId(idToken);
     return idToken;
+  }
+
+  Future<void> logout() async {
+    await FirebaseAuth.instance.signOut();
+    GoToProfilePage.call();
+  }
+}
+
+class GoToProfilePage {
+  static void call() {
+    BuildContextProvider()
+        .call((context) => context.router.replaceAll([const LoginRoute()]));
   }
 }

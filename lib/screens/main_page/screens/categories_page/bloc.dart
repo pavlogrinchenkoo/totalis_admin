@@ -37,8 +37,8 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
     final fields = [
       FieldModel(
           title: 'Parent id',
-          controller:
-              TextEditingController(text: (item?.parent_id ?? 0).toString())),
+          controller: TextEditingController(
+              text: ((item?.parent_id) ?? "").toString())),
       FieldModel(
           title: 'Name', controller: TextEditingController(text: item?.name)),
       FieldModel(
@@ -110,7 +110,7 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
   onSave(BuildContext context, List<FieldModel> fields, CategoryModel? item,
       {bool isCreate = false}) async {
     final newModel = CategoryModel(
-        parent_id: int.parse(
+        parent_id: int.tryParse(
             fields.firstWhere((i) => i.title == 'Parent id').controller?.text ??
                 '0'),
         id: item?.id,
@@ -154,7 +154,14 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
     if (changed?.id == null) return;
     final admins = [...currentState.categories];
     final index = admins.indexWhere((users) => users?.id == newUser?.id);
-    admins.replaceRange(index, index + 1, [changed]);
+    if (index == -1) {
+      newUser
+        ?..id = changed?.id
+        ..time_create = changed?.time_create;
+      admins.add(newUser);
+    } else {
+      admins.replaceRange(index, index + 1, [changed]);
+    }
     setState(currentState.copyWith(categories: admins));
   }
 

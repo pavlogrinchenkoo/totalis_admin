@@ -20,7 +20,7 @@ class CustomCircle extends StatelessWidget {
       ),
       child: ClipRRect(
           borderRadius: BRadius.r64,
-          child: image != 'tetst'
+          child: image != 'tetst' && image != null && image != ""
               ? Image.memory(_createFileFromString(image ?? ''))
               : const SizedBox()),
     );
