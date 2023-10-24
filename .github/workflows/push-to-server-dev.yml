@@ -1,7 +1,7 @@
 name: Push service to server dev
 on:
   push:
-    branches: [ dev. main ]
+    branches: [ main ]
 jobs:
   Push:
     runs-on: ubuntu-latest
