@@ -13,14 +13,14 @@ class LoginBloc extends BlocBaseWithState<ScreenState> {
   ScreenState get currentState => super.currentState!;
   final Request _request = Request();
   final GoogleSignIn? googleSignIn = GoogleSignIn();
-  final UserRequest _userRequest = UserRequest();
+  late UserRequest _userRequest = UserRequest();
 
   LoginBloc() {
     setState(ScreenState());
   }
 
   Future<void> signInWithGoogle(BuildContext context) async {
-    await googleSignIn?.currentUser?.clearAuthCache();
+    // await googleSignIn?.currentUser?.clearAuthCache();
     final GoogleSignInAccount? googleUser = await googleSignIn?.signIn();
 
     final GoogleSignInAuthentication? googleAuth =
@@ -37,6 +37,7 @@ class LoginBloc extends BlocBaseWithState<ScreenState> {
     final idToken = await credentialResult.user?.getIdToken();
     await _request.setTokenId(idToken);
 
+    _userRequest = UserRequest();
     final alreadyLoggedIn = await _userRequest.getAll();
     if (alreadyLoggedIn != null) {
       if (context.mounted) context.router.push(const MainRoute());

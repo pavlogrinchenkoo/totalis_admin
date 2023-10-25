@@ -80,7 +80,7 @@ class CustomSideBar extends StatelessWidget {
                         children: [
                           Icon(Icons.logout, color: BC.white),
                           Space.w8,
-                          Text('Logouttt',
+                          Text('Logout',
                               style: BS.med20.apply(color: BC.white)),
                         ],
                       )))
