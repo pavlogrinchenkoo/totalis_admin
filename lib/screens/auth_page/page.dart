@@ -7,7 +7,9 @@ import 'package:totalis_admin/widgets/custom_buttom.dart';
 
 @RoutePage()
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({this.reLogin = false, super.key});
+
+  final bool reLogin;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -18,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   initState() {
-    _bloc.init(context);
+    _bloc.init(context, widget.reLogin);
     super.initState();
   }
 

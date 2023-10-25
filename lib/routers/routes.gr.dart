@@ -16,9 +16,14 @@ abstract class _$AppRouter extends RootStackRouter {
   @override
   final Map<String, PageFactory> pagesMap = {
     LoginRoute.name: (routeData) {
+      final args = routeData.argsAs<LoginRouteArgs>(
+          orElse: () => const LoginRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const LoginPage(),
+        child: LoginPage(
+          reLogin: args.reLogin,
+          key: args.key,
+        ),
       );
     },
     MainRoute.name: (routeData) {
@@ -99,16 +104,39 @@ abstract class _$AppRouter extends RootStackRouter {
 
 /// generated route for
 /// [LoginPage]
-class LoginRoute extends PageRouteInfo<void> {
-  const LoginRoute({List<PageRouteInfo>? children})
-      : super(
+class LoginRoute extends PageRouteInfo<LoginRouteArgs> {
+  LoginRoute({
+    bool reLogin = false,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
           LoginRoute.name,
+          args: LoginRouteArgs(
+            reLogin: reLogin,
+            key: key,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'LoginRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<LoginRouteArgs> page = PageInfo<LoginRouteArgs>(name);
+}
+
+class LoginRouteArgs {
+  const LoginRouteArgs({
+    this.reLogin = false,
+    this.key,
+  });
+
+  final bool reLogin;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'LoginRouteArgs{reLogin: $reLogin, key: $key}';
+  }
 }
 
 /// generated route for

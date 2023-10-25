@@ -52,11 +52,11 @@ class UsersBloc extends BlocBaseWithState<ScreenState> {
           type: FieldType.text,
           enable: false,
           controller: TextEditingController(text: item?.firebase_uid)),
-      // FieldModel(
-      //     title: 'Avatar',
-      //     type: FieldType.avatar,
-      //     enable: false,
-      //     controller: TextEditingController(text: item?.avatar)),
+      FieldModel(
+          title: 'Avatar',
+          type: FieldType.avatar,
+          enable: false,
+          controller: TextEditingController(text: item?.avatar)),
       FieldModel(
           title: 'Is tester', type: FieldType.checkbox, value: item?.is_tester),
       FieldModel(
@@ -94,7 +94,7 @@ class UsersBloc extends BlocBaseWithState<ScreenState> {
         coach_id: int.parse(
             fields.firstWhere((i) => i.title == 'Coach id').controller?.text ??
                 '0'),
-        avatar: item?.avatar);
+        avatar: "");
 
     final res = await _userRequest.change(newModel);
     replaceItem(res, newModel);

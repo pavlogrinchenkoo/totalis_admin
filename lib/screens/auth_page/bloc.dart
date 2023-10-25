@@ -1,14 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:totalis_admin/api/admin/dto.dart';
-import 'package:totalis_admin/api/admin/request.dart';
 import 'package:totalis_admin/api/request.dart';
 import 'package:totalis_admin/api/user/request.dart';
 import 'package:totalis_admin/routers/routes.dart';
 import 'package:totalis_admin/utils/bloc_base.dart';
+import 'package:universal_html/html.dart' as html;
 
 class LoginBloc extends BlocBaseWithState<ScreenState> {
   @override
@@ -44,8 +42,12 @@ class LoginBloc extends BlocBaseWithState<ScreenState> {
       if (context.mounted) context.router.push(const MainRoute());
     } else {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Contact the main admin')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(
+                content: Text('Contact the main admin'),
+                duration: Duration(seconds: 2)))
+            .closed
+            .then((_) => html.window.location.reload());
       }
       return;
       // final newUser = await _adminRequest.create(AdminRequestModel(
@@ -78,8 +80,11 @@ class LoginBloc extends BlocBaseWithState<ScreenState> {
     // }
   }
 
-  Future<void> init(BuildContext context) async {
-    // await FirebaseAuth.instance.signOut();
+  Future<void> init(BuildContext context, bool reLogin) async {
+    await FirebaseAuth.instance.signOut();
+    if (reLogin) {
+      html.window.location.reload();
+    }
     if (FirebaseAuth.instance.currentUser != null) {
       if (context.mounted) context.router.push(const MainRoute());
     }

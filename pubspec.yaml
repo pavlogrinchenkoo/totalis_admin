@@ -31,6 +31,8 @@ dependencies:
   build_context_provider: ^1.1.0
   image_picker_web: ^3.1.1
   image_downloader_web: ^2.0.4
+  alice: ^0.3.3
+  universal_html: ^2.2.4
 
 dev_dependencies:
   flutter_test:

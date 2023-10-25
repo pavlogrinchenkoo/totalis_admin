@@ -1,3 +1,4 @@
+import 'package:alice/alice.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -7,6 +8,8 @@ import 'package:totalis_admin/generated/l10n.dart';
 import 'package:totalis_admin/routers/routes.dart';
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/localization.dart';
+
+Alice alice = Alice();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +31,7 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext buildContext) {
+    alice.setNavigatorKey(_appRouter.navigatorKey);
     return ChangeNotifierProvider<LanguageService>(create: (context) {
       return LanguageService();
     }, builder: (context, child) {
