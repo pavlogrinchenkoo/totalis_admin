@@ -29,25 +29,23 @@ class ChangePage extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(80),
           children: [
-            Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (title != null)
-                    Text(
-                      title ?? '',
-                      style: BS.sb32,
-                    ),
-                  Space.h32,
-                  Wrap(spacing: 16, children: [
-                    for (final field in fields ?? [])
-                      Container(
-                        width: 400,
-                        padding: const EdgeInsets.only(top: 24),
-                        child: CustomFieldWidget(field: field),
-                      ),
-                  ]),
-                  Space.h24,
-                ]),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              if (title != null)
+                Text(
+                  title ?? '',
+                  style: BS.sb32,
+                ),
+              Space.h32,
+              Wrap(spacing: 16, children: [
+                for (final field in fields ?? [])
+                  Container(
+                    width: 400,
+                    padding: const EdgeInsets.only(top: 24),
+                    child: CustomFieldWidget(field: field),
+                  ),
+              ]),
+              Space.h24,
+            ]),
             Center(
                 child: SizedBox(
                     width: 400,

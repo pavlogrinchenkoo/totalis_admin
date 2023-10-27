@@ -16,7 +16,7 @@ class Request {
 
   // final dio = Dio();
 
-  static const String baseUrl = 'https://app.totalis.care/';
+  static const String baseUrl = 'https://web.totalis.app/';
   static const String tokenKey = 'tokenKey';
   String? token;
   int attempt = 0;
@@ -101,7 +101,7 @@ class Request {
 
 class GoToProfilePage {
   static void call() {
-    BuildContextProvider()
-        .call((context) => context.router.replaceAll([LoginRoute(reLogin: true)]));
+    BuildContextProvider().call(
+        (context) => context.router.replaceAll([LoginRoute(reLogin: true)]));
   }
 }
