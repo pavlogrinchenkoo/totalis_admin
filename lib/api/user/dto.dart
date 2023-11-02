@@ -9,7 +9,7 @@ class UserRequestModel {
   String? first_name;
   String? last_name;
   String? firebase_uid;
-  String? avatar;
+  int? image_id;
   bool? is_tester;
   String? sex;
   String? birth;
@@ -19,7 +19,7 @@ class UserRequestModel {
     this.first_name,
     this.last_name,
     this.firebase_uid,
-    this.avatar,
+    this.image_id,
     this.is_tester,
     this.sex,
     this.birth,
@@ -38,7 +38,7 @@ class UserModel {
   String? first_name;
   String? last_name;
   String? firebase_uid;
-  String? avatar;
+  int? image_id;
   bool? is_tester;
   String? sex;
   String? birth;
@@ -50,7 +50,7 @@ class UserModel {
     this.first_name,
     this.last_name,
     this.firebase_uid,
-    this.avatar,
+    this.image_id,
     this.is_tester,
     this.sex,
     this.birth,

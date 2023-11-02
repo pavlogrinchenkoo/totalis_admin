@@ -9,3 +9,11 @@ List<String> getTitlesCustom({required List<dynamic>? items}) {
     return [];
   }
 }
+
+String getFileExtension(String fileName) {
+  try {
+    return ".${fileName.split('.').last}";
+  } catch (e) {
+    return '';
+  }
+}

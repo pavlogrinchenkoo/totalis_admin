@@ -14,11 +14,15 @@ import 'package:flutter/services.dart';
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/app_logo.png
+  AssetGenImage get appLogo =>
+      const AssetGenImage('assets/images/app_logo.png');
+
   /// File path: assets/images/paint.png
   AssetGenImage get paint => const AssetGenImage('assets/images/paint.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [paint];
+  List<AssetGenImage> get values => [appLogo, paint];
 }
 
 class Assets {

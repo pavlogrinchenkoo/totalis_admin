@@ -2,12 +2,35 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:totalis_admin/api/images/dto.dart';
+import 'package:totalis_admin/api/images/request.dart';
 import 'package:totalis_admin/style.dart';
 
-class CustomCircle extends StatelessWidget {
-  const CustomCircle({this.image, super.key});
+class CustomCircle extends StatefulWidget {
+  const CustomCircle({this.imageId,  super.key});
 
-  final String? image;
+  final int? imageId;
+
+  @override
+  State<CustomCircle> createState() => _CustomCircleState();
+}
+
+class _CustomCircleState extends State<CustomCircle> {
+  final ImageRequest _imageRequest = ImageRequest();
+  ImageModel image = ImageModel();
+  bool needReload = false;
+
+  @override
+  void initState() {
+    _loadImage(widget.imageId);
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant CustomCircle oldWidget) {
+    _loadImage(widget.imageId);
+    super.didUpdateWidget(oldWidget);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +43,24 @@ class CustomCircle extends StatelessWidget {
       ),
       child: ClipRRect(
           borderRadius: BRadius.r64,
-          child: image != 'tetst' && image != null && image != ""
-              ? Image.memory(_createFileFromString(image ?? ''))
+          child: image.data != null && image.data != ""
+              ? Image.memory(_createFileFromString(image.data!),
+                  fit: BoxFit.cover)
               : const SizedBox()),
     );
+  }
+
+  Future<void> _loadImage(int? imageId) async {
+    final res = await _imageRequest.get(imageId.toString());
+    print(widget.imageId);
+    print(res?.id);
+    print("++++");
+    if (res == null) return;
+
+    setState(() {
+      needReload = true;
+      image = res;
+    });
   }
 }
 

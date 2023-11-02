@@ -8,13 +8,13 @@ part 'dto.g.dart';
 class CoachesRequestModel {
   String? name;
   String? description;
-  String? avatar;
+  int? image_id;
   String? prompt;
 
   CoachesRequestModel({
     this.name,
     this.description,
-    this.avatar,
+    this.image_id,
     this.prompt,
   });
 
@@ -28,7 +28,7 @@ class CoachesRequestModel {
 class CoachesModel {
   String? name;
   String? description;
-  String? avatar;
+  int? image_id;
   String? prompt;
   int? id;
   String? time_create;
@@ -36,7 +36,7 @@ class CoachesModel {
   CoachesModel({
     this.name,
     this.description,
-    this.avatar,
+    this.image_id,
     this.prompt,
     this.id,
     this.time_create,

@@ -43,7 +43,7 @@ class CoachesBloc extends BlocBaseWithState<ScreenState> {
       FieldModel(
         title: 'Avatar',
         type: FieldType.avatar,
-        controller: TextEditingController(text: item?.description),
+        imageId: item?.image_id,
       ),
     ];
 
@@ -61,8 +61,8 @@ class CoachesBloc extends BlocBaseWithState<ScreenState> {
         prompt: fields.firstWhere((i) => i.title == 'Prompt').controller?.text,
         description:
             fields.firstWhere((i) => i.title == 'Description').controller?.text,
-        // avatar: fields.firstWhere((i) => i.title == 'Avatar').base64,
-        avatar: "",
+        image_id: fields.firstWhere((i) => i.title == 'Avatar').imageId,
+        // avatar: "",
         id: item?.id,
         time_create: item?.time_create);
 
@@ -95,7 +95,7 @@ class CoachesBloc extends BlocBaseWithState<ScreenState> {
       prompt: newModel.prompt,
       description: newModel.description,
       name: newModel.name,
-      avatar: newModel.avatar,
+      image_id: newModel.image_id,
     );
 
     final res = await _coachesRequest.create(requestModel);

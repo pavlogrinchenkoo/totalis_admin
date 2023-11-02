@@ -3,6 +3,7 @@ import 'package:totalis_admin/api/user/dto.dart';
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_checkbox.dart';
 import 'package:totalis_admin/utils/spaces.dart';
+import 'package:totalis_admin/widgets/custom_circle_avatar.dart';
 import 'package:totalis_admin/widgets/custom_open_icon.dart';
 import 'package:totalis_admin/widgets/sheets_text.dart';
 
@@ -61,9 +62,15 @@ class _CustomSheetsWidgetState extends State<CustomSheetsWidget> {
                         const CustomOpenIcon()
                       ],
                     ))),
-                DataCell(SheetText(
-                    text:
-                        '${item?.first_name ?? ''} ${item?.last_name ?? ''}')),
+                DataCell(Row(
+                  children: [
+                    CustomCircle(imageId: item?.image_id),
+                    Space.w16,
+                    SheetText(
+                        text:
+                            '${item?.first_name ?? ''} ${item?.last_name ?? ''}'),
+                  ],
+                )),
                 DataCell(CustomCheckbox(
                     value: item?.is_tester,
                     onChanged: (isTester) =>

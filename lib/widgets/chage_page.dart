@@ -6,8 +6,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_downloader_web/image_downloader_web.dart';
 import 'package:image_picker_web/image_picker_web.dart';
+import 'package:mime/mime.dart';
+import 'package:totalis_admin/api/images/dto.dart';
+import 'package:totalis_admin/api/images/request.dart';
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_checkbox.dart';
+import 'package:totalis_admin/utils/custom_function.dart';
 import 'package:totalis_admin/utils/spaces.dart';
 import 'package:totalis_admin/widgets/custom_buttom.dart';
 
@@ -120,14 +124,15 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
         ],
       );
     } else if (widget.field?.type == FieldType.avatar) {
+      print(widget.field?.imageId);
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(widget.field?.title ?? '', style: BS.reg16),
           Space.h8,
           _AvatarWidget(
-              base64: widget.field?.base64 ?? '',
-              onChange: (image) => widget.field?.base64 = image),
+              imageId: widget.field?.imageId,
+              onChange: (imageId) => onChangedImageId(imageId)),
         ],
       );
     } else {
@@ -139,24 +144,35 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
     widget.field?.value = value;
     setState(() {});
   }
+
+  onChangedImageId(int? value) {
+    widget.field?.imageId = value;
+    setState(() {});
+  }
 }
 
 class _AvatarWidget extends StatefulWidget {
-  const _AvatarWidget({this.base64 = '', super.key, required this.onChange});
+  const _AvatarWidget({
+    this.imageId,
+    required this.onChange,
+    super.key,
+  });
 
-  final String base64;
-  final void Function(String image) onChange;
+  final int? imageId;
+  final void Function(int? imageId) onChange;
 
   @override
   State<_AvatarWidget> createState() => _AvatarWidgetState();
 }
 
 class _AvatarWidgetState extends State<_AvatarWidget> {
-  late Uint8List bytesImage;
+  final ImageRequest _imageRequest = ImageRequest();
+  ImageModel? image = ImageModel();
 
   @override
   void initState() {
-    bytesImage = const Base64Decoder().convert(widget.base64);
+    // bytesImage = const Base64Decoder().convert(widget.base64);
+    _loadImage(widget.imageId);
     super.initState();
   }
 
@@ -170,8 +186,9 @@ class _AvatarWidgetState extends State<_AvatarWidget> {
         child: Row(
           children: [
             Expanded(
-                child: bytesImage.isNotEmpty
-                    ? Image.memory(bytesImage,
+                child: image?.data != null && image?.data != ""
+                    ? Image.memory(
+                        const Base64Decoder().convert(image?.data ?? ''),
                         fit: BoxFit.cover,
                         width: double.infinity,
                         height: double.infinity)
@@ -183,15 +200,15 @@ class _AvatarWidgetState extends State<_AvatarWidget> {
                   children: [
                     IconButton(
                         splashRadius: 10,
-                        onPressed: () => _trashPhoto(),
+                        onPressed: () => _trashPhoto(widget.imageId),
                         icon: Icon(Icons.delete_outline, color: BC.white)),
                     IconButton(
                         splashRadius: 10,
-                        onPressed: () => _downloadPhoto(),
+                        onPressed: () => _downloadPhoto(widget.imageId),
                         icon: Icon(Icons.download, color: BC.white)),
                     IconButton(
                         splashRadius: 10,
-                        onPressed: () => _uploadPhoto(),
+                        onPressed: () => _uploadPhoto(widget.imageId),
                         icon: Icon(Icons.change_circle_outlined,
                             color: BC.white)),
                   ]),
@@ -200,35 +217,74 @@ class _AvatarWidgetState extends State<_AvatarWidget> {
         ));
   }
 
-  _trashPhoto() {
-    widget.onChange(base64.encode(Uint8List(0)));
+  Future<void> _loadImage(int? imageId) async {
+    if (imageId == null) return;
+    final res = await _imageRequest.get(imageId.toString());
+    if (res == null) return;
     setState(() {
-      bytesImage = Uint8List(0);
+      image = res;
     });
   }
 
-  _downloadPhoto() async {
+  _trashPhoto(int? imageId) async {
+    if (imageId == null) return;
+    final image = await _imageRequest.remove(widget.imageId.toString());
+    if (image?.id == widget.imageId) {
+      setState(() {
+        this.image = ImageModel();
+      });
+    }
+  }
+
+  _downloadPhoto(int? imageId) async {
+    if (imageId == null) return;
+    final image = await _imageRequest.get(widget.imageId.toString());
+    final bytesImage = const Base64Decoder().convert(image?.data ?? '');
+
     if (bytesImage.isNotEmpty) {
       await WebImageDownloader.downloadImageFromUInt8List(
           uInt8List: bytesImage);
     }
   }
 
-  _uploadPhoto() async {
+  _uploadPhoto(int? imageId) async {
     Uint8List? bytesFromPicker = await ImagePickerWeb.getImageAsBytes();
-    if (bytesFromPicker != null) {
-      widget.onChange(base64.encode(bytesFromPicker));
-      setState(() {
-        bytesImage = bytesFromPicker;
-      });
+    var mime = lookupMimeType('', headerBytes: bytesFromPicker) ?? '';
+    var extension = '.${extensionFromMime(mime)}';
+
+    if (bytesFromPicker == null) return;
+    final data = base64.encode(bytesFromPicker);
+
+    ImageModel? imageRes;
+
+    if (imageId != null) {
+      final newImage = ImageModel(
+        data: data,
+        extension: extension,
+        user_id: image?.user_id,
+        time_create: image?.time_create,
+        id: image?.id,
+      );
+      imageRes = await _imageRequest.change(newImage);
+    } else {
+      imageRes = await _imageRequest.create(ImageRequestModel(
+        data: data,
+        extension: extension,
+      ));
     }
+
+    widget.onChange(imageRes?.id);
+
+    setState(() {
+      image = imageRes;
+    });
   }
 }
 
 class FieldModel {
   String? title;
   TextEditingController? controller;
-  String? base64;
+  int? imageId;
   bool? value;
   FieldType? type;
   bool? enable;
@@ -237,7 +293,7 @@ class FieldModel {
   FieldModel(
       {this.title = '',
       this.controller,
-      this.base64,
+      this.imageId,
       this.value,
       this.type = FieldType.text,
       this.enable = true,

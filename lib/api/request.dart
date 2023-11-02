@@ -60,7 +60,6 @@ class Request {
 
     http.Response response = await http.post(Uri.parse(baseUrl + url),
         body: jsonEncode(body), headers: headers);
-    print(jsonEncode(body));
     final res = jsonDecode(response.body);
     alice.onHttpResponse(response);
     if (response.statusCode == 401) {

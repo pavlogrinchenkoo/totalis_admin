@@ -19,11 +19,6 @@ class CustomSheetsWidget extends StatefulWidget {
 
 class _CustomSheetsWidgetState extends State<CustomSheetsWidget> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final titles = [
       'Id',
@@ -64,7 +59,7 @@ class _CustomSheetsWidgetState extends State<CustomSheetsWidget> {
                     ))),
                 DataCell(Row(
                   children: [
-                    CustomCircle(image: item?.avatar ?? ''),
+                    CustomCircle(imageId: item?.image_id),
                     Space.w16,
                     SheetText(text: item?.name),
                   ],
