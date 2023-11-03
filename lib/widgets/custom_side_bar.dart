@@ -44,11 +44,7 @@ class CustomSideBar extends StatelessWidget {
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               for (int i = 0, length = items.length; i < length; i++)
                 InkWell(
-                    onTap: i == 8
-                        ? () => alice.showInspector()
-                        : onTap != null
-                            ? () => onTap!(i)
-                            : () => {},
+                    onTap: onTap != null ? () => onTap!(i) : () => {},
                     child: Container(
                         margin: const EdgeInsets.symmetric(vertical: 6),
                         decoration: BoxDecoration(

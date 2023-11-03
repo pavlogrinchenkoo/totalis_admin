@@ -28,15 +28,18 @@ class CoachesBloc extends BlocBaseWithState<ScreenState> {
       FieldModel(
         title: 'Name',
         type: FieldType.text,
+        required: true,
         controller: TextEditingController(text: item?.name),
       ),
       FieldModel(
         title: 'Prompt',
+        required: true,
         type: FieldType.bigText,
         controller: TextEditingController(text: item?.prompt),
       ),
       FieldModel(
         title: 'Description',
+        required: true,
         type: FieldType.bigText,
         controller: TextEditingController(text: item?.description),
       ),

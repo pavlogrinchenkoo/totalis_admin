@@ -4,56 +4,95 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:image_downloader_web/image_downloader_web.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 import 'package:mime/mime.dart';
 import 'package:totalis_admin/api/images/dto.dart';
 import 'package:totalis_admin/api/images/request.dart';
 import 'package:totalis_admin/style.dart';
-import 'package:totalis_admin/utils/custom_checkbox.dart';
-import 'package:totalis_admin/utils/custom_function.dart';
+import 'package:totalis_admin/theme/theme_extensions/app_button_theme.dart';
 import 'package:totalis_admin/utils/spaces.dart';
-import 'package:totalis_admin/widgets/custom_buttom.dart';
+import 'package:totalis_admin/widgets/card_elements.dart';
 
 @RoutePage()
 class ChangePage extends StatelessWidget {
-  const ChangePage({this.fields, this.title, this.onSave, super.key});
+  ChangePage({this.fields, this.title, this.onSave, super.key});
 
   final List<FieldModel>? fields;
   final String? title;
   final void Function()? onSave;
 
+  final _formKey = GlobalKey<FormBuilderState>();
+
   @override
   Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
+
     fields?.sort((a, b) => a.type == FieldType.checkbox ? 1 : -1);
     fields?.sort((a, b) => a.type == FieldType.bigText ? 1 : -1);
+
+    if ((fields ?? []).any((field) => field.type == FieldType.avatar)) {
+      fields?.sort((a, b) => a.type == FieldType.avatar ? 1 : -1);
+    }
 
     return Scaffold(
       body: SizedBox(
         child: ListView(
-          padding: const EdgeInsets.all(80),
+          padding: const EdgeInsets.all(16),
           children: [
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               if (title != null)
                 Text(
                   title ?? '',
-                  style: BS.sb32,
+                  style: BS.reg16.apply(color: BC.white),
                 ),
               Space.h32,
-              Wrap(spacing: 16, children: [
-                for (final field in fields ?? [])
-                  Container(
-                    width: 400,
-                    padding: const EdgeInsets.only(top: 24),
-                    child: CustomFieldWidget(field: field),
-                  ),
-              ]),
-              Space.h24,
+              CardBody(
+                  padding: EdgeInsets.zero,
+                  child: FormBuilder(
+                      key: _formKey,
+                      autovalidateMode: AutovalidateMode.disabled,
+                      child: Wrap(spacing: 16, children: [
+                        for (final field in fields ?? [])
+                          Container(
+                            width: 400,
+                            padding: const EdgeInsets.only(top: 24),
+                            child: CustomFieldWidget(field: field),
+                          ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 36),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: SizedBox(
+                              height: 36.0,
+                              width: 100.0,
+                              child: ElevatedButton(
+                                style: themeData
+                                    .extension<AppButtonTheme>()!
+                                    .primaryElevated,
+                                onPressed: () {
+                                  if (_formKey.currentState?.validate() ??
+                                      false) {
+                                    // Validation passed.
+                                    onSave?.call();
+                                  } else {
+                                    // Validation failed.
+                                  }
+                                },
+                                child: Text('Save'),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ]))),
+              // Space.h24,
             ]),
-            Center(
-                child: SizedBox(
-                    width: 400,
-                    child: CustomButton(title: 'Save', onTap: onSave))),
+            // Center(
+            //     child: SizedBox(
+            //         width: 400,
+            //         child: CustomButton(title: 'Save', onTap: onSave))),
           ],
         ),
       ),
@@ -74,66 +113,130 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
   @override
   Widget build(BuildContext context) {
     if (widget.field?.type == FieldType.text) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(widget.field?.title ?? '', style: BS.reg16),
-          Space.h8,
-          CupertinoTextField(
-            controller: widget.field?.controller,
-            enabled: widget.field?.enable,
-          ),
-        ],
+      // return Column(
+      //   crossAxisAlignment: CrossAxisAlignment.start,
+      //   children: [
+      //     Text(widget.field?.title ?? '', style: BS.reg16),
+      //     Space.h8,
+      //     CupertinoTextField(
+      //       controller: widget.field?.controller,
+      //       enabled: widget.field?.enable,
+      //     ),
+      //   ],
+      // );
+      return FormBuilderTextField(
+        controller: widget.field?.controller,
+        enabled: widget.field?.enable ?? true,
+        name: widget.field?.title ?? '',
+        decoration: InputDecoration(
+          labelText: widget.field?.title ?? '',
+          hintText: widget.field?.title ?? '',
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+        ),
+        validator: (widget.field?.required ?? false)
+            ? FormBuilderValidators.required()
+            : null,
       );
     } else if (widget.field?.type == FieldType.bigText) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(widget.field?.title ?? '', style: BS.reg16),
-          Space.h8,
-          CupertinoTextField(
-            minLines: 5,
-            maxLines: 5,
-            controller: widget.field?.controller,
-            enabled: widget.field?.enable,
-          ),
-        ],
+      // return Column(
+      //   crossAxisAlignment: CrossAxisAlignment.start,
+      //   children: [
+      //     Text(widget.field?.title ?? '', style: BS.reg16),
+      //     Space.h8,
+      //     CupertinoTextField(
+      //       minLines: 5,
+      //       maxLines: 5,
+      //       controller: widget.field?.controller,
+      //       enabled: widget.field?.enable,
+      //     ),
+      //   ],
+      // );
+      return FormBuilderTextField(
+        controller: widget.field?.controller,
+        enabled: widget.field?.enable ?? true,
+        name: widget.field?.title ?? '',
+        decoration: InputDecoration(
+          labelText: widget.field?.title ?? '',
+          hintText: widget.field?.title ?? '',
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+        ),
+        validator: (widget.field?.required ?? false)
+            ? FormBuilderValidators.required()
+            : null,
       );
     } else if (widget.field?.type == FieldType.checkbox) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(widget.field?.title ?? '', style: BS.reg16),
-          Space.h8,
-          CustomCheckbox(
-              value: widget.field?.value,
-              onChanged: (value) => onChanged(value)),
-        ],
+      // return Column(
+      //   crossAxisAlignment: CrossAxisAlignment.start,
+      //   children: [
+      //     Text(widget.field?.title ?? '', style: BS.reg16),
+      //     Space.h8,
+      //     CustomCheckbox(
+      //         value: widget.field?.value,
+      //         onChanged: (value) => onChanged(value)),
+      //   ],
+      // );
+      return FormBuilderCheckbox(
+        checkColor: BC.white,
+        activeColor: BC.green,
+        name: 'accept_terms',
+        initialValue: widget.field?.value,
+        onChanged: (value) => onChanged(value ?? false),
+        title: Text(widget.field?.title ?? ''),
+        validator: FormBuilderValidators.required(),
       );
     } else if (widget.field?.type == FieldType.email) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(widget.field?.title ?? '', style: BS.reg16),
-          Space.h8,
-          CupertinoTextField(
-            controller: widget.field?.controller,
-            enabled: widget.field?.enable,
-            keyboardType: TextInputType.emailAddress,
-          ),
-        ],
+      // return Column(
+      //   crossAxisAlignment: CrossAxisAlignment.start,
+      //   children: [
+      //     Text(widget.field?.title ?? '', style: BS.reg16),
+      //     Space.h8,
+      //     CupertinoTextField(
+      //       controller: widget.field?.controller,
+      //       enabled: widget.field?.enable,
+      //       keyboardType: TextInputType.emailAddress,
+      //     ),
+      //   ],
+      // );
+      return FormBuilderTextField(
+        controller: widget.field?.controller,
+        enabled: widget.field?.enable ?? true,
+        name: widget.field?.title ?? '',
+        decoration: InputDecoration(
+          labelText: widget.field?.title ?? '',
+          hintText: widget.field?.title ?? '',
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+        ),
+        validator: (widget.field?.required ?? false)
+            ? FormBuilderValidators.email()
+            : null,
       );
     } else if (widget.field?.type == FieldType.avatar) {
-      print(widget.field?.imageId);
-      return Column(
+      return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(widget.field?.title ?? '', style: BS.reg16),
-          Space.h8,
+          Text(widget.field?.title ?? ''),
+          Space.w8,
           _AvatarWidget(
               imageId: widget.field?.imageId,
               onChange: (imageId) => onChangedImageId(imageId)),
         ],
+      );
+    } else if (widget.field?.type == FieldType.dropdown) {
+      return FormBuilderDropdown(
+        name: widget.field?.title ?? '',
+        decoration: InputDecoration(
+          labelText: widget.field?.title ?? '',
+          border: const OutlineInputBorder(),
+          hoverColor: Colors.transparent,
+          focusColor: Colors.transparent,
+        ),
+        focusColor: Colors.transparent,
+        onChanged: (value) => widget.field?.enumValue = value,
+        validator: FormBuilderValidators.required(),
+        initialValue: widget.field?.enumValue,
+        items: (widget.field?.values ?? [])
+            .map((e) => DropdownMenuItem(value: e, child: Text(e.toString())))
+            .toList(),
       );
     } else {
       return const SizedBox();
@@ -286,6 +389,8 @@ class FieldModel {
   TextEditingController? controller;
   int? imageId;
   bool? value;
+  List<dynamic>? values;
+  dynamic enumValue;
   FieldType? type;
   bool? enable;
   bool required;
@@ -295,6 +400,8 @@ class FieldModel {
       this.controller,
       this.imageId,
       this.value,
+      this.values,
+      this.enumValue,
       this.type = FieldType.text,
       this.enable = true,
       this.required = false}) {
@@ -304,4 +411,4 @@ class FieldModel {
   }
 }
 
-enum FieldType { checkbox, text, bigText, email, avatar }
+enum FieldType { checkbox, text, bigText, email, avatar, dropdown }

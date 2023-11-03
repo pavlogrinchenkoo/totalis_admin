@@ -50,8 +50,7 @@ class AdminsBloc extends BlocBaseWithState<ScreenState> {
       FieldModel(
           title: 'Email',
           type: FieldType.email,
-          controller: TextEditingController(text: item?.mail),
-          enable: true),
+          controller: TextEditingController(text: item?.mail)),
       FieldModel(
           title: 'Enabled', type: FieldType.checkbox, value: item?.enabled),
       FieldModel(
@@ -60,18 +59,18 @@ class AdminsBloc extends BlocBaseWithState<ScreenState> {
           value: item?.super_admin),
       FieldModel(
           title: 'Firebase uid',
+          required: true,
           type: FieldType.text,
-          enable: false,
           controller: TextEditingController(text: item?.firebase_uid)),
     ];
     context.router.push(ChangeRoute(
         fields: fields,
         title: 'Admin',
-        onSave: () => {onSave(context, fields, item)}));
+        onSave: () => {onSave(context, fields, item, isCreate: item?.id == null)}));
   }
 
-  onSave(
-      BuildContext context, List<FieldModel> fields, AdminModel? item) async {
+  onSave(BuildContext context, List<FieldModel> fields, AdminModel? item,
+      {bool isCreate = false}) async {
     final newModel = AdminModel(
         firebase_uid: item?.firebase_uid,
         id: item?.id,
@@ -81,7 +80,25 @@ class AdminsBloc extends BlocBaseWithState<ScreenState> {
         enabled: fields.firstWhere((i) => i.title == 'Enabled').value,
         super_admin: fields.firstWhere((i) => i.title == 'Super admin').value);
 
+    if (isCreate) {
+      onCreate(context, newModel);
+      return;
+    }
     final res = await _adminRequest.change(newModel);
+    replaceItem(res, newModel);
+    if (context.mounted) context.router.pop();
+  }
+
+  Future<void> onCreate(BuildContext context, AdminModel newModel) async {
+    final requestModel = AdminRequestModel(
+      name: newModel.name,
+      mail: newModel.mail,
+      enabled: newModel.enabled,
+      super_admin: newModel.super_admin,
+      firebase_uid: newModel.firebase_uid,
+    );
+
+    final res = await _adminRequest.create(requestModel);
     replaceItem(res, newModel);
     if (context.mounted) context.router.pop();
   }

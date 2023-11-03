@@ -29,6 +29,7 @@ class RecommendationBloc extends BlocBaseWithState<ScreenState> {
       FieldModel(
         title: 'Checkin id',
         type: FieldType.text,
+        required: true,
         controller:
             TextEditingController(text: (item?.checkin_id ?? "").toString()),
       ),

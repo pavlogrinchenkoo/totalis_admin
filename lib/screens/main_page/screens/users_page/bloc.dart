@@ -50,7 +50,7 @@ class UsersBloc extends BlocBaseWithState<ScreenState> {
       FieldModel(
           title: 'Firebase uid',
           type: FieldType.text,
-          enable: false,
+          required: true,
           controller: TextEditingController(text: item?.firebase_uid)),
       FieldModel(
           title: 'Avatar', type: FieldType.avatar, imageId: item?.image_id),
@@ -73,10 +73,12 @@ class UsersBloc extends BlocBaseWithState<ScreenState> {
     context.router.push(ChangeRoute(
         fields: fields,
         title: 'User',
-        onSave: () => {onSave(context, fields, item)}));
+        onSave: () =>
+            {onSave(context, fields, item, isCreate: item?.id == null)}));
   }
 
-  onSave(BuildContext context, List<FieldModel> fields, UserModel? item) async {
+  onSave(BuildContext context, List<FieldModel> fields, UserModel? item,
+      {bool isCreate = false}) async {
     final newModel = UserModel(
         firebase_uid: item?.firebase_uid,
         id: item?.id,
@@ -93,7 +95,29 @@ class UsersBloc extends BlocBaseWithState<ScreenState> {
                 '0'),
         image_id: fields.firstWhere((i) => i.title == 'Avatar').imageId);
 
+    if (isCreate) {
+      onCreate(context, newModel);
+      return;
+    }
+
     final res = await _userRequest.change(newModel);
+    replaceItem(res, newModel);
+    if (context.mounted) context.router.pop();
+  }
+
+  Future<void> onCreate(BuildContext context, UserModel newModel) async {
+    final requestModel = UserRequestModel(
+      firebase_uid: newModel.firebase_uid,
+      first_name: newModel.first_name,
+      last_name: newModel.last_name,
+      is_tester: newModel.is_tester,
+      sex: newModel.sex,
+      birth: newModel.birth,
+      image_id: newModel.image_id,
+      coach_id: newModel.coach_id,
+    );
+
+    final res = await _userRequest.create(requestModel);
     replaceItem(res, newModel);
     if (context.mounted) context.router.pop();
   }

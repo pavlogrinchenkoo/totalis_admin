@@ -1,14 +1,16 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
-import 'package:totalis_admin/api/variable/dto.dart';
+import 'package:totalis_admin/api/messages/dto.dart';
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
-import 'package:totalis_admin/widgets/custom_buttom.dart';
+import 'package:totalis_admin/widgets/custom_open_icon.dart';
 import 'package:totalis_admin/widgets/custom_progress_indicator.dart';
+import 'package:totalis_admin/widgets/custom_sheet_header_widget.dart';
+import 'package:totalis_admin/widgets/custom_sheet_widget.dart';
+import 'package:totalis_admin/widgets/sheets_text.dart';
 
 import 'bloc.dart';
-import 'widgets/custom_sheets_widget.dart';
 
 @RoutePage()
 class MessagePage extends StatefulWidget {
@@ -23,34 +25,100 @@ class _MessagePageState extends State<MessagePage> {
 
   @override
   void initState() {
-    // _bloc.init();
+    _bloc.init();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final titles = [
+      'User category id',
+      'Checkin id',
+      'Coach id',
+      'Is checkin',
+      'Text',
+      'Role',
+      'Token used',
+      'GPT version',
+    ];
+
     return CustomStreamBuilder(
         bloc: _bloc,
         builder: (context, ScreenState state) {
-          if (state.loading && state.variables.isEmpty) {
+          if (state.loading && state.messages.isEmpty) {
             return const CustomProgressIndicator();
           } else {
             return Scaffold(
                 body: Container(
-              padding: const EdgeInsets.only(top: 80, left: 80),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(children: [
-                    Text('Messages', style: BS.sb32),
-                  ]),
+                  CustomSheetHeaderWidget(
+                      title: 'Messages',
+                      onSave: () => _bloc.openChange(context, MessageModel())),
                   Space.h24,
-                  Text('Empty', style: BS.sb20),
-                  // CustomSheetsWidget(items: state.variables)
+                  Expanded(
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        CustomSheetWidget(
+                          columns: <DataColumn>[
+                            for (final title in titles)
+                              DataColumn(
+                                label: Expanded(
+                                  child: Text(title),
+                                ),
+                              ),
+                          ],
+                          rows: <DataRow>[
+                            for (final item in state.messages)
+                              DataRow(
+                                cells: <DataCell>[
+                                  DataCell(InkWell(
+                                      borderRadius: BRadius.r6,
+                                      onTap: () =>
+                                          _bloc.openChange(context, item),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                              child: SheetText(text: item?.id)),
+                                          Space.w16,
+                                          const CustomOpenIcon()
+                                        ],
+                                      ))),
+                                  DataCell(
+                                      SheetText(text: item?.user_category_id)),
+                                  DataCell(SheetText(text: item?.checkin_id)),
+                                  DataCell(SheetText(text: item?.coach_id)),
+                                  DataCell(SheetText(text: item?.text)),
+                                  DataCell(SheetText(
+                                      text: _getStringRole(item?.role))),
+                                  DataCell(SheetText(text: item?.tokens_used)),
+                                  DataCell(SheetText(text: item?.gpt_version)),
+
+                                ],
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ));
           }
         });
+  }
+
+  _getStringRole(RoleEnum? role) {
+    switch (role) {
+      case RoleEnum.User:
+        return 'User';
+      case RoleEnum.Assistant:
+        return 'Assistant';
+      default:
+        return '';
+    }
   }
 }

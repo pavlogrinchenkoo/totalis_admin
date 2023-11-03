@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:totalis_admin/api/admin/dto.dart';
 import 'package:totalis_admin/screens/main_page/screens/admins_page/bloc.dart';
 import 'package:totalis_admin/style.dart';
+import 'package:totalis_admin/theme/theme_extensions/app_button_theme.dart';
+import 'package:totalis_admin/utils/custom_checkbox.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
+import 'package:totalis_admin/widgets/custom_open_icon.dart';
 import 'package:totalis_admin/widgets/custom_progress_indicator.dart';
-
-import 'widgets/custom_sheets_widget.dart';
+import 'package:totalis_admin/widgets/custom_sheet_header_widget.dart';
+import 'package:totalis_admin/widgets/custom_sheet_widget.dart';
+import 'package:totalis_admin/widgets/sheets_text.dart';
 
 @RoutePage()
 class AdminsPage extends StatefulWidget {
@@ -28,6 +32,9 @@ class _AdminsPageState extends State<AdminsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
+    final titles = ['Id', 'Users name', 'Email', 'Enabled', 'Super admin'];
+
     return CustomStreamBuilder(
         bloc: _bloc,
         builder: (context, ScreenState state) {
@@ -36,23 +43,53 @@ class _AdminsPageState extends State<AdminsPage> {
           } else {
             return Scaffold(
                 body: Container(
-              padding: const EdgeInsets.only(top: 80, left: 80),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(children: [
-                    Text('Admins', style: BS.sb32),
-                    Space.w52,
-                    // CustomButton(title: 'New Admin', onTap: () {}),
-                  ]),
+                  CustomSheetHeaderWidget(
+                      title: 'Admins',
+                      onSave: () => _bloc.openChange(context, AdminModel())),
                   Space.h24,
-                  CustomSheetsWidget(
-                      onChangeEnabled: (AdminModel? item, bool enabled) =>
-                          _bloc.changeAdminEnabled(item, enabled),
-                      onChangeSuperAdmin: (AdminModel? item, bool enabled) =>
-                          _bloc.changeAdminSuperAdmin(item, enabled),
-                      items: state.admins,
-                      openChange: (item) => _bloc.openChange(context, item))
+                  CustomSheetWidget(
+                    columns: <DataColumn>[
+                      for (final title in titles)
+                        DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              title,
+                            ),
+                          ),
+                        ),
+                    ],
+                    rows: <DataRow>[
+                      for (final item in state.admins)
+                        DataRow(
+                          cells: <DataCell>[
+                            DataCell(InkWell(
+                                borderRadius: BRadius.r6,
+                                onTap: () => _bloc.openChange(context, item),
+                                child: Row(
+                                  children: [
+                                    Expanded(child: SheetText(text: item?.id)),
+                                    Space.w16,
+                                    const CustomOpenIcon()
+                                  ],
+                                ))),
+                            DataCell(SheetText(text: item?.name)),
+                            DataCell(SheetText(text: item?.mail)),
+                            DataCell(CustomCheckbox(
+                                value: item?.enabled,
+                                onChanged: (enabled) =>
+                                    _bloc.changeAdminEnabled(item, enabled))),
+                            DataCell(CustomCheckbox(
+                                value: item?.super_admin,
+                                onChanged: (enabled) => _bloc
+                                    .changeAdminSuperAdmin(item, enabled))),
+                          ],
+                        ),
+                    ],
+                  )
                 ],
               ),
             ));

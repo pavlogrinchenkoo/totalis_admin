@@ -1,15 +1,16 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:totalis_admin/api/check_ins/dto.dart';
-import 'package:totalis_admin/api/check_ins/request.dart';
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
-import 'package:totalis_admin/widgets/custom_buttom.dart';
+import 'package:totalis_admin/widgets/custom_open_icon.dart';
 import 'package:totalis_admin/widgets/custom_progress_indicator.dart';
+import 'package:totalis_admin/widgets/custom_sheet_header_widget.dart';
+import 'package:totalis_admin/widgets/custom_sheet_widget.dart';
+import 'package:totalis_admin/widgets/sheets_text.dart';
 
 import 'bloc.dart';
-import 'widgets/custom_sheets_widget.dart';
 
 @RoutePage()
 class CheckInsPage extends StatefulWidget {
@@ -30,6 +31,13 @@ class _CheckInsPageState extends State<CheckInsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final titles = [
+      'Id',
+      'User category id',
+      'Level',
+      'Date',
+      'Summary',
+    ];
     return CustomStreamBuilder(
         bloc: _bloc,
         builder: (context, ScreenState state) {
@@ -38,21 +46,55 @@ class _CheckInsPageState extends State<CheckInsPage> {
           } else {
             return Scaffold(
                 body: Container(
-              padding: const EdgeInsets.only(top: 80, left: 80),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(children: [
-                    Text('Check-ins', style: BS.sb32),
-                    Space.w52,
-                    CustomButton(
-                        title: 'New check-in',
-                        onTap: () => _bloc.openChange(context, CheckInModel())),
-                  ]),
+                  CustomSheetHeaderWidget(
+                      title: 'Check-ins',
+                      onSave: () => _bloc.openChange(context, CheckInModel())),
                   Space.h24,
-                  CustomSheetsWidget(
-                      items: state.checkins,
-                      openChange: (item) => _bloc.openChange(context, item))
+                  Expanded(
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        CustomSheetWidget(
+                          columns: <DataColumn>[
+                            for (final title in titles)
+                              DataColumn(
+                                label: Expanded(
+                                  child: Text(title),
+                                ),
+                              ),
+                          ],
+                          rows: <DataRow>[
+                            for (final item in state.checkins)
+                              DataRow(
+                                cells: <DataCell>[
+                                  DataCell(InkWell(
+                                      borderRadius: BRadius.r6,
+                                      onTap: () =>
+                                          _bloc.openChange(context, item),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                              child: SheetText(text: item?.id)),
+                                          Space.w16,
+                                          const CustomOpenIcon()
+                                        ],
+                                      ))),
+                                  DataCell(
+                                      SheetText(text: item?.user_category_id)),
+                                  DataCell(SheetText(text: item?.level)),
+                                  DataCell(SheetText(text: item?.date)),
+                                  DataCell(SheetText(text: item?.summary)),
+                                ],
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ));

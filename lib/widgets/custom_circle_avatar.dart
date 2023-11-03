@@ -7,7 +7,7 @@ import 'package:totalis_admin/api/images/request.dart';
 import 'package:totalis_admin/style.dart';
 
 class CustomCircle extends StatefulWidget {
-  const CustomCircle({this.imageId,  super.key});
+  const CustomCircle({this.imageId, super.key});
 
   final int? imageId;
 
@@ -18,7 +18,6 @@ class CustomCircle extends StatefulWidget {
 class _CustomCircleState extends State<CustomCircle> {
   final ImageRequest _imageRequest = ImageRequest();
   ImageModel image = ImageModel();
-  bool needReload = false;
 
   @override
   void initState() {
@@ -52,13 +51,9 @@ class _CustomCircleState extends State<CustomCircle> {
 
   Future<void> _loadImage(int? imageId) async {
     final res = await _imageRequest.get(imageId.toString());
-    print(widget.imageId);
-    print(res?.id);
-    print("++++");
     if (res == null) return;
 
     setState(() {
-      needReload = true;
       image = res;
     });
   }

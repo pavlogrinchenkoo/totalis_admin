@@ -7,6 +7,7 @@ import 'package:totalis_admin/firebase_options.dart';
 import 'package:totalis_admin/generated/l10n.dart';
 import 'package:totalis_admin/routers/routes.dart';
 import 'package:totalis_admin/style.dart';
+import 'package:totalis_admin/theme/themes.dart';
 import 'package:totalis_admin/utils/localization.dart';
 
 Alice alice = Alice();
@@ -50,11 +51,7 @@ class _AppState extends State<App> {
         ],
         locale: l,
         themeMode: ThemeMode.light,
-        theme: ThemeData(
-          scaffoldBackgroundColor: BC.white,
-          bottomSheetTheme:
-              const BottomSheetThemeData(backgroundColor: Colors.transparent),
-        ),
+        theme: AppThemeData.instance.dark(),
         supportedLocales: S.delegate.supportedLocales,
         debugShowCheckedModeBanner: false,
         routerConfig: _appRouter.config(),

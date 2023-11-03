@@ -9,8 +9,7 @@ class CustomOpenIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         padding: const EdgeInsets.all(4),
-        decoration:
-            BoxDecoration(color: BC.lightGreen, borderRadius: BRadius.r6),
+        decoration: BoxDecoration(color: BC.green, borderRadius: BRadius.r6),
         child: Assets.open.svg());
   }
 }

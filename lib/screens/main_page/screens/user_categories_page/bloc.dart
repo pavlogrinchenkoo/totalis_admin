@@ -37,14 +37,17 @@ class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
     final fields = [
       FieldModel(
           title: 'User id',
+          required: true,
           controller:
-              TextEditingController(text: (item?.user_id ?? 0).toString())),
+              TextEditingController(text: (item?.user_id ?? '').toString())),
       FieldModel(
           title: 'Category id',
-          controller:
-              TextEditingController(text: (item?.category_id ?? 0).toString())),
+          required: true,
+          controller: TextEditingController(
+              text: (item?.category_id ?? '').toString())),
       FieldModel(
           title: 'Is favorite',
+          required: true,
           type: FieldType.checkbox,
           value: item?.is_favorite),
       FieldModel(
@@ -56,7 +59,7 @@ class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
         title: 'Muted for',
         type: FieldType.text,
         controller:
-            TextEditingController(text: (item?.muted_for ?? 0).toString()),
+            TextEditingController(text: (item?.muted_for ?? '').toString()),
       ),
       FieldModel(
         title: 'Chat summary long',
@@ -84,20 +87,24 @@ class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
   onSave(BuildContext context, List<FieldModel> fields, UserCategoryModel? item,
       {bool isCreate = false}) async {
     final newModel = UserCategoryModel(
-        user_id: int.parse(
-            fields.firstWhere((i) => i.title == 'User id').controller?.text ??
-                '0'),
-        category_id: int.parse(fields
-                .firstWhere((i) => i.title == 'Category id')
-                .controller
-                ?.text ??
-            '0'),
+        user_id:
+            int.tryParse(fields.firstWhere((i) => i.title == 'User id').controller?.text ?? '0') ??
+                0,
+        category_id: int.tryParse(fields
+                    .firstWhere((i) => i.title == 'Category id')
+                    .controller
+                    ?.text ??
+                '0') ??
+            0,
         is_favorite: fields.firstWhere((i) => i.title == 'Is favorite').value,
         muted_day:
             fields.firstWhere((i) => i.title == 'Muted day').controller?.text,
-        muted_for: int.tryParse(
-            fields.firstWhere((i) => i.title == 'Muted for').controller?.text ??
-                '0'),
+        muted_for: int.tryParse(fields
+                    .firstWhere((i) => i.title == 'Muted for')
+                    .controller
+                    ?.text ??
+                '0') ??
+            0,
         chat_summary_long: fields
             .firstWhere((i) => i.title == 'Chat summary long')
             .controller

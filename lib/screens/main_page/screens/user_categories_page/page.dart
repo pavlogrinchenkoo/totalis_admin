@@ -1,14 +1,21 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:totalis_admin/admin_ui/lib/constants/dimens.dart';
 import 'package:totalis_admin/api/user_categories/dto.dart';
 import 'package:totalis_admin/screens/main_page/screens/user_categories_page/bloc.dart';
 import 'package:totalis_admin/style.dart';
+import 'package:totalis_admin/theme/theme_extensions/app_button_theme.dart';
+import 'package:totalis_admin/utils/custom_checkbox.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
 import 'package:totalis_admin/widgets/custom_buttom.dart';
+import 'package:totalis_admin/widgets/custom_open_icon.dart';
 import 'package:totalis_admin/widgets/custom_progress_indicator.dart';
+import 'package:totalis_admin/widgets/custom_sheet_header_widget.dart';
+import 'package:totalis_admin/widgets/sheets_text.dart';
 
-import 'widgets/custom_sheets_widget.dart';
+import '../../../../widgets/custom_sheet_widget.dart';
 
 @RoutePage()
 class UserCategoriesPage extends StatefulWidget {
@@ -29,6 +36,19 @@ class _UserCategoriesPageState extends State<UserCategoriesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
+
+    final titles = [
+      'Id',
+      'User id',
+      'Category id',
+      'Is favorite',
+      'Muted day',
+      'Muted for',
+      'Chat summary long',
+      'Chat summary short',
+    ];
+
     return CustomStreamBuilder(
         bloc: _bloc,
         builder: (context, ScreenState state) {
@@ -37,33 +57,64 @@ class _UserCategoriesPageState extends State<UserCategoriesPage> {
           } else {
             return Scaffold(
                 body: Container(
-              padding: const EdgeInsets.only(top: 80, left: 80, right: 40),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(children: [
-                    Text('User categories', style: BS.sb32),
-                    Space.w52,
-                    CustomButton(
-                        title: 'New user category',
-                        onTap: () =>
-                            _bloc.openChange(context, UserCategoryModel())),
-                  ]),
+                  CustomSheetHeaderWidget(
+                      title: 'User categories',
+                      onSave: () =>
+                          _bloc.openChange(context, UserCategoryModel())),
                   Space.h24,
                   Expanded(
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
-                        CustomSheetsWidget(
-                            onChangeIsFavorite:
-                                (UserCategoryModel? item, bool value) =>
-                                    _bloc.changeIsFavorite(item, value),
-                            items: state.userCategories,
-                            openChange: (item) =>
-                                _bloc.openChange(context, item)),
+                        CustomSheetWidget(
+                          columns: <DataColumn>[
+                            for (final title in titles)
+                              DataColumn(
+                                label: Expanded(
+                                  child: Text(title),
+                                ),
+                              ),
+                          ],
+                          rows: <DataRow>[
+                            for (final item in state.userCategories)
+                              DataRow(
+                                cells: <DataCell>[
+                                  DataCell(InkWell(
+                                      borderRadius: BRadius.r6,
+                                      onTap: () =>
+                                          _bloc.openChange(context, item),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                              child: SheetText(text: item?.id)),
+                                          Space.w16,
+                                          const CustomOpenIcon()
+                                        ],
+                                      ))),
+                                  DataCell(SheetText(text: item?.user_id)),
+                                  DataCell(SheetText(text: item?.category_id)),
+                                  DataCell(CustomCheckbox(
+                                    value: item?.is_favorite,
+                                    onChanged: (value) =>
+                                        _bloc.changeIsFavorite(item, value),
+                                  )),
+                                  DataCell(SheetText(text: item?.muted_day)),
+                                  DataCell(SheetText(text: item?.muted_for)),
+                                  DataCell(
+                                      SheetText(text: item?.chat_summary_long)),
+                                  DataCell(SheetText(
+                                      text: item?.chat_summary_short)),
+                                ],
+                              ),
+                          ],
+                        ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ));

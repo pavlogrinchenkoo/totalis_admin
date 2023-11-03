@@ -1,14 +1,17 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:totalis_admin/api/recommendation/dto.dart';
 import 'package:totalis_admin/api/variable/dto.dart';
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
 import 'package:totalis_admin/widgets/custom_buttom.dart';
 import 'package:totalis_admin/widgets/custom_progress_indicator.dart';
+import 'package:totalis_admin/widgets/custom_sheet_header_widget.dart';
+import 'package:totalis_admin/widgets/custom_sheet_widget.dart';
+import 'package:totalis_admin/widgets/sheets_text.dart';
 
 import 'bloc.dart';
-import 'widgets/custom_sheets_widget.dart';
 
 @RoutePage()
 class VariablePage extends StatefulWidget {
@@ -29,6 +32,11 @@ class _VariablePageState extends State<VariablePage> {
 
   @override
   Widget build(BuildContext context) {
+    final titles = [
+      'Id',
+      'Name',
+      'Value',
+    ];
     return CustomStreamBuilder(
         bloc: _bloc,
         builder: (context, ScreenState state) {
@@ -37,18 +45,41 @@ class _VariablePageState extends State<VariablePage> {
           } else {
             return Scaffold(
                 body: Container(
-              padding: const EdgeInsets.only(top: 80, left: 80),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(children: [
-                    Text('Variables', style: BS.sb32),
-                    Space.w52,
-                    CustomButton(title: 'New variable',  onTap: () =>
-                        _bloc.openChange(context, VariableModel())),
-                  ]),
+                  CustomSheetHeaderWidget(
+                      title: 'Variables',
+                      onSave: () => _bloc.openChange(context, VariableModel())),
                   Space.h24,
-                  CustomSheetsWidget(items: state.variables, openChange: (item) => _bloc.openChange(context, item))
+                  Expanded(
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        CustomSheetWidget(
+                          columns: <DataColumn>[
+                            for (final title in titles)
+                              DataColumn(
+                                label: Expanded(
+                                  child: Text(title),
+                                ),
+                              ),
+                          ],
+                          rows: <DataRow>[
+                            for (final item in state.variables)
+                              DataRow(
+                                cells: <DataCell>[
+                                  DataCell(SheetText(text: item?.id)),
+                                  DataCell(SheetText(text: item?.name)),
+                                  DataCell(SheetText(text: item?.value)),
+                                ],
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ));

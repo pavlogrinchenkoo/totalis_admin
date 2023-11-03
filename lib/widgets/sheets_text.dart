@@ -11,6 +11,6 @@ class SheetText extends StatelessWidget {
     return Container(
         constraints: const BoxConstraints(maxWidth: 200),
         child: Text((text ?? "").toString(),
-            style: BS.reg16, maxLines: 2, overflow: TextOverflow.ellipsis));
+            maxLines: 2, overflow: TextOverflow.ellipsis));
   }
 }
