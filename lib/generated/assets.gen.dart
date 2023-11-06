@@ -43,6 +43,8 @@ class Assets {
   static const SvgGenImage onCompress = SvgGenImage('assets/onCompress.svg');
   static const SvgGenImage onExpand = SvgGenImage('assets/onExpand.svg');
   static const SvgGenImage open = SvgGenImage('assets/open.svg');
+  static const SvgGenImage openBigTextfield =
+      SvgGenImage('assets/open_big_textfield.svg');
   static const SvgGenImage points = SvgGenImage('assets/points.svg');
   static const SvgGenImage rec = SvgGenImage('assets/rec.svg');
   static const SvgGenImage send = SvgGenImage('assets/send.svg');
@@ -66,6 +68,7 @@ class Assets {
         onCompress,
         onExpand,
         open,
+        openBigTextfield,
         points,
         rec,
         send,

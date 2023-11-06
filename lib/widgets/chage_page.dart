@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -11,10 +10,12 @@ import 'package:image_picker_web/image_picker_web.dart';
 import 'package:mime/mime.dart';
 import 'package:totalis_admin/api/images/dto.dart';
 import 'package:totalis_admin/api/images/request.dart';
+import 'package:totalis_admin/generated/assets.gen.dart';
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/theme/theme_extensions/app_button_theme.dart';
 import 'package:totalis_admin/utils/spaces.dart';
 import 'package:totalis_admin/widgets/card_elements.dart';
+import 'package:totalis_admin/widgets/custom_bottom_sheet_text_field.dart';
 
 @RoutePage()
 class ChangePage extends StatelessWidget {
@@ -151,18 +152,35 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
       //     ),
       //   ],
       // );
-      return FormBuilderTextField(
-        controller: widget.field?.controller,
-        enabled: widget.field?.enable ?? true,
-        name: widget.field?.title ?? '',
-        decoration: InputDecoration(
-          labelText: widget.field?.title ?? '',
-          hintText: widget.field?.title ?? '',
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-        ),
-        validator: (widget.field?.required ?? false)
-            ? FormBuilderValidators.required()
-            : null,
+      return Stack(
+        children: [
+          FormBuilderTextField(
+            minLines: 10,
+            maxLines: 10,
+            controller: widget.field?.controller,
+            enabled: widget.field?.enable ?? true,
+            name: widget.field?.title ?? '',
+            decoration: InputDecoration(
+              labelText: widget.field?.title ?? '',
+              hintText: widget.field?.title ?? '',
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+            ),
+            validator: (widget.field?.required ?? false)
+                ? FormBuilderValidators.required()
+                : null,
+          ),
+          Positioned(
+              right: 1,
+              bottom: 1,
+              child: InkWell(
+                onTap: () => CustomBottomSheetTextField().show(context, widget.field),
+                child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                        color: BC.green, borderRadius: BRadius.r6),
+                    child: Assets.openBigTextfield.svg()),
+              )),
+        ],
       );
     } else if (widget.field?.type == FieldType.checkbox) {
       // return Column(
