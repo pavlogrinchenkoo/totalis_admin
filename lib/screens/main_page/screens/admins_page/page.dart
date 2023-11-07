@@ -1,11 +1,8 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:totalis_admin/api/admin/dto.dart';
-import 'package:totalis_admin/generated/assets.gen.dart';
 import 'package:totalis_admin/screens/main_page/screens/admins_page/bloc.dart';
 import 'package:totalis_admin/style.dart';
-import 'package:totalis_admin/theme/theme_extensions/app_button_theme.dart';
 import 'package:totalis_admin/utils/custom_checkbox.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
@@ -34,7 +31,6 @@ class _AdminsPageState extends State<AdminsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
     final titles = ['Id', 'Users name', 'Email', 'Enabled', 'Super admin'];
 
     return CustomStreamBuilder(

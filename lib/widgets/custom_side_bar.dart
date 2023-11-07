@@ -2,7 +2,6 @@ import 'package:build_context_provider/build_context_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:totalis_admin/api/request.dart';
 import 'package:totalis_admin/generated/assets.gen.dart';
-import 'package:totalis_admin/main.dart';
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/spaces.dart';
 

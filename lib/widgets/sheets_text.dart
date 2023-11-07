@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:totalis_admin/style.dart';
 
 class SheetText extends StatelessWidget {
   const SheetText({this.text, super.key});
