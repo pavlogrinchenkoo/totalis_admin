@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:totalis_admin/api/categories/dto.dart';
 import 'package:totalis_admin/screens/main_page/screens/categories_page/bloc.dart';
 import 'package:totalis_admin/style.dart';
-import 'package:totalis_admin/utils/custom_checkbox.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
 import 'package:totalis_admin/widgets/custom_open_icon.dart';
@@ -36,9 +35,9 @@ class _CategoriesPageState extends State<CategoriesPage> {
       'Parent id',
       'Sort order',
       'Name',
-      'Description',
-      'Is home',
-      'Subcategories title',
+      // 'Description',
+      // 'Is home',
+      // 'Subcategories title',
     ];
 
     return CustomStreamBuilder(
@@ -83,14 +82,14 @@ class _CategoriesPageState extends State<CategoriesPage> {
                             DataCell(SheetText(text: item?.parent_id)),
                             DataCell(SheetText(text: item?.sort_order)),
                             DataCell(SheetText(text: item?.name)),
-                            DataCell(SheetText(text: item?.description)),
-                            DataCell(CustomCheckbox(
-                              value: item?.is_home,
-                              onChanged: (value) =>
-                                  _bloc.changeIsHome(item, value),
-                            )),
-                            DataCell(
-                                SheetText(text: item?.subcategories_title)),
+                            // DataCell(SheetText(text: item?.description)),
+                            // DataCell(CustomCheckbox(
+                            //   value: item?.is_home,
+                            //   onChanged: (value) =>
+                            //       _bloc.changeIsHome(item, value),
+                            // )),
+                            // DataCell(
+                            //     SheetText(text: item?.subcategories_title)),
                           ],
                         ),
                     ],

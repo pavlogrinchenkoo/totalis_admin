@@ -20,6 +20,7 @@ class MessageBloc extends BlocBaseWithState<ScreenState> {
   Future<void> init() async {
     setState(ScreenState(loading: true));
     final messages = await _messageRequest.getAll();
+    messages?.sort((a, b) => (b.id ?? 0) < (a.id ?? 0) ? -1 : 1);
     setState(currentState.copyWith(loading: false, messages: messages ?? []));
   }
 
@@ -102,7 +103,7 @@ class MessageBloc extends BlocBaseWithState<ScreenState> {
     final newModel = MessageModel(
         text: fields.firstWhere((i) => i.title == 'Text').controller?.text,
         role: fields.firstWhere((i) => i.title == 'Role').enumValue,
-        is_checkin: fields.firstWhere((i) => i.title == 'Is checkin').value,
+        is_checkin: fields.firstWhere((i) => i.title == 'Is checkin').value ?? false,
         checkin_id: int.tryParse(fields
                 .firstWhere((i) => i.title == 'Checkin id')
                 .controller

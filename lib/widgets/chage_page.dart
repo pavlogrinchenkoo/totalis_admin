@@ -19,11 +19,12 @@ import 'package:totalis_admin/widgets/custom_bottom_sheet_text_field.dart';
 
 @RoutePage()
 class ChangePage extends StatelessWidget {
-  ChangePage({this.fields, this.title, this.onSave, super.key});
+  ChangePage({this.fields, this.title, this.onSave, this.widget, super.key});
 
   final List<FieldModel>? fields;
   final String? title;
   final void Function()? onSave;
+  final Widget? widget;
 
   final _formKey = GlobalKey<FormBuilderState>();
 
@@ -62,6 +63,7 @@ class ChangePage extends StatelessWidget {
                             padding: const EdgeInsets.only(top: 24),
                             child: CustomFieldWidget(field: field),
                           ),
+                        widget ?? const SizedBox(),
                         Padding(
                           padding: const EdgeInsets.only(top: 36),
                           child: Align(
@@ -82,7 +84,7 @@ class ChangePage extends StatelessWidget {
                                     // Validation failed.
                                   }
                                 },
-                                child: Text('Save'),
+                                child: const Text('Save'),
                               ),
                             ),
                           ),
@@ -114,17 +116,6 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
   @override
   Widget build(BuildContext context) {
     if (widget.field?.type == FieldType.text) {
-      // return Column(
-      //   crossAxisAlignment: CrossAxisAlignment.start,
-      //   children: [
-      //     Text(widget.field?.title ?? '', style: BS.reg16),
-      //     Space.h8,
-      //     CupertinoTextField(
-      //       controller: widget.field?.controller,
-      //       enabled: widget.field?.enable,
-      //     ),
-      //   ],
-      // );
       return FormBuilderTextField(
         controller: widget.field?.controller,
         enabled: widget.field?.enable ?? true,
@@ -139,19 +130,6 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
             : null,
       );
     } else if (widget.field?.type == FieldType.bigText) {
-      // return Column(
-      //   crossAxisAlignment: CrossAxisAlignment.start,
-      //   children: [
-      //     Text(widget.field?.title ?? '', style: BS.reg16),
-      //     Space.h8,
-      //     CupertinoTextField(
-      //       minLines: 5,
-      //       maxLines: 5,
-      //       controller: widget.field?.controller,
-      //       enabled: widget.field?.enable,
-      //     ),
-      //   ],
-      // );
       return Stack(
         children: [
           FormBuilderTextField(
@@ -173,7 +151,8 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
               right: 1,
               bottom: 1,
               child: InkWell(
-                onTap: () => CustomBottomSheetTextField().show(context, widget.field),
+                onTap: () =>
+                    CustomBottomSheetTextField().show(context, widget.field),
                 child: Container(
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
@@ -183,38 +162,17 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
         ],
       );
     } else if (widget.field?.type == FieldType.checkbox) {
-      // return Column(
-      //   crossAxisAlignment: CrossAxisAlignment.start,
-      //   children: [
-      //     Text(widget.field?.title ?? '', style: BS.reg16),
-      //     Space.h8,
-      //     CustomCheckbox(
-      //         value: widget.field?.value,
-      //         onChanged: (value) => onChanged(value)),
-      //   ],
-      // );
       return FormBuilderCheckbox(
         checkColor: BC.white,
         activeColor: BC.green,
-        name: 'accept_terms',
-        initialValue: widget.field?.value,
+        name: widget.field?.title ?? '',
+        enabled: widget.field?.enable ?? true,
+        initialValue: widget.field?.value ?? false,
         onChanged: (value) => onChanged(value ?? false),
         title: Text(widget.field?.title ?? ''),
         validator: FormBuilderValidators.required(),
       );
     } else if (widget.field?.type == FieldType.email) {
-      // return Column(
-      //   crossAxisAlignment: CrossAxisAlignment.start,
-      //   children: [
-      //     Text(widget.field?.title ?? '', style: BS.reg16),
-      //     Space.h8,
-      //     CupertinoTextField(
-      //       controller: widget.field?.controller,
-      //       enabled: widget.field?.enable,
-      //       keyboardType: TextInputType.emailAddress,
-      //     ),
-      //   ],
-      // );
       return FormBuilderTextField(
         controller: widget.field?.controller,
         enabled: widget.field?.enable ?? true,
@@ -227,6 +185,24 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
         validator: (widget.field?.required ?? false)
             ? FormBuilderValidators.email()
             : null,
+      );
+    } else if (widget.field?.type == FieldType.dateTime) {
+      return FormBuilderDateTimePicker(
+        name: widget.field?.title ?? '',
+        onChanged: (DateTime? value) {
+          if (value != null) {
+            widget.field?.controller?.text = (value).toIso8601String();
+          }
+        },
+        inputType: InputType.date,
+        decoration: InputDecoration(
+          labelText: widget.field?.title ?? '',
+          border: const OutlineInputBorder(),
+        ),
+        initialValue: widget.field?.controller?.text != null &&
+                widget.field?.controller?.text != ''
+            ? DateTime.parse(widget.field?.controller?.text ?? '')
+            : DateTime.now(),
       );
     } else if (widget.field?.type == FieldType.avatar) {
       return Row(
@@ -253,7 +229,8 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
         validator: FormBuilderValidators.required(),
         initialValue: widget.field?.enumValue,
         items: (widget.field?.values ?? [])
-            .map((e) => DropdownMenuItem(value: e, child: Text(e.toString())))
+            .map((e) => DropdownMenuItem(
+                value: e, child: Text(e.toString().split('.').last)))
             .toList(),
       );
     } else {
@@ -276,7 +253,6 @@ class _AvatarWidget extends StatefulWidget {
   const _AvatarWidget({
     this.imageId,
     required this.onChange,
-    super.key,
   });
 
   final int? imageId;
@@ -429,4 +405,4 @@ class FieldModel {
   }
 }
 
-enum FieldType { checkbox, text, bigText, email, avatar, dropdown }
+enum FieldType { checkbox, text, bigText, email, avatar, dropdown, dateTime }

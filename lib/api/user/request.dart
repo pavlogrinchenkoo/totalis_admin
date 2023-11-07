@@ -16,9 +16,17 @@ class UserRequest {
     return (res as List).map((e) => UserModel.fromJson(e)).toList();
   }
 
+  Future<UserModel?> get(String id) async {
+    final res = await _request.get('api/admin/users/get/id/$id');
+    if (res == null) return null;
+    return UserModel.fromJson(res);
+  }
+
   Future<UserModel?> change(UserModel? item) async {
     final res = await _request.post('api/admin/users/change', item);
     if (res == null) return null;
     return UserModel.fromJson(res);
   }
 }
+
+enum SexEnum { M, F, N }

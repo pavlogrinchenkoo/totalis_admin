@@ -54,15 +54,17 @@ class UsersBloc extends BlocBaseWithState<ScreenState> {
           controller: TextEditingController(text: item?.firebase_uid)),
       FieldModel(
           title: 'Avatar', type: FieldType.avatar, imageId: item?.image_id),
-      FieldModel(
-          title: 'Is tester', type: FieldType.checkbox, value: item?.is_tester),
+      // FieldModel(
+      //     title: 'Is tester', type: FieldType.checkbox, value: item?.is_tester),
       FieldModel(
           title: 'Sex',
-          type: FieldType.text,
-          controller: TextEditingController(text: item?.sex)),
+          type: FieldType.dropdown,
+          required: true,
+          values: SexEnum.values,
+          enumValue: item?.sex),
       FieldModel(
           title: 'Birthday',
-          type: FieldType.text,
+          type: FieldType.dateTime,
           controller: TextEditingController(text: item?.birth)),
       FieldModel(
           title: 'Coach id',
@@ -87,8 +89,8 @@ class UsersBloc extends BlocBaseWithState<ScreenState> {
             fields.firstWhere((i) => i.title == 'First name').controller?.text,
         last_name:
             fields.firstWhere((i) => i.title == 'Last name').controller?.text,
-        is_tester: fields.firstWhere((i) => i.title == 'Is tester').value,
-        sex: fields.firstWhere((i) => i.title == 'Sex').controller?.text,
+        // is_tester: fields.firstWhere((i) => i.title == 'Is tester').value,
+        sex: fields.firstWhere((i) => i.title == 'Sex').enumValue,
         birth: fields.firstWhere((i) => i.title == 'Birthday').controller?.text,
         coach_id: int.parse(
             fields.firstWhere((i) => i.title == 'Coach id').controller?.text ??
@@ -128,6 +130,11 @@ class UsersBloc extends BlocBaseWithState<ScreenState> {
     final index = admins.indexWhere((users) => users?.id == newUser?.id);
     admins.replaceRange(index, index + 1, [changed]);
     setState(currentState.copyWith(users: admins));
+  }
+
+  Future<UserModel?> getUser(int? id) async {
+    final res = await _userRequest.get(id.toString());
+    return res;
   }
 }
 

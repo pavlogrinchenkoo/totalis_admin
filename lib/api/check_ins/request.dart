@@ -16,6 +16,19 @@ class CheckInsRequest {
     return (res as List).map((e) => CheckInModel.fromJson(e)).toList();
   }
 
+  Future<CheckInModel?> get(String? id) async {
+    final res = await _request.get('api/admin/checkin/get/id/$id');
+    if (res == null) return null;
+    return CheckInModel.fromJson(res);
+  }
+
+  Future<List<CheckInModel>?> getFromUserCategory(int id) async {
+    final res =
+        await _request.post('api/user/checkin/get', {'user_category_id': id});
+    if (res == null) return null;
+    return (res as List).map((e) => CheckInModel.fromJson(e)).toList();
+  }
+
   Future<CheckInModel?> change(CheckInModel? item) async {
     final res = await _request.post('api/admin/checkin/change', item);
     if (res == null) return null;

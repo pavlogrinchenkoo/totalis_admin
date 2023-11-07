@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:json_annotation/json_annotation.dart';
+import 'package:totalis_admin/api/user/request.dart';
 
 part 'dto.g.dart';
 
@@ -10,12 +11,14 @@ class CoachesRequestModel {
   String? description;
   int? image_id;
   String? prompt;
+  SexEnum? sex;
 
   CoachesRequestModel({
     this.name,
     this.description,
     this.image_id,
     this.prompt,
+    this.sex,
   });
 
   factory CoachesRequestModel.fromJson(Map<String, dynamic> json) =>
@@ -30,6 +33,7 @@ class CoachesModel {
   String? description;
   int? image_id;
   String? prompt;
+  SexEnum? sex;
   int? id;
   String? time_create;
 
@@ -38,6 +42,7 @@ class CoachesModel {
     this.description,
     this.image_id,
     this.prompt,
+    this.sex,
     this.id,
     this.time_create,
   });

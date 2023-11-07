@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:totalis_admin/api/coaches/dto.dart';
 import 'package:totalis_admin/api/coaches/request.dart';
+import 'package:totalis_admin/api/user/request.dart';
 import 'package:totalis_admin/routers/routes.dart';
 import 'package:totalis_admin/utils/bloc_base.dart';
 import 'package:totalis_admin/widgets/chage_page.dart';
@@ -48,11 +49,18 @@ class CoachesBloc extends BlocBaseWithState<ScreenState> {
         type: FieldType.avatar,
         imageId: item?.image_id,
       ),
+      FieldModel(
+        title: 'Sex',
+        type: FieldType.dropdown,
+        enumValue: item?.sex,
+        values: SexEnum.values,
+        required: true,
+      ),
     ];
 
     context.router.push(ChangeRoute(
         fields: fields,
-        title: 'New coach',
+        title: 'Coach',
         onSave: () =>
             {onSave(context, fields, item, isCreate: item?.id == null)}));
   }
@@ -65,6 +73,7 @@ class CoachesBloc extends BlocBaseWithState<ScreenState> {
         description:
             fields.firstWhere((i) => i.title == 'Description').controller?.text,
         image_id: fields.firstWhere((i) => i.title == 'Avatar').imageId,
+        sex: fields.firstWhere((i) => i.title == 'Sex').enumValue,
         // avatar: "",
         id: item?.id,
         time_create: item?.time_create);

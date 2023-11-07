@@ -32,7 +32,7 @@ class _UsersPageState extends State<UsersPage> {
 
   @override
   Widget build(BuildContext context) {
-    final titles = ['Id', 'Users name', 'Is tester'];
+    final titles = ['Id', 'Name', 'Tester'];
 
     return CustomStreamBuilder(
         bloc: _bloc,

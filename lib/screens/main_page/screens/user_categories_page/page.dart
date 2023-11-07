@@ -1,21 +1,21 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:totalis_admin/admin_ui/lib/constants/dimens.dart';
 import 'package:totalis_admin/api/user_categories/dto.dart';
-import 'package:totalis_admin/screens/main_page/screens/user_categories_page/bloc.dart';
+import 'package:totalis_admin/screens/main_page/screens/categories_page/bloc.dart'
+    as cb;
+import 'package:totalis_admin/screens/main_page/screens/users_page/bloc.dart'
+    as ub;
 import 'package:totalis_admin/style.dart';
-import 'package:totalis_admin/theme/theme_extensions/app_button_theme.dart';
-import 'package:totalis_admin/utils/custom_checkbox.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
-import 'package:totalis_admin/widgets/custom_buttom.dart';
 import 'package:totalis_admin/widgets/custom_open_icon.dart';
 import 'package:totalis_admin/widgets/custom_progress_indicator.dart';
 import 'package:totalis_admin/widgets/custom_sheet_header_widget.dart';
+import 'package:totalis_admin/widgets/custom_sheet_widget.dart';
 import 'package:totalis_admin/widgets/sheets_text.dart';
 
-import '../../../../widgets/custom_sheet_widget.dart';
+import 'bloc.dart';
+import 'widgets/check_in_widget.dart';
 
 @RoutePage()
 class UserCategoriesPage extends StatefulWidget {
@@ -27,6 +27,8 @@ class UserCategoriesPage extends StatefulWidget {
 
 class _UserCategoriesPageState extends State<UserCategoriesPage> {
   final UserCategoriesBloc _bloc = UserCategoriesBloc();
+  final cb.CategoriesBloc _blocCategories = cb.CategoriesBloc();
+  final ub.UsersBloc _blocUsers = ub.UsersBloc();
 
   @override
   void initState() {
@@ -36,17 +38,10 @@ class _UserCategoriesPageState extends State<UserCategoriesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
-
     final titles = [
       'Id',
       'User id',
       'Category id',
-      'Is favorite',
-      'Muted day',
-      'Muted for',
-      'Chat summary long',
-      'Chat summary short',
     ];
 
     return CustomStreamBuilder(
@@ -85,8 +80,9 @@ class _UserCategoriesPageState extends State<UserCategoriesPage> {
                                 cells: <DataCell>[
                                   DataCell(InkWell(
                                       borderRadius: BRadius.r6,
-                                      onTap: () =>
-                                          _bloc.openChange(context, item),
+                                      onTap: () => _bloc.openChange(
+                                          context, item,
+                                          widget: CheckInWidget(id: item?.id)),
                                       child: Row(
                                         children: [
                                           Expanded(
@@ -95,19 +91,36 @@ class _UserCategoriesPageState extends State<UserCategoriesPage> {
                                           const CustomOpenIcon()
                                         ],
                                       ))),
-                                  DataCell(SheetText(text: item?.user_id)),
-                                  DataCell(SheetText(text: item?.category_id)),
-                                  DataCell(CustomCheckbox(
-                                    value: item?.is_favorite,
-                                    onChanged: (value) =>
-                                        _bloc.changeIsFavorite(item, value),
-                                  )),
-                                  DataCell(SheetText(text: item?.muted_day)),
-                                  DataCell(SheetText(text: item?.muted_for)),
-                                  DataCell(
-                                      SheetText(text: item?.chat_summary_long)),
-                                  DataCell(SheetText(
-                                      text: item?.chat_summary_short)),
+                                  DataCell(InkWell(
+                                      borderRadius: BRadius.r6,
+                                      onTap: () async => _blocUsers.openChange(
+                                          context,
+                                          await _blocUsers
+                                              .getUser(item?.user_id)),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                              child: SheetText(
+                                                  text: item?.user_id)),
+                                          Space.w16,
+                                          const CustomOpenIcon()
+                                        ],
+                                      ))),
+                                  DataCell(InkWell(
+                                      borderRadius: BRadius.r6,
+                                      onTap: () async => _blocCategories.openChange(
+                                          context, await _blocCategories.getCategory(
+                                              item?.category_id
+                                          )),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                              child: SheetText(
+                                                  text: item?.category_id)),
+                                          Space.w16,
+                                          const CustomOpenIcon()
+                                        ],
+                                      ))),
                                 ],
                               ),
                           ],

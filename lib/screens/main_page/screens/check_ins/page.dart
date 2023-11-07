@@ -1,9 +1,12 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:totalis_admin/api/check_ins/dto.dart';
+import 'package:totalis_admin/screens/main_page/screens/user_categories_page/bloc.dart'
+    as ub;
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
+import 'package:totalis_admin/widgets/category_data_cell_widget.dart';
 import 'package:totalis_admin/widgets/custom_open_icon.dart';
 import 'package:totalis_admin/widgets/custom_progress_indicator.dart';
 import 'package:totalis_admin/widgets/custom_sheet_header_widget.dart';
@@ -22,6 +25,7 @@ class CheckInsPage extends StatefulWidget {
 
 class _CheckInsPageState extends State<CheckInsPage> {
   final CheckInsBloc _bloc = CheckInsBloc();
+  final ub.UserCategoriesBloc _blocUserCategory = ub.UserCategoriesBloc();
 
   @override
   void initState() {
@@ -34,6 +38,7 @@ class _CheckInsPageState extends State<CheckInsPage> {
     final titles = [
       'Id',
       'User category id',
+      'Category id',
       'Level',
       'Date',
       'Summary',
@@ -78,16 +83,33 @@ class _CheckInsPageState extends State<CheckInsPage> {
                                       child: Row(
                                         children: [
                                           Expanded(
-                                              child: SheetText(text: item?.id)),
+                                              child: SheetText(text: item.id)),
                                           Space.w16,
                                           const CustomOpenIcon()
                                         ],
                                       ))),
-                                  DataCell(
-                                      SheetText(text: item?.user_category_id)),
-                                  DataCell(SheetText(text: item?.level)),
-                                  DataCell(SheetText(text: item?.date)),
-                                  DataCell(SheetText(text: item?.summary)),
+                                  DataCell(InkWell(
+                                      borderRadius: BRadius.r6,
+                                      onTap: () async =>
+                                          _blocUserCategory.openChange(
+                                              context,
+                                              await _blocUserCategory
+                                                  .getUserCategory(
+                                                      item.user_category_id)),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                              child: SheetText(
+                                                  text: item.user_category_id)),
+                                          Space.w16,
+                                          const CustomOpenIcon()
+                                        ],
+                                      ))),
+                                  DataCell(CategoryDataCellWidget(
+                                      userCategoryId: item.user_category_id)),
+                                  DataCell(SheetText(text: item.level)),
+                                  DataCell(SheetText(text: item.date)),
+                                  DataCell(SheetText(text: item.summary)),
                                 ],
                               ),
                           ],

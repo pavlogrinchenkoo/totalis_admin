@@ -4,11 +4,13 @@ import 'package:totalis_admin/api/messages/dto.dart';
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
+import 'package:totalis_admin/widgets/check_in_data_cell_widget.dart';
 import 'package:totalis_admin/widgets/custom_open_icon.dart';
 import 'package:totalis_admin/widgets/custom_progress_indicator.dart';
 import 'package:totalis_admin/widgets/custom_sheet_header_widget.dart';
 import 'package:totalis_admin/widgets/custom_sheet_widget.dart';
 import 'package:totalis_admin/widgets/sheets_text.dart';
+import 'package:totalis_admin/widgets/user_category_data_cell_widget.dart';
 
 import 'bloc.dart';
 
@@ -32,13 +34,12 @@ class _MessagePageState extends State<MessagePage> {
   @override
   Widget build(BuildContext context) {
     final titles = [
+      'Id',
       'User category id',
-      'Checkin id',
-      'Coach id',
-      'Is checkin',
-      'Text',
+      'Сheckin',
       'Role',
-      'Token used',
+      'Text',
+      'Token',
       'GPT version',
     ];
 
@@ -87,16 +88,15 @@ class _MessagePageState extends State<MessagePage> {
                                           const CustomOpenIcon()
                                         ],
                                       ))),
-                                  DataCell(
-                                      SheetText(text: item?.user_category_id)),
-                                  DataCell(SheetText(text: item?.checkin_id)),
-                                  DataCell(SheetText(text: item?.coach_id)),
-                                  DataCell(SheetText(text: item?.text)),
+                                  DataCell(UserCategoryDataCellWidget(
+                                      userCategoryId: item?.user_category_id)),
+                                  DataCell(CheckInDataCellWidget(
+                                      checkInId: item?.checkin_id)),
                                   DataCell(SheetText(
                                       text: _getStringRole(item?.role))),
+                                  DataCell(SheetText(text: item?.text)),
                                   DataCell(SheetText(text: item?.tokens_used)),
                                   DataCell(SheetText(text: item?.gpt_version)),
-
                                 ],
                               ),
                           ],

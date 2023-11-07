@@ -13,7 +13,7 @@ UserRequestModel _$UserRequestModelFromJson(Map<String, dynamic> json) =>
       firebase_uid: json['firebase_uid'] as String?,
       image_id: json['image_id'] as int?,
       is_tester: json['is_tester'] as bool?,
-      sex: json['sex'] as String?,
+      sex: $enumDecodeNullable(_$SexEnumEnumMap, json['sex']),
       birth: json['birth'] as String?,
       coach_id: json['coach_id'] as int?,
     );
@@ -25,10 +25,16 @@ Map<String, dynamic> _$UserRequestModelToJson(UserRequestModel instance) =>
       'firebase_uid': instance.firebase_uid,
       'image_id': instance.image_id,
       'is_tester': instance.is_tester,
-      'sex': instance.sex,
+      'sex': _$SexEnumEnumMap[instance.sex],
       'birth': instance.birth,
       'coach_id': instance.coach_id,
     };
+
+const _$SexEnumEnumMap = {
+  SexEnum.M: 'M',
+  SexEnum.F: 'F',
+  SexEnum.N: 'N',
+};
 
 UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       id: json['id'] as int?,
@@ -37,7 +43,7 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       firebase_uid: json['firebase_uid'] as String?,
       image_id: json['image_id'] as int?,
       is_tester: json['is_tester'] as bool?,
-      sex: json['sex'] as String?,
+      sex: $enumDecodeNullable(_$SexEnumEnumMap, json['sex']),
       birth: json['birth'] as String?,
       coach_id: json['coach_id'] as int?,
       time_create: json['time_create'] as String?,
@@ -50,7 +56,7 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'firebase_uid': instance.firebase_uid,
       'image_id': instance.image_id,
       'is_tester': instance.is_tester,
-      'sex': instance.sex,
+      'sex': _$SexEnumEnumMap[instance.sex],
       'birth': instance.birth,
       'coach_id': instance.coach_id,
       'time_create': instance.time_create,

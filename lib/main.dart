@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:totalis_admin/firebase_options.dart';
 import 'package:totalis_admin/generated/l10n.dart';
 import 'package:totalis_admin/routers/routes.dart';
-import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/theme/themes.dart';
 import 'package:totalis_admin/utils/localization.dart';
 

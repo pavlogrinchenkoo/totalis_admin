@@ -39,7 +39,7 @@ class CheckInsBloc extends BlocBaseWithState<ScreenState> {
       ),
       FieldModel(
         title: 'Date',
-        type: FieldType.text,
+        type: FieldType.dateTime,
         required: true,
         controller: TextEditingController(text: item?.date),
       ),
@@ -57,7 +57,7 @@ class CheckInsBloc extends BlocBaseWithState<ScreenState> {
 
     context.router.push(ChangeRoute(
         fields: fields,
-        title: 'New check in',
+        title: 'Сheck-In',
         onSave: () =>
             {onSave(context, fields, item, isCreate: item?.id == null)}));
   }
@@ -95,13 +95,15 @@ class CheckInsBloc extends BlocBaseWithState<ScreenState> {
   void replaceItem(CheckInModel? changed, CheckInModel? newCheckIn) {
     if (changed?.id == null) return;
     final coaches = [...currentState.checkins];
-    final index = coaches.indexWhere((users) => users?.id == newCheckIn?.id);
+    final index = coaches.indexWhere((users) => users.id == newCheckIn?.id);
     if (index == -1) {
       newCheckIn
         ?..id = changed?.id
         ..time_create = changed?.time_create;
+      if (newCheckIn == null) return;
       coaches.add(newCheckIn);
     } else {
+      if (changed == null) return;
       coaches.replaceRange(index, index + 1, [changed]);
     }
     setState(currentState.copyWith(checkins: coaches));
@@ -120,18 +122,29 @@ class CheckInsBloc extends BlocBaseWithState<ScreenState> {
     replaceItem(res, newModel);
     if (context.mounted) context.router.pop();
   }
+
+  initCheckins(int? id) async {
+    final CheckInsRequest checkInsRequest = CheckInsRequest();
+    final checkins = await checkInsRequest.getFromUserCategory(id ?? 0);
+    setState(currentState.copyWith(checkins: checkins ?? []));
+  }
+
+  Future<CheckInModel?> getCheckIn(int? id) async {
+    final res = await _checkInsRequest.get(id.toString());
+    return res;
+  }
 }
 
 class ScreenState {
   final bool loading;
-  final List<CheckInModel?> checkins;
+  final List<CheckInModel> checkins;
   final List<String>? titles;
 
   ScreenState(
       {this.loading = false, this.checkins = const [], this.titles = const []});
 
   ScreenState copyWith(
-      {bool? loading, List<CheckInModel?>? checkins, List<String>? titles}) {
+      {bool? loading, List<CheckInModel>? checkins, List<String>? titles}) {
     return ScreenState(
         loading: loading ?? this.loading,
         checkins: checkins ?? this.checkins,

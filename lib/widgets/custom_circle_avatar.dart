@@ -25,11 +25,11 @@ class _CustomCircleState extends State<CustomCircle> {
     super.initState();
   }
 
-  @override
-  void didUpdateWidget(covariant CustomCircle oldWidget) {
-    _loadImage(widget.imageId);
-    super.didUpdateWidget(oldWidget);
-  }
+  // @override
+  // void didUpdateWidget(covariant CustomCircle oldWidget) {
+  //   _loadImage(widget.imageId);
+  //   super.didUpdateWidget(oldWidget);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class _CustomCircleState extends State<CustomCircle> {
       height: 36,
       decoration: BoxDecoration(
         borderRadius: BRadius.r64,
-        color: BC.lightGreen,
+        color: BC.green,
       ),
       child: ClipRRect(
           borderRadius: BRadius.r64,

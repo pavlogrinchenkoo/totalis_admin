@@ -1,14 +1,18 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:totalis_admin/api/recommendation/dto.dart';
+import 'package:totalis_admin/screens/main_page/screens/check_ins/bloc.dart'
+    as cb;
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
+import 'package:totalis_admin/widgets/category_data_cell_widget.dart';
 import 'package:totalis_admin/widgets/custom_open_icon.dart';
 import 'package:totalis_admin/widgets/custom_progress_indicator.dart';
 import 'package:totalis_admin/widgets/custom_sheet_header_widget.dart';
 import 'package:totalis_admin/widgets/custom_sheet_widget.dart';
 import 'package:totalis_admin/widgets/sheets_text.dart';
+import 'package:totalis_admin/widgets/user_category_data_cell_widget.dart';
 
 import 'bloc.dart';
 
@@ -22,6 +26,7 @@ class RecommendationPage extends StatefulWidget {
 
 class _RecommendationPageState extends State<RecommendationPage> {
   final RecommendationBloc _bloc = RecommendationBloc();
+  final cb.CheckInsBloc _blocCheckIns = cb.CheckInsBloc();
 
   @override
   void initState() {
@@ -34,6 +39,8 @@ class _RecommendationPageState extends State<RecommendationPage> {
     final titles = [
       'Id',
       'Check-in id',
+      'User Category id',
+      'Category id',
       'Text',
     ];
 
@@ -45,7 +52,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
           } else {
             return Scaffold(
                 body: Container(
-              padding: const EdgeInsets.only(top: 80, left: 80),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -83,7 +90,25 @@ class _RecommendationPageState extends State<RecommendationPage> {
                                           const CustomOpenIcon()
                                         ],
                                       ))),
-                                  DataCell(SheetText(text: item?.checkin_id)),
+                                  DataCell(InkWell(
+                                      borderRadius: BRadius.r6,
+                                      onTap: () async =>
+                                          _blocCheckIns.openChange(
+                                              context,
+                                              await _blocCheckIns.getCheckIn(
+                                                  item?.checkin_id)),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                              child: SheetText(
+                                                  text: item?.checkin_id)),
+                                          Space.w16,
+                                          const CustomOpenIcon()
+                                        ],
+                                      ))),
+                                  for (final w in _userCategoryAndCategory(
+                                      item?.checkin_id))
+                                    DataCell(w),
                                   DataCell(SheetText(text: item?.text)),
                                 ],
                               ),
@@ -97,5 +122,15 @@ class _RecommendationPageState extends State<RecommendationPage> {
             ));
           }
         });
+  }
+
+  _userCategoryAndCategory(int? id) {
+    final checkIn = _blocCheckIns.getCheckIn(id);
+    return [
+      UserCategoryDataCellWidget(checkIn: checkIn,),
+      CategoryDataCellWidget(
+        checkIn: checkIn,
+      )
+    ];
   }
 }

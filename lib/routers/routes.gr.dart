@@ -95,6 +95,7 @@ abstract class _$AppRouter extends RootStackRouter {
           fields: args.fields,
           title: args.title,
           onSave: args.onSave,
+          widget: args.widget,
           key: args.key,
         ),
       );
@@ -286,6 +287,7 @@ class ChangeRoute extends PageRouteInfo<ChangeRouteArgs> {
     List<FieldModel>? fields,
     String? title,
     void Function()? onSave,
+    Widget? widget,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
@@ -294,6 +296,7 @@ class ChangeRoute extends PageRouteInfo<ChangeRouteArgs> {
             fields: fields,
             title: title,
             onSave: onSave,
+            widget: widget,
             key: key,
           ),
           initialChildren: children,
@@ -309,6 +312,7 @@ class ChangeRouteArgs {
     this.fields,
     this.title,
     this.onSave,
+    this.widget,
     this.key,
   });
 
@@ -318,10 +322,12 @@ class ChangeRouteArgs {
 
   final void Function()? onSave;
 
+  final Widget? widget;
+
   final Key? key;
 
   @override
   String toString() {
-    return 'ChangeRouteArgs{fields: $fields, title: $title, onSave: $onSave, key: $key}';
+    return 'ChangeRouteArgs{fields: $fields, title: $title, onSave: $onSave, widget: $widget, key: $key}';
   }
 }

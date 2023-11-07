@@ -16,7 +16,7 @@ const Color kWarningColor = Color(0xFFFFc107);
 
 const Color kTextColor = Color(0xFF2A2B2D);
 
-const Color kScreenBackgroundColor = Color(0xFFF4F6F9);
+const Color kScreenBackgroundColor = Color(0xFF343A40);
 
 class AppThemeData {
   AppThemeData._();
@@ -33,7 +33,8 @@ class AppThemeData {
         foregroundColor: Colors.white,
       ),
       scaffoldBackgroundColor: kScreenBackgroundColor,
-      drawerTheme: const DrawerThemeData(backgroundColor: Color(0xFF343A40)),
+      drawerTheme:
+          const DrawerThemeData(backgroundColor: kScreenBackgroundColor),
       colorScheme: const ColorScheme(
         brightness: Brightness.light,
         primary: kPrimaryColor,
@@ -106,9 +107,44 @@ class AppThemeData {
     );
   }
 
+  final inputDecorationTheme = InputDecorationTheme(
+      labelStyle: MaterialStateTextStyle.resolveWith((states) {
+        if (states.contains(MaterialState.error)) {
+          return TextStyle(color: BC.red);
+        } else if (states.contains(MaterialState.focused)) {
+          return TextStyle(color: BC.white);
+        } else {
+          return TextStyle(color: BC.white.withOpacity(0.8));
+        }
+      }),
+      floatingLabelStyle: MaterialStateTextStyle.resolveWith((states) {
+        if (states.contains(MaterialState.error)) {
+          return TextStyle(color: BC.red);
+        } else if (states.contains(MaterialState.focused)) {
+          return TextStyle(color: BC.white);
+        } else {
+          return TextStyle(color: BC.white.withOpacity(0.8));
+        }
+      }),
+      // labelStyle: TextStyle(color: BC.white),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: BC.white.withOpacity(0.8), width: 1),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: BC.white, width: 1),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: BC.red, width: 1),
+      ),
+      border: OutlineInputBorder(
+        borderSide: BorderSide(color: BC.white.withOpacity(0.8), width: 4),
+      ));
+
   ThemeData dark() {
     final themeData = ThemeData.dark().copyWith(
-      drawerTheme: const DrawerThemeData(backgroundColor: Color(0xFF343A40)),
+      drawerTheme:
+          const DrawerThemeData(backgroundColor: kScreenBackgroundColor),
+      scaffoldBackgroundColor: kScreenBackgroundColor,
       appBarTheme: const AppBarTheme(
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: kPrimaryColor,
@@ -124,40 +160,65 @@ class AppThemeData {
           onError: BC.red,
           background: BC.gray,
           onBackground: BC.gray,
-          surface: BC.black,
-          onSurface: BC.black),
-      inputDecorationTheme: InputDecorationTheme(
-          labelStyle: MaterialStateTextStyle.resolveWith((states) {
-            if (states.contains(MaterialState.error)) {
-              return TextStyle(color: BC.red);
-            } else if (states.contains(MaterialState.focused)) {
-              return TextStyle(color: BC.white);
-            } else {
-              return TextStyle(color: BC.white.withOpacity(0.8));
-            }
-          }),
-          floatingLabelStyle: MaterialStateTextStyle.resolveWith((states) {
-            if (states.contains(MaterialState.error)) {
-              return TextStyle(color: BC.red);
-            } else if (states.contains(MaterialState.focused)) {
-              return TextStyle(color: BC.white);
-            } else {
-              return TextStyle(color: BC.white.withOpacity(0.8));
-            }
-          }),
-          // labelStyle: TextStyle(color: BC.white),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: BC.white.withOpacity(0.8), width: 1),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: BC.white, width: 1),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: BC.red, width: 1),
-          ),
-          border: OutlineInputBorder(
-            borderSide: BorderSide(color: BC.white.withOpacity(0.8), width: 4),
-          )),
+          surface: BC.white,
+          onSurface: BC.white),
+      datePickerTheme: DatePickerThemeData(
+        rangePickerElevation: 1,
+        elevation: 1,
+        backgroundColor: kScreenBackgroundColor,
+        headerBackgroundColor: BC.green,
+        headerForegroundColor: BC.white,
+        rangePickerHeaderForegroundColor: BC.white,
+        weekdayStyle: TextStyle(color: BC.white),
+        yearForegroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.selected)) {
+            return BC.white;
+          } else {
+            return BC.white;
+          }
+        }),
+        yearBackgroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.selected)) {
+            return BC.green;
+          } else if (states.contains(MaterialState.hovered)) {
+            return BC.green.withOpacity(0.5);
+          } else {
+            return Colors.transparent;
+          }
+        }),
+        dayForegroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.selected)) {
+            return BC.white;
+          } else {
+            return BC.white;
+          }
+        }),
+        dayBackgroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.selected)) {
+            return BC.green;
+          } else if (states.contains(MaterialState.hovered)) {
+            return BC.green.withOpacity(0.5);
+          } else {
+            return Colors.transparent;
+          }
+        }),
+        todayBorder: BorderSide.none,
+        todayForegroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.selected)) {
+            return BC.white;
+          } else {
+            return BC.white;
+          }
+        }),
+        todayBackgroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.selected)) {
+            return BC.green;
+          } else {
+            return BC.white.withOpacity(0.5);
+          }
+        }),
+      ),
+      inputDecorationTheme: inputDecorationTheme,
       cardTheme: const CardTheme(
         margin: EdgeInsets.zero,
       ),

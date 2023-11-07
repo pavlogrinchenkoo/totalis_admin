@@ -50,7 +50,7 @@ class Request {
     // }
   }
 
-  Future<Map<String, dynamic>?> post(String url, body) async {
+  Future<dynamic> post(String url, body) async {
     final headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
@@ -65,6 +65,9 @@ class Request {
     if (response.statusCode == 401) {
       logout();
       return null;
+    }
+    if (res.runtimeType == List<dynamic>) {
+      return res.map((e) => e).toList();
     } else {
       return res;
     }

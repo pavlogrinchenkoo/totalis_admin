@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:json_annotation/json_annotation.dart';
+import 'package:totalis_admin/api/user/request.dart';
 
 part 'dto.g.dart';
 
@@ -11,7 +12,7 @@ class UserRequestModel {
   String? firebase_uid;
   int? image_id;
   bool? is_tester;
-  String? sex;
+  SexEnum? sex;
   String? birth;
   int? coach_id;
 
@@ -40,7 +41,7 @@ class UserModel {
   String? firebase_uid;
   int? image_id;
   bool? is_tester;
-  String? sex;
+  SexEnum? sex;
   String? birth;
   int? coach_id;
   String? time_create;

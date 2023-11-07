@@ -20,6 +20,8 @@ class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
   Future<void> init() async {
     setState(ScreenState(loading: true));
     final userCategories = await _userCategoriesRequest.getAll();
+    userCategories
+        ?.sort((a, b) => (a.user_id ?? 0) > (b.user_id ?? 0) ? 1 : -1);
     setState(currentState.copyWith(
         loading: false, userCategories: userCategories ?? []));
   }
@@ -33,7 +35,7 @@ class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
     replaceItem(changed, newUserCategory);
   }
 
-  openChange(BuildContext context, UserCategoryModel? item) {
+  openChange(BuildContext context, UserCategoryModel? item, {Widget? widget}) {
     final fields = [
       FieldModel(
           title: 'User id',
@@ -52,7 +54,7 @@ class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
           value: item?.is_favorite),
       FieldModel(
         title: 'Muted day',
-        type: FieldType.text,
+        type: FieldType.dateTime,
         controller: TextEditingController(text: item?.muted_day),
       ),
       FieldModel(
@@ -63,12 +65,14 @@ class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
       ),
       FieldModel(
         title: 'Chat summary long',
-        type: FieldType.bigText,
+        type: FieldType.text,
+        enable: false,
         controller: TextEditingController(text: item?.chat_summary_long),
       ),
       FieldModel(
         title: 'Chat summary short',
-        type: FieldType.bigText,
+        type: FieldType.text,
+        enable: false,
         controller: TextEditingController(text: item?.chat_summary_short),
       ),
       FieldModel(
@@ -80,6 +84,7 @@ class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
     context.router.push(ChangeRoute(
         fields: fields,
         title: 'User category',
+        widget: widget,
         onSave: () =>
             {onSave(context, fields, item, isCreate: item?.id == null)}));
   }
@@ -158,6 +163,16 @@ class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
     final res = await _userCategoriesRequest.create(requestModel);
     replaceItem(res, newModel);
     if (context.mounted) context.router.pop();
+  }
+
+  Future<UserCategoryModel?> getUserCategory(int? id) async {
+    final res = await _userCategoriesRequest.get(id.toString());
+    return res;
+  }
+
+  Future<int?> getUserCategoryId(int? id) async {
+    final res = await _userCategoriesRequest.get(id.toString());
+    return res?.category_id;
   }
 }
 

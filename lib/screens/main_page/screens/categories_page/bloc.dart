@@ -24,14 +24,14 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
         currentState.copyWith(loading: false, categories: categories ?? []));
   }
 
-  changeIsHome(CategoryModel? item, bool value) async {
-    if (item == null) return;
-    final newCategory = item;
-    newCategory.is_home = value;
-    final changed = await _categoriesRequest.change(newCategory);
-    if (changed?.id == null) return;
-    replaceItem(changed, newCategory);
-  }
+  // changeIsHome(CategoryModel? item, bool value) async {
+  //   if (item == null) return;
+  //   final newCategory = item;
+  //   newCategory.is_home = value;
+  //   final changed = await _categoriesRequest.change(newCategory);
+  //   if (changed?.id == null) return;
+  //   replaceItem(changed, newCategory);
+  // }
 
   openChange(BuildContext context, CategoryModel? item) {
     final fields = [
@@ -42,9 +42,7 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
       FieldModel(
           title: 'Name', controller: TextEditingController(text: item?.name)),
       FieldModel(
-          title: 'Icon id',
-          controller:
-              TextEditingController(text: (item?.icon_id ?? 0).toString())),
+          title: 'Image', type: FieldType.avatar, imageId: item?.icon_id),
       FieldModel(
           title: 'Sorted order',
           controller:
@@ -53,7 +51,10 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
           title: 'Description',
           controller: TextEditingController(text: item?.description)),
       FieldModel(
-          title: 'Is home', type: FieldType.checkbox, value: item?.is_home),
+          enable: false,
+          title: 'Is home',
+          type: FieldType.checkbox,
+          value: item?.is_home),
       FieldModel(
         title: 'Subcategories title',
         type: FieldType.text,
@@ -74,17 +75,17 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
       ),
       FieldModel(
         title: 'Prompt',
-        type: FieldType.text,
+        type: FieldType.bigText,
         controller: TextEditingController(text: item?.prompt),
       ),
       FieldModel(
         title: 'Prompt checkin',
-        type: FieldType.text,
+        type: FieldType.bigText,
         controller: TextEditingController(text: item?.prompt_checkin),
       ),
       FieldModel(
         title: 'Prompt followup',
-        type: FieldType.text,
+        type: FieldType.bigText,
         controller: TextEditingController(text: item?.prompt_followup),
       ),
       FieldModel(
@@ -116,11 +117,9 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
         id: item?.id,
         time_create: item?.time_create,
         name: fields.firstWhere((i) => i.title == 'Name').controller?.text,
-        icon_id: int.parse(
-            fields.firstWhere((i) => i.title == 'Icon id').controller?.text ??
-                '0'),
+        icon_id: fields.firstWhere((i) => i.title == 'Image').imageId,
         sort_order: int.parse(
-            fields.firstWhere((i) => i.title == 'Icon id').controller?.text ??
+            fields.firstWhere((i) => i.title == 'Sorted order').controller?.text ??
                 '0'),
         description:
             fields.firstWhere((i) => i.title == 'Description').controller?.text,
@@ -133,9 +132,15 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
             fields.firstWhere((i) => i.title == 'Show checkin history').value ??
                 false,
         checkin_enabled:
-            fields.firstWhere((i) => i.title == 'Checkin enabled').value ?? false,
-        guidelines_file_link: fields.firstWhere((i) => i.title == 'Guidelines file link').controller?.text ?? '',
-        prompt: fields.firstWhere((i) => i.title == 'Prompt').controller?.text ?? '',
+            fields.firstWhere((i) => i.title == 'Checkin enabled').value ??
+                false,
+        guidelines_file_link: fields
+                .firstWhere((i) => i.title == 'Guidelines file link')
+                .controller
+                ?.text ??
+            '',
+        prompt:
+            fields.firstWhere((i) => i.title == 'Prompt').controller?.text ?? '',
         prompt_checkin: fields.firstWhere((i) => i.title == 'Prompt checkin').controller?.text ?? '',
         prompt_followup: fields.firstWhere((i) => i.title == 'Prompt followup').controller?.text ?? '',
         followup_chat_enabled: fields.firstWhere((i) => i.title == 'Followup chat enabled').value,
@@ -186,6 +191,11 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
     final res = await _categoriesRequest.create(requestModel);
     replaceItem(res, newModel);
     if (context.mounted) context.router.pop();
+  }
+
+  Future<CategoryModel?> getCategory(int? id) async {
+    final res = await _categoriesRequest.get(id.toString());
+    return res;
   }
 }
 

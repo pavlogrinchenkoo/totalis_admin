@@ -32,6 +32,9 @@ class _CustomSheetWidgetState extends State<CustomSheetWidget> {
           dataTableTheme: appDataTableTheme?.dataTableThemeData,
         ),
         child: DataTable(
+            horizontalMargin: 10,
+            columnSpacing: 16,
+            checkboxHorizontalMargin: 0,
             showCheckboxColumn: false,
             showBottomBorder: true,
             rows: widget.rows,

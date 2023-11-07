@@ -10,6 +10,12 @@ class CategoriesRequest {
     return CategoryModel.fromJson(res);
   }
 
+  Future<CategoryModel?> get(String id) async {
+    final res = await _request.get('api/admin/category/get/id/$id');
+    if (res == null) return null;
+    return CategoryModel.fromJson(res);
+  }
+
   Future<List<CategoryModel>?> getAll() async {
     final res = await _request.get('api/admin/category/get/page/0');
     if (res == null) return null;
