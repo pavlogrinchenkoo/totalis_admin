@@ -1,4 +1,6 @@
 import 'dart:convert';
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:js' as js;
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
@@ -117,6 +119,7 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
   Widget build(BuildContext context) {
     if (widget.field?.type == FieldType.text) {
       return FormBuilderTextField(
+        onChanged: (value) => js.context.callMethod('enableSpellCheck'),
         controller: widget.field?.controller,
         enabled: widget.field?.enable ?? true,
         name: widget.field?.title ?? '',
@@ -133,6 +136,7 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
       return Stack(
         children: [
           FormBuilderTextField(
+            onChanged: (value) => js.context.callMethod('enableSpellCheck'),
             minLines: 10,
             maxLines: 10,
             controller: widget.field?.controller,
@@ -174,6 +178,7 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
       );
     } else if (widget.field?.type == FieldType.email) {
       return FormBuilderTextField(
+        onChanged: (value) => js.context.callMethod('enableSpellCheck'),
         controller: widget.field?.controller,
         enabled: widget.field?.enable ?? true,
         name: widget.field?.title ?? '',

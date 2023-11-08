@@ -3,11 +3,14 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:totalis_admin/generated/assets.gen.dart';
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/widgets/chage_page.dart';
+
+// ignore: avoid_web_libraries_in_flutter
 import 'dart:js' as js;
+
+import '../theme/themes.dart';
 
 class CustomBottomSheetTextField {
   show(BuildContext context, FieldModel? field) {
-    final themeData = Theme.of(context);
     return showGeneralDialog(
         context: context,
         barrierColor: Colors.black12.withOpacity(0.6),
@@ -74,8 +77,8 @@ class CustomBottomSheetTextField {
                     controller: field?.controller,
                     enabled: field?.enable ?? true,
                     name: field?.title ?? '',
-                    style: BS.reg16.apply(color: BC.black),
                     textAlign: TextAlign.start,
+                    style: TextStyle(color: BC.black),
                     textAlignVertical: TextAlignVertical.top,
                     cursorColor: BC.black,
                     decoration: InputDecoration(

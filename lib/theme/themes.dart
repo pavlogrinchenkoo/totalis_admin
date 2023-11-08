@@ -144,14 +144,13 @@ class AppThemeData {
     final themeData = ThemeData.dark().copyWith(
       drawerTheme:
           const DrawerThemeData(backgroundColor: kScreenBackgroundColor),
-      scaffoldBackgroundColor: kScreenBackgroundColor,
       appBarTheme: const AppBarTheme(
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: kPrimaryColor,
         foregroundColor: Colors.white,
       ),
       textSelectionTheme: TextSelectionThemeData(
-        cursorColor: BC.black,
+        cursorColor: BC.green,
         selectionColor: BC.green.withOpacity(0.2),
         selectionHandleColor: BC.green.withOpacity(0.2),
       ),
