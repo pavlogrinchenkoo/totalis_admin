@@ -150,6 +150,11 @@ class AppThemeData {
         backgroundColor: kPrimaryColor,
         foregroundColor: Colors.white,
       ),
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: BC.black,
+        selectionColor: BC.green.withOpacity(0.2),
+        selectionHandleColor: BC.green.withOpacity(0.2),
+      ),
       colorScheme: ColorScheme(
           brightness: Brightness.dark,
           primary: BC.white,

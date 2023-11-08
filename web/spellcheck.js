@@ -1,0 +1,1 @@
+function enableSpellCheck() { document.activeElement.setAttribute('spellcheck','true');}

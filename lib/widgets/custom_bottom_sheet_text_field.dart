@@ -3,9 +3,11 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:totalis_admin/generated/assets.gen.dart';
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/widgets/chage_page.dart';
+import 'dart:js' as js;
 
 class CustomBottomSheetTextField {
   show(BuildContext context, FieldModel? field) {
+    final themeData = Theme.of(context);
     return showGeneralDialog(
         context: context,
         barrierColor: Colors.black12.withOpacity(0.6),
@@ -64,6 +66,8 @@ class CustomBottomSheetTextField {
                           bottomRight: Radius.circular(6),
                           bottomLeft: Radius.circular(6))),
                   child: FormBuilderTextField(
+                    onChanged: (value) =>
+                        js.context.callMethod('enableSpellCheck'),
                     expands: true,
                     maxLines: null,
                     minLines: null,
