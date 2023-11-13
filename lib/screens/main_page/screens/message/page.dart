@@ -113,9 +113,9 @@ class _MessagePageState extends State<MessagePage> {
 
   _getStringRole(RoleEnum? role) {
     switch (role) {
-      case RoleEnum.User:
+      case RoleEnum.user:
         return 'User';
-      case RoleEnum.Assistant:
+      case RoleEnum.assistant:
         return 'Assistant';
       default:
         return '';

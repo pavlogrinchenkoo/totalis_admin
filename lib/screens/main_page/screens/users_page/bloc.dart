@@ -54,8 +54,8 @@ class UsersBloc extends BlocBaseWithState<ScreenState> {
           controller: TextEditingController(text: item?.firebase_uid)),
       FieldModel(
           title: 'Avatar', type: FieldType.avatar, imageId: item?.image_id),
-      // FieldModel(
-      //     title: 'Is tester', type: FieldType.checkbox, value: item?.is_tester),
+      FieldModel(
+          title: 'Is tester', type: FieldType.checkbox, value: item?.is_tester, enable: false),
       FieldModel(
           title: 'Sex',
           type: FieldType.dropdown,
@@ -89,7 +89,7 @@ class UsersBloc extends BlocBaseWithState<ScreenState> {
             fields.firstWhere((i) => i.title == 'First name').controller?.text,
         last_name:
             fields.firstWhere((i) => i.title == 'Last name').controller?.text,
-        // is_tester: fields.firstWhere((i) => i.title == 'Is tester').value,
+        is_tester: fields.firstWhere((i) => i.title == 'Is tester').value ?? false,
         sex: fields.firstWhere((i) => i.title == 'Sex').enumValue,
         birth: fields.firstWhere((i) => i.title == 'Birthday').controller?.text,
         coach_id: int.parse(
@@ -112,7 +112,7 @@ class UsersBloc extends BlocBaseWithState<ScreenState> {
       firebase_uid: newModel.firebase_uid,
       first_name: newModel.first_name,
       last_name: newModel.last_name,
-      is_tester: newModel.is_tester,
+      is_tester: newModel.is_tester ?? false,
       sex: newModel.sex,
       birth: newModel.birth,
       image_id: newModel.image_id,
