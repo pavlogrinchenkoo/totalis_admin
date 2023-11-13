@@ -65,6 +65,6 @@ class MessageModel {
 }
 
 enum RoleEnum {
-  user,
-  assistant
+  User,
+  Assistant
 }
