@@ -84,6 +84,11 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
         controller: TextEditingController(text: item?.prompt_checkin),
       ),
       FieldModel(
+        title: 'Prompt checkin proposal',
+        type: FieldType.bigText,
+        controller: TextEditingController(text: item?.prompt_checkin_proposal),
+      ),
+      FieldModel(
         title: 'Prompt followup',
         type: FieldType.bigText,
         controller: TextEditingController(text: item?.prompt_followup),
@@ -118,9 +123,11 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
         time_create: item?.time_create,
         name: fields.firstWhere((i) => i.title == 'Name').controller?.text,
         icon_id: fields.firstWhere((i) => i.title == 'Image').imageId,
-        sort_order: int.parse(
-            fields.firstWhere((i) => i.title == 'Sorted order').controller?.text ??
-                '0'),
+        sort_order: int.parse(fields
+                .firstWhere((i) => i.title == 'Sorted order')
+                .controller
+                ?.text ??
+            '0'),
         description:
             fields.firstWhere((i) => i.title == 'Description').controller?.text,
         is_home: fields.firstWhere((i) => i.title == 'Is home').value,
@@ -139,9 +146,9 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
                 .controller
                 ?.text ??
             '',
-        prompt:
-            fields.firstWhere((i) => i.title == 'Prompt').controller?.text ?? '',
+        prompt: fields.firstWhere((i) => i.title == 'Prompt').controller?.text ?? '',
         prompt_checkin: fields.firstWhere((i) => i.title == 'Prompt checkin').controller?.text ?? '',
+        prompt_checkin_proposal: fields.firstWhere((i) => i.title == 'Prompt checkin proposal').controller?.text ?? '',
         prompt_followup: fields.firstWhere((i) => i.title == 'Prompt followup').controller?.text ?? '',
         followup_chat_enabled: fields.firstWhere((i) => i.title == 'Followup chat enabled').value,
         followup_timer: int.tryParse(fields.firstWhere((i) => i.title == 'Followup timer').controller?.text ?? '0'));
@@ -184,6 +191,7 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
         guidelines_file_link: newModel.guidelines_file_link,
         prompt: newModel.prompt,
         prompt_checkin: newModel.prompt_checkin,
+        prompt_checkin_proposal: newModel.prompt_checkin_proposal,
         prompt_followup: newModel.prompt_followup,
         followup_chat_enabled: newModel.followup_chat_enabled,
         followup_timer: newModel.followup_timer);

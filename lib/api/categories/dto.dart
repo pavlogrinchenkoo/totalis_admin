@@ -18,6 +18,7 @@ class CategoryModelRequest {
   String? guidelines_file_link;
   String? prompt;
   String? prompt_checkin;
+  String? prompt_checkin_proposal;
   String? prompt_followup;
   bool? followup_chat_enabled;
   int? followup_timer;
@@ -35,6 +36,7 @@ class CategoryModelRequest {
     this.guidelines_file_link,
     this.prompt,
     this.prompt_checkin,
+    this.prompt_checkin_proposal,
     this.prompt_followup,
     this.followup_chat_enabled,
     this.followup_timer,
@@ -60,6 +62,7 @@ class CategoryModel {
   String? guidelines_file_link;
   String? prompt;
   String? prompt_checkin;
+  String? prompt_checkin_proposal;
   String? prompt_followup;
   bool? followup_chat_enabled;
   int? followup_timer;
@@ -79,6 +82,7 @@ class CategoryModel {
     this.guidelines_file_link,
     this.prompt,
     this.prompt_checkin,
+    this.prompt_checkin_proposal,
     this.prompt_followup,
     this.followup_chat_enabled,
     this.followup_timer,
