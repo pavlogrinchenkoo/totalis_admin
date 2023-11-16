@@ -29,16 +29,17 @@ class _MainPageState extends State<MainPage> {
         bloc: _bloc,
         builder: (context, ScreenState state) {
           return CustomAutoTabsScaffold(
-            routes: const [
-              AdminsRoute(),
-              UsersRoute(),
-              CategoriesRoute(),
-              UserCategoriesRoute(),
-              CoachesRoute(),
-              CheckInsRoute(),
-              RecommendationRoute(),
-              VariableRoute(),
-              MessageRoute(),
+            routes: [
+              const AdminsRoute(),
+              const UsersRoute(),
+              const CategoriesRoute(),
+              const UserCategoriesRoute(),
+              const CoachesRoute(),
+              const CheckInsRoute(),
+              const RecommendationRoute(),
+              const VariableRoute(),
+              const MessageRoute(),
+              PromptPreviewRoute(),
             ],
             bodyBuilder: (_, tabsRouter) {
               return CustomSideBar(

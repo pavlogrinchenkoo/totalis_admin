@@ -32,9 +32,12 @@ class Request {
     // try {
     http.Response response =
         await http.get(Uri.parse(baseUrl + url), headers: headers);
-    final res = jsonDecode(response.body);
-    alice.onHttpResponse(response);
 
+    final res = const JsonDecoder()
+        .convert(const Utf8Decoder().convert(response.body.codeUnits));
+    // alice.onHttpResponse(response);
+
+    // alice.showInspector();
     if (response.statusCode == 401) {
       logout();
       return null;
@@ -60,8 +63,9 @@ class Request {
 
     http.Response response = await http.post(Uri.parse(baseUrl + url),
         body: jsonEncode(body), headers: headers);
-    final res = jsonDecode(response.body);
-    alice.onHttpResponse(response);
+    final res = const JsonDecoder()
+        .convert(const Utf8Decoder().convert(response.body.codeUnits));
+    // alice.onHttpResponse(response);
     if (response.statusCode == 401) {
       logout();
       return null;

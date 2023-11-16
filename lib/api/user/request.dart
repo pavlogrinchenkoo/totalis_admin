@@ -10,8 +10,8 @@ class UserRequest {
     return UserModel.fromJson(res);
   }
 
-  Future<List<UserModel>?> getAll() async {
-    final res = await _request.get('api/admin/users/get/page/0');
+  Future<List<UserModel>?> getAll({int page = 0}) async {
+    final res = await _request.get('api/admin/users/get/page/$page');
     if (res == null) return null;
     return (res as List).map((e) => UserModel.fromJson(e)).toList();
   }

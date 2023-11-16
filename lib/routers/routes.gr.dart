@@ -100,6 +100,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    PromptPreviewRoute.name: (routeData) {
+      final args = routeData.argsAs<PromptPreviewRouteArgs>(
+          orElse: () => const PromptPreviewRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: PromptPreviewPage(
+          field: args.field,
+          key: args.key,
+        ),
+      );
+    },
   };
 }
 
@@ -329,5 +340,43 @@ class ChangeRouteArgs {
   @override
   String toString() {
     return 'ChangeRouteArgs{fields: $fields, title: $title, onSave: $onSave, widget: $widget, key: $key}';
+  }
+}
+
+/// generated route for
+/// [PromptPreviewPage]
+class PromptPreviewRoute extends PageRouteInfo<PromptPreviewRouteArgs> {
+  PromptPreviewRoute({
+    FieldModel? field,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          PromptPreviewRoute.name,
+          args: PromptPreviewRouteArgs(
+            field: field,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'PromptPreviewRoute';
+
+  static const PageInfo<PromptPreviewRouteArgs> page =
+      PageInfo<PromptPreviewRouteArgs>(name);
+}
+
+class PromptPreviewRouteArgs {
+  const PromptPreviewRouteArgs({
+    this.field,
+    this.key,
+  });
+
+  final FieldModel? field;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'PromptPreviewRouteArgs{field: $field, key: $key}';
   }
 }

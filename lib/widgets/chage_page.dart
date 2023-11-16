@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:js' as js;
 
@@ -13,6 +14,7 @@ import 'package:mime/mime.dart';
 import 'package:totalis_admin/api/images/dto.dart';
 import 'package:totalis_admin/api/images/request.dart';
 import 'package:totalis_admin/generated/assets.gen.dart';
+import 'package:totalis_admin/screens/main_page/screens/prompt_preview/page.dart';
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/theme/theme_extensions/app_button_theme.dart';
 import 'package:totalis_admin/utils/spaces.dart';
@@ -63,7 +65,8 @@ class ChangePage extends StatelessWidget {
                           Container(
                             width: 400,
                             padding: const EdgeInsets.only(top: 24),
-                            child: CustomFieldWidget(field: field),
+                            child: CustomFieldWidget(
+                                field: field, formKey: _formKey),
                           ),
                         widget ?? const SizedBox(),
                         Padding(
@@ -106,9 +109,11 @@ class ChangePage extends StatelessWidget {
 }
 
 class CustomFieldWidget extends StatefulWidget {
-  const CustomFieldWidget({this.field, super.key});
+  const CustomFieldWidget({this.field, this.formKey, this.onSave, super.key});
 
   final FieldModel? field;
+  final GlobalKey<FormBuilderState>? formKey;
+  final void Function()? onSave;
 
   @override
   State<CustomFieldWidget> createState() => _CustomFieldWidgetState();
@@ -117,6 +122,9 @@ class CustomFieldWidget extends StatefulWidget {
 class _CustomFieldWidgetState extends State<CustomFieldWidget> {
   @override
   Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
+    print(widget.field?.controller?.text);
+
     if (widget.field?.type == FieldType.text) {
       return FormBuilderTextField(
         onChanged: (value) => js.context.callMethod('enableSpellCheck'),
@@ -133,36 +141,78 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
             : null,
       );
     } else if (widget.field?.type == FieldType.bigText) {
-      return Stack(
+      return Column(
         children: [
-          FormBuilderTextField(
-            onChanged: (value) => js.context.callMethod('enableSpellCheck'),
-            minLines: 10,
-            maxLines: 10,
-            controller: widget.field?.controller,
-            enabled: widget.field?.enable ?? true,
-            name: widget.field?.title ?? '',
-            decoration: InputDecoration(
-              labelText: widget.field?.title ?? '',
-              hintText: widget.field?.title ?? '',
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-            ),
-            validator: (widget.field?.required ?? false)
-                ? FormBuilderValidators.required()
-                : null,
+          Stack(
+            children: [
+              FormBuilderTextField(
+                onChanged: (value) => js.context.callMethod('enableSpellCheck'),
+                minLines: 10,
+                maxLines: 10,
+                controller: widget.field?.controller,
+                enabled: widget.field?.enable ?? true,
+                name: widget.field?.title ?? '',
+                decoration: InputDecoration(
+                  labelText: widget.field?.title ?? '',
+                  hintText: widget.field?.title ?? '',
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                ),
+                validator: (widget.field?.required ?? false)
+                    ? FormBuilderValidators.required()
+                    : null,
+              ),
+              Positioned(
+                  right: 1,
+                  bottom: 1,
+                  child: InkWell(
+                    onTap: () => CustomBottomSheetTextField()
+                        .show(context, widget.field),
+                    child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                            color: BC.green, borderRadius: BRadius.r6),
+                        child: Assets.openBigTextfield.svg()),
+                  )),
+            ],
           ),
-          Positioned(
-              right: 1,
-              bottom: 1,
-              child: InkWell(
-                onTap: () =>
-                    CustomBottomSheetTextField().show(context, widget.field),
-                child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                        color: BC.green, borderRadius: BRadius.r6),
-                    child: Assets.openBigTextfield.svg()),
-              )),
+          if (widget.field?.title == 'Prompt')
+            Column(
+              children: [
+                Space.h16,
+                ElevatedButton(
+                  style: themeData.extension<AppButtonTheme>()!.primaryElevated,
+                  onPressed: () {
+                    if (widget.formKey?.currentState?.validate() ?? false) {
+                      // Validation passed.
+                      widget.onSave?.call();
+                      PromptPreviewBottomSheet().show(context, widget.field);
+                    } else {
+                      // Validation failed.
+                    }
+                  },
+                  child: const Text('Propmpt preview'),
+                ),
+              ],
+            ),
+          if (widget.field?.title == 'Prompt checkin')
+            Column(
+              children: [
+                Space.h16,
+                ElevatedButton(
+                  style: themeData.extension<AppButtonTheme>()!.primaryElevated,
+                  onPressed: () {
+                    if (widget.formKey?.currentState?.validate() ?? false) {
+                      // Validation passed.
+                      widget.onSave?.call();
+                      PromptPreviewBottomSheet().show(context, widget.field);
+                    } else {
+                      // Validation failed.
+                    }
+                  },
+                  child: const Text('Propmpt preview'),
+                ),
+              ],
+            )
         ],
       );
     } else if (widget.field?.type == FieldType.checkbox) {

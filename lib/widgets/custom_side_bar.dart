@@ -23,6 +23,8 @@ class CustomSideBar extends StatelessWidget {
     CustomSideBarItem(title: 'Recommendations', icon: Assets.rec.svg()),
     CustomSideBarItem(title: 'Variables', icon: Assets.variables.svg()),
     CustomSideBarItem(title: 'Messages', icon: Assets.messages.svg()),
+    CustomSideBarItem(
+        title: 'Prompts preview', icon: const Icon(Icons.preview)),
   ];
 
   @override
