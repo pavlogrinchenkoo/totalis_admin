@@ -90,15 +90,44 @@ class _PromptPreviewPageState extends State<PromptPreviewPage> {
                         if (widget.field?.title == 'Prompt' ||
                             widget.field?.title == 'Prompt checkin proposal' ||
                             widget.field?.title == 'Prompt checkin')
-                          UserSearchWidget(bloc: userBloc),
+                          Expanded(
+                            child: Row(
+                              children: [
+                                UserSearchWidget(bloc: userBloc),
+                                Space.w22,
+                              ],
+                            ),
+                          ),
                         if (widget.field?.title == 'Prompt' ||
                             widget.field?.title == 'Prompt checkin proposal')
-                          UserCategorySearchWidget(bloc: userCategoryBloc),
+                          Expanded(
+                            child: Row(
+                              children: [
+                                UserCategorySearchWidget(
+                                    bloc: userCategoryBloc),
+                                Space.w22,
+                              ],
+                            ),
+                          ),
                         if (widget.field?.title == 'Prompt' ||
                             widget.field?.title == 'Prompt checkin')
-                          MessagesSearchWidget(bloc: messagesBloc),
+                          Expanded(
+                            child: Row(
+                              children: [
+                                MessagesSearchWidget(bloc: messagesBloc),
+                                Space.w22,
+                              ],
+                            ),
+                          ),
                         if (widget.field?.title == 'Prompt checkin')
-                          CheckinsSearchWidget(bloc: checkinsBloc)
+                          Expanded(
+                            child: Row(
+                              children: [
+                                CheckinsSearchWidget(bloc: checkinsBloc),
+                                Space.w22,
+                              ],
+                            ),
+                          ),
                       ]),
                     ),
                     Space.h24,
@@ -107,7 +136,7 @@ class _PromptPreviewPageState extends State<PromptPreviewPage> {
                             .extension<AppButtonTheme>()!
                             .primaryElevated,
                         onPressed: () => _bloc.preview(
-                          context,
+                            context,
                             widget.field,
                             userCategoryBloc,
                             messagesBloc,
