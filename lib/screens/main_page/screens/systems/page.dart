@@ -1,5 +1,6 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:totalis_admin/api/system/dto.dart';
 import 'package:totalis_admin/api/variable/dto.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
@@ -36,7 +37,7 @@ class _SystemPageState extends State<SystemPage> {
     return CustomStreamBuilder(
         bloc: _bloc,
         builder: (context, ScreenState state) {
-          if (state.loading && state.variables.isEmpty) {
+          if (state.loading && state.system != null) {
             return const CustomProgressIndicator();
           } else {
             return Scaffold(
@@ -47,7 +48,7 @@ class _SystemPageState extends State<SystemPage> {
                 children: [
                   CustomSheetHeaderWidget(
                       title: 'Systems',
-                      onSave: () => _bloc.openChange(context, VariableModel()),
+                      onSave: () => _bloc.openChange(context, state.system),
                       customText: 'Change'),
                   Space.h24,
                   Expanded(
@@ -64,12 +65,14 @@ class _SystemPageState extends State<SystemPage> {
                               ),
                           ],
                           rows: <DataRow>[
-                            for (final item in state.variables)
+                            for (final item in (state.system ?? SystemModel())
+                                .toJson()
+                                .keys)
                               DataRow(
                                 cells: <DataCell>[
-                                  DataCell(SheetText(text: item?.id)),
-                                  DataCell(SheetText(text: item?.name)),
-                                  DataCell(SheetText(text: item?.value)),
+                                  DataCell(SheetText(text: item)),
+                                  DataCell(SheetText(
+                                      text: state.system?.toJson()[item])),
                                 ],
                               ),
                           ],

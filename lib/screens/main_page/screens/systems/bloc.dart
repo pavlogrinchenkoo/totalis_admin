@@ -22,76 +22,142 @@ class SystemBloc extends BlocBaseWithState<ScreenState> {
 
   Future<void> init() async {
     setState(ScreenState(loading: true));
-    final variables = await _variableRequest.getAll();
     final system = await _systemRequest.get();
-    setState(currentState.copyWith(
-        loading: false, variables: variables ?? [], system: system?.first));
+    setState(currentState.copyWith(loading: false, system: system));
   }
 
-  openChange(BuildContext context, VariableModel? item) {
+  openChange(BuildContext context, SystemModel? item) {
     final fields = [
       FieldModel(
-        title: 'Name',
+        title: 'Openapi key',
         type: FieldType.text,
-        required: true,
-        controller: TextEditingController(text: item?.name),
+        controller: TextEditingController(text: item?.openapi_key),
       ),
       FieldModel(
-        title: 'Value',
+        title: 'Model gpt version',
         type: FieldType.text,
-        required: true,
-        controller: TextEditingController(text: item?.value),
+        controller: TextEditingController(text: item?.model_gpt_version),
+      ),
+      FieldModel(
+        title: 'Prompt why',
+        type: FieldType.bigText,
+        controller: TextEditingController(text: item?.prompt_why),
+      ),
+      FieldModel(
+        title: 'Prompt how',
+        type: FieldType.bigText,
+        controller: TextEditingController(text: item?.prompt_how),
+      ),
+      FieldModel(
+        title: 'Model temperature',
+        type: FieldType.text,
+        controller: TextEditingController(
+            text: (item?.model_temperature ?? 0).toString()),
+      ),
+      FieldModel(
+        title: 'Model max response token',
+        type: FieldType.text,
+        controller: TextEditingController(
+            text: (item?.model_max_response_token ?? '').toString()),
+      ),
+      FieldModel(
+        title: 'Model presence penalty',
+        type: FieldType.text,
+        controller: TextEditingController(
+            text: (item?.model_presence_penalty ?? '').toString()),
+      ),
+      FieldModel(
+        title: 'Model frequency penalty',
+        type: FieldType.text,
+        controller: TextEditingController(
+            text: (item?.model_frequency_penalty ?? '').toString()),
+      ),
+      FieldModel(
+        title: 'Context limit',
+        type: FieldType.text,
+        controller:
+            TextEditingController(text: (item?.context_limit ?? '').toString()),
+      ),
+      FieldModel(
+        title: 'Show msg history',
+        type: FieldType.text,
+        controller: TextEditingController(
+            text: (item?.show_msg_history ?? '').toString()),
+      ),
+      FieldModel(
+        title: 'Summarize frequency',
+        type: FieldType.text,
+        controller: TextEditingController(
+            text: (item?.summarize_frequency ?? '').toString()),
+      ),
+      FieldModel(
+        title: 'Test days forward',
+        type: FieldType.text,
+        controller: TextEditingController(
+            text: (item?.test_days_forward ?? '').toString()),
+      ),
+      FieldModel(
+        title: 'Login timeout',
+        type: FieldType.text,
+        controller:
+            TextEditingController(text: (item?.login_timeout ?? '').toString()),
+      ),
+      FieldModel(
+        title: 'Message cache',
+        type: FieldType.text,
+        controller:
+            TextEditingController(text: (item?.message_cache ?? '').toString()),
       ),
     ];
 
     context.router.push(ChangeRoute(
         fields: fields,
-        title: 'New variable',
-        onSave: () =>
-            {onSave(context, fields, item, isCreate: item?.id == null)}));
+        title: 'Change system',
+        onSave: () => {onSave(context, fields, item)}));
   }
 
-  onSave(BuildContext context, List<FieldModel> fields, VariableModel? item,
-      {bool isCreate = false}) async {
-    final newModel = VariableModel(
-        name: fields.firstWhere((i) => i.title == 'Name').controller?.text,
-        value: fields.firstWhere((i) => i.title == 'Value').controller?.text,
+  onSave(
+      BuildContext context, List<FieldModel> fields, SystemModel? item) async {
+    final newModel = SystemModel(
+        openapi_key:
+            fields.firstWhere((i) => i.title == 'Openapi key').controller?.text,
+        model_gpt_version: fields
+            .firstWhere((i) => i.title == 'Model gpt version')
+            .controller
+            ?.text,
+        prompt_why:
+            fields.firstWhere((i) => i.title == 'Prompt why').controller?.text,
+        prompt_how:
+            fields.firstWhere((i) => i.title == 'Prompt how').controller?.text,
+        model_temperature: int.parse(fields
+                .firstWhere((i) => i.title == 'Model temperature')
+                .controller
+                ?.text ??
+            '0'),
+        model_max_response_token: int.parse(fields
+                .firstWhere((i) => i.title == 'Model max response token')
+                .controller
+                ?.text ??
+            '0'),
+        model_presence_penalty: int.parse(fields
+                .firstWhere((i) => i.title == 'Model presence penalty')
+                .controller
+                ?.text ??
+            '0'),
+        model_frequency_penalty: int.parse(
+            fields.firstWhere((i) => i.title == 'Model frequency penalty').controller?.text ?? '0'),
+        context_limit: int.parse(fields.firstWhere((i) => i.title == 'Context limit').controller?.text ?? '0'),
+        show_msg_history: int.parse(fields.firstWhere((i) => i.title == 'Show msg history').controller?.text ?? '0'),
+        summarize_frequency: int.parse(fields.firstWhere((i) => i.title == 'Summarize frequency').controller?.text ?? '0'),
+        test_days_forward: int.parse(fields.firstWhere((i) => i.title == 'Test days forward').controller?.text ?? '0'),
+        login_timeout: int.parse(fields.firstWhere((i) => i.title == 'Login timeout').controller?.text ?? '0'),
+        message_cache: int.parse(fields.firstWhere((i) => i.title == 'Message cache').controller?.text ?? '0'),
         id: item?.id,
         time_create: item?.time_create);
 
-    if (isCreate) {
-      onCreate(context, newModel);
-      return;
-    }
-    final res = await _variableRequest.change(newModel);
-    replaceItem(res, newModel);
+    final res = await _systemRequest.change(newModel);
     if (context.mounted) context.router.pop();
-  }
-
-  void replaceItem(VariableModel? changed, VariableModel? newVariable) {
-    if (changed?.id == null) return;
-    final variables = [...currentState.variables];
-    final index = variables.indexWhere((users) => users?.id == newVariable?.id);
-    if (index == -1) {
-      newVariable
-        ?..id = changed?.id
-        ..time_create = changed?.time_create;
-      variables.add(newVariable);
-    } else {
-      variables.replaceRange(index, index + 1, [changed]);
-    }
-    setState(currentState.copyWith(variables: variables));
-  }
-
-  Future<void> onCreate(BuildContext context, VariableModel newModel) async {
-    final requestModel = VariableRequestModel(
-      value: newModel.value,
-      name: newModel.name,
-    );
-
-    final res = await _variableRequest.create(requestModel);
-    replaceItem(res, newModel);
-    if (context.mounted) context.router.pop();
+    setState(currentState.copyWith(system: res));
   }
 }
 
