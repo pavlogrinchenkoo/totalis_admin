@@ -6,10 +6,11 @@ import 'package:totalis_admin/utils/spaces.dart';
 import 'package:totalis_admin/constants/dimens.dart';
 
 class CustomSheetHeaderWidget extends StatelessWidget {
-  const CustomSheetHeaderWidget({this.title, this.onSave, super.key});
+  const CustomSheetHeaderWidget({this.title, this.onSave, this.customText,  super.key});
 
   final String? title;
   final void Function()? onSave;
+  final String? customText;
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +28,11 @@ class CustomSheetHeaderWidget extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: kDefaultPadding * 0.5),
                 child: Icon(
-                  Icons.add,
+                  customText != null ? Icons.edit : Icons.add,
                   size: (themeData.textTheme.labelLarge!.fontSize! + 4.0),
                 ),
               ),
-              const Text('Create new'),
+              Text(customText ?? 'Create new'),
             ],
           )),
     ]);

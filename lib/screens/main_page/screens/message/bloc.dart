@@ -1,16 +1,20 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:totalis_admin/api/filters/dto.dart';
+import 'package:totalis_admin/api/filters/request.dart';
 import 'package:totalis_admin/api/messages/dto.dart';
 import 'package:totalis_admin/api/messages/request.dart';
 import 'package:totalis_admin/routers/routes.dart';
 import 'package:totalis_admin/utils/bloc_base.dart';
+import 'package:totalis_admin/utils/custom_function.dart';
 import 'package:totalis_admin/widgets/chage_page.dart';
 
 class MessageBloc extends BlocBaseWithState<ScreenState> {
   @override
   ScreenState get currentState => super.currentState!;
   final MessagesRequest _messageRequest = MessagesRequest();
+  final FilterRequest _filterRequest = FilterRequest();
   final GoogleSignIn? googleSignIn = GoogleSignIn();
 
   MessageBloc() {
@@ -19,18 +23,43 @@ class MessageBloc extends BlocBaseWithState<ScreenState> {
 
   Future<void> init() async {
     setState(ScreenState(loading: true));
-    final messages = await _messageRequest.getAll();
-    messages?.sort((a, b) => (b.id ?? 0) < (a.id ?? 0) ? -1 : 1);
-    setState(currentState.copyWith(loading: false, messages: messages ?? []));
+    await uploadItems();
+    setState(currentState.copyWith(loading: false));
   }
 
-  changeIsCheckin(MessageModel? item, bool value) async {
-    if (item == null) return;
-    final newCategory = item;
-    newCategory.is_checkin = value;
-    final changed = await _messageRequest.change(newCategory);
-    if (changed?.id == null) return;
-    replaceItem(changed, newCategory);
+  Future<void> uploadItems(
+      {int? page, bool? isAll, List<Filters?>? filters}) async {
+    if (currentState.isAll && filters == null) return;
+    final items = await _filterRequest.messagesFilters(QueryModel(
+        page: page ?? currentState.page,
+        count: 20,
+        filters: filters ?? currentState.filters ?? []));
+    if (items != null) {
+      final List<MessageModel?> newItems =
+          page == 0 ? [...items] : [...currentState.messages, ...items];
+      final newIsAll = (items.length) < 20;
+      setState(currentState.copyWith(
+          messages: newItems,
+          page: (page ?? currentState.page) + 1,
+          isAll: newIsAll));
+    } else {
+      setState(currentState.copyWith(isAll: true));
+    }
+  }
+
+  onSearch(Filters? filters) async {
+    if (filters == null) {
+      setState(currentState..copyWith(filters: [], page: 0, isAll: false));
+      uploadItems(page: 0, isAll: false, filters: []);
+      return null;
+    }
+    final newFilters =
+        containsInt(filters.field) || containsLevel(filters.value)
+            ? Filters(field: filters.field, value: int.tryParse(filters.value))
+            : filters;
+    setState(
+        currentState..copyWith(filters: [newFilters], page: 0, isAll: false));
+    uploadItems(page: 0, isAll: false, filters: [newFilters]);
   }
 
   openChange(BuildContext context, MessageModel? item) {
@@ -103,7 +132,8 @@ class MessageBloc extends BlocBaseWithState<ScreenState> {
     final newModel = MessageModel(
         text: fields.firstWhere((i) => i.title == 'Text').controller?.text,
         role: fields.firstWhere((i) => i.title == 'Role').enumValue,
-        is_checkin: fields.firstWhere((i) => i.title == 'Is checkin').value ?? false,
+        is_checkin:
+            fields.firstWhere((i) => i.title == 'Is checkin').value ?? false,
         checkin_id: int.tryParse(fields
                 .firstWhere((i) => i.title == 'Checkin id')
                 .controller
@@ -118,10 +148,8 @@ class MessageBloc extends BlocBaseWithState<ScreenState> {
             fields.firstWhere((i) => i.title == 'Coach id').controller?.text ??
                 '0'),
         tokens_used: int.tryParse(
-            fields.firstWhere((i) => i.title == 'Token used').controller?.text ??
-                '0'),
-        gpt_version:
-            fields.firstWhere((i) => i.title == 'Gpt version').controller?.text ?? '',
+            fields.firstWhere((i) => i.title == 'Token used').controller?.text ?? '0'),
+        gpt_version: fields.firstWhere((i) => i.title == 'Gpt version').controller?.text ?? '',
         id: item?.id,
         time_create: item?.time_create);
 
@@ -171,15 +199,31 @@ class ScreenState {
   final bool loading;
   final List<MessageModel?> messages;
   final List<String>? titles;
+  final List<Filters?>? filters;
+  final bool isAll;
+  final int page;
 
   ScreenState(
-      {this.loading = false, this.messages = const [], this.titles = const []});
+      {this.loading = false,
+      this.messages = const [],
+      this.titles = const [],
+      this.filters = const [],
+      this.isAll = false,
+      this.page = 0});
 
   ScreenState copyWith(
-      {bool? loading, List<MessageModel?>? messages, List<String>? titles}) {
+      {bool? loading,
+      List<MessageModel?>? messages,
+      List<String>? titles,
+      List<Filters?>? filters,
+      bool? isAll,
+      int? page}) {
     return ScreenState(
         loading: loading ?? this.loading,
         messages: messages ?? this.messages,
-        titles: titles ?? this.titles);
+        titles: titles ?? this.titles,
+        filters: filters ?? this.filters,
+        isAll: isAll ?? this.isAll,
+        page: page ?? this.page);
   }
 }

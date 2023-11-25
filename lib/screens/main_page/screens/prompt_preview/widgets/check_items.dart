@@ -17,7 +17,7 @@ class CheckItem extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [Text(text ?? ''), CustomCheckbox(value: isSelected)]),
+              children: [Expanded(child: Text(text ?? '')), CustomCheckbox(value: isSelected)]),
         ),
       ),
     );

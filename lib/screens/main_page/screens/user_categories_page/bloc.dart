@@ -1,16 +1,20 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:totalis_admin/api/filters/dto.dart';
+import 'package:totalis_admin/api/filters/request.dart';
 import 'package:totalis_admin/api/user_categories/dto.dart';
 import 'package:totalis_admin/api/user_categories/request.dart';
 import 'package:totalis_admin/routers/routes.dart';
 import 'package:totalis_admin/utils/bloc_base.dart';
+import 'package:totalis_admin/utils/custom_function.dart';
 import 'package:totalis_admin/widgets/chage_page.dart';
 
 class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
   @override
   ScreenState get currentState => super.currentState!;
   final UserCategoriesRequest _userCategoriesRequest = UserCategoriesRequest();
+  final FilterRequest _filterRequest = FilterRequest();
   final GoogleSignIn? googleSignIn = GoogleSignIn();
 
   UserCategoriesBloc() {
@@ -19,20 +23,43 @@ class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
 
   Future<void> init() async {
     setState(ScreenState(loading: true));
-    final userCategories = await _userCategoriesRequest.getAll();
-    userCategories
-        ?.sort((a, b) => (a.user_id ?? 0) > (b.user_id ?? 0) ? 1 : -1);
-    setState(currentState.copyWith(
-        loading: false, userCategories: userCategories ?? []));
+    await uploadItems();
+    setState(currentState.copyWith(loading: false));
   }
 
-  changeIsFavorite(UserCategoryModel? item, bool value) async {
-    if (item == null) return;
-    final newUserCategory = item;
-    newUserCategory.is_favorite = value;
-    final changed = await _userCategoriesRequest.change(newUserCategory);
-    if (changed?.id == null) return;
-    replaceItem(changed, newUserCategory);
+  Future<void> uploadItems(
+      {int? page, bool? isAll, List<Filters?>? filters}) async {
+    if (currentState.isAll && filters == null) return;
+    final items = await _filterRequest.userCategoryFilters(QueryModel(
+        page: page ?? currentState.page,
+        count: 20,
+        filters: filters ?? currentState.filters ?? []));
+    if (items != null) {
+      final List<UserCategoryModel?> newItems =
+          page == 0 ? [...items] : [...currentState.items, ...items];
+      final newIsAll = (items.length) < 20;
+      setState(currentState.copyWith(
+          items: newItems,
+          page: (page ?? currentState.page) + 1,
+          isAll: newIsAll));
+    } else {
+      setState(currentState.copyWith(isAll: true));
+    }
+  }
+
+  onSearch(Filters? filters) async {
+    if (filters == null) {
+      setState(currentState..copyWith(filters: [], page: 0, isAll: false));
+      uploadItems(page: 0, isAll: false, filters: []);
+      return null;
+    }
+    final newFilters =
+        containsInt(filters.field) || containsLevel(filters.value)
+            ? Filters(field: filters.field, value: int.tryParse(filters.value))
+            : filters;
+    setState(
+        currentState..copyWith(filters: [newFilters], page: 0, isAll: false));
+    uploadItems(page: 0, isAll: false, filters: [newFilters]);
   }
 
   openChange(BuildContext context, UserCategoryModel? item, {Widget? widget}) {
@@ -134,7 +161,7 @@ class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
 
   void replaceItem(UserCategoryModel? changed, UserCategoryModel? newUser) {
     if (changed?.id == null) return;
-    final admins = [...currentState.userCategories];
+    final admins = [...currentState.items];
     final index = admins.indexWhere((users) => users?.id == newUser?.id);
     if (index == -1) {
       newUser
@@ -144,7 +171,7 @@ class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
     } else {
       admins.replaceRange(index, index + 1, [changed]);
     }
-    setState(currentState.copyWith(userCategories: admins));
+    setState(currentState.copyWith(items: admins));
   }
 
   Future<void> onCreate(
@@ -166,11 +193,13 @@ class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
   }
 
   Future<UserCategoryModel?> getUserCategory(int? id) async {
+    if(id == null) return null;
     final res = await _userCategoriesRequest.get(id.toString());
     return res;
   }
 
   Future<int?> getUserCategoryId(int? id) async {
+    if(id == null) return null;
     final res = await _userCategoriesRequest.get(id.toString());
     return res?.category_id;
   }
@@ -178,21 +207,33 @@ class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
 
 class ScreenState {
   final bool loading;
-  final List<UserCategoryModel?> userCategories;
+  final List<UserCategoryModel?> items;
   final List<String>? titles;
+  final List<Filters?>? filters;
+  final bool isAll;
+  final int page;
 
   ScreenState(
       {this.loading = false,
-      this.userCategories = const [],
-      this.titles = const []});
+      this.items = const [],
+      this.titles = const [],
+      this.filters = const [],
+      this.isAll = false,
+      this.page = 0});
 
   ScreenState copyWith(
       {bool? loading,
-      List<UserCategoryModel?>? userCategories,
-      List<String>? titles}) {
+      List<UserCategoryModel?>? items,
+      List<String>? titles,
+      List<Filters?>? filters,
+      bool? isAll,
+      int? page}) {
     return ScreenState(
         loading: loading ?? this.loading,
-        userCategories: userCategories ?? this.userCategories,
-        titles: titles ?? this.titles);
+        items: items ?? this.items,
+        titles: titles ?? this.titles,
+        filters: filters ?? this.filters,
+        isAll: isAll ?? this.isAll,
+        page: page ?? this.page);
   }
 }

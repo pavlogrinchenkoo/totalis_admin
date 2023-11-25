@@ -130,6 +130,7 @@ class CheckInsBloc extends BlocBaseWithState<ScreenState> {
   }
 
   Future<CheckInModel?> getCheckIn(int? id) async {
+    if(id == null) return null;
     final res = await _checkInsRequest.get(id.toString());
     return res;
   }

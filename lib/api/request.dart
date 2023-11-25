@@ -70,6 +70,7 @@ class Request {
       logout();
       return null;
     }
+
     if (res.runtimeType == List<dynamic>) {
       return res.map((e) => e).toList();
     } else {

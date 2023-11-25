@@ -17,3 +17,11 @@ String getFileExtension(String fileName) {
     return '';
   }
 }
+
+bool containsInt(String? value) {
+  return value?.contains('id') ?? false;
+}
+
+bool containsLevel(String? value) {
+  return value?.contains('level') ?? false;
+}

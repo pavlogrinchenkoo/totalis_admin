@@ -18,6 +18,7 @@ import 'package:totalis_admin/screens/main_page/screens/prompt_preview/page.dart
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/theme/theme_extensions/app_button_theme.dart';
 import 'package:totalis_admin/utils/spaces.dart';
+import 'package:totalis_admin/widgets/app_bar_back_button.dart';
 import 'package:totalis_admin/widgets/card_elements.dart';
 import 'package:totalis_admin/widgets/custom_bottom_sheet_text_field.dart';
 
@@ -48,12 +49,18 @@ class ChangePage extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            Row(
+              children: [
+                const AppBarBackButton(),
+                Space.w22,
+                if (title != null)
+                  Text(
+                    title ?? '',
+                    style: BS.reg16.apply(color: BC.white),
+                  ),
+              ],
+            ),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              if (title != null)
-                Text(
-                  title ?? '',
-                  style: BS.reg16.apply(color: BC.white),
-                ),
               Space.h32,
               CardBody(
                   padding: EdgeInsets.zero,
@@ -123,7 +130,6 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-    print(widget.field?.controller?.text);
 
     if (widget.field?.type == FieldType.text) {
       return FormBuilderTextField(
@@ -195,6 +201,25 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
               ],
             ),
           if (widget.field?.title == 'Prompt checkin')
+            Column(
+              children: [
+                Space.h16,
+                ElevatedButton(
+                  style: themeData.extension<AppButtonTheme>()!.primaryElevated,
+                  onPressed: () {
+                    if (widget.formKey?.currentState?.validate() ?? false) {
+                      // Validation passed.
+                      widget.onSave?.call();
+                      PromptPreviewBottomSheet().show(context, widget.field);
+                    } else {
+                      // Validation failed.
+                    }
+                  },
+                  child: const Text('Propmpt preview'),
+                ),
+              ],
+            ),
+          if (widget.field?.title == 'Prompt checkin proposal')
             Column(
               children: [
                 Space.h16,
