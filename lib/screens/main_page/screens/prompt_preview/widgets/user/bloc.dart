@@ -7,6 +7,7 @@ import 'package:totalis_admin/api/prompt/request.dart';
 import 'package:totalis_admin/api/user/dto.dart';
 import 'package:totalis_admin/api/user/request.dart';
 import 'package:totalis_admin/utils/bloc_base.dart';
+import 'package:collection/collection.dart';
 import 'package:totalis_admin/utils/custom_function.dart';
 import 'package:totalis_admin/widgets/chage_page.dart';
 
@@ -58,18 +59,30 @@ class UserSearchBloc extends BlocBaseWithState<ScreenState> {
   }
 
   searchUser(Filters? filters) async {
-    if (filters == null) {
-      setState(currentState..copyWith(userFilters: [], page: 0, isAll: false));
-      uploadUsers(page: 0, isAll: false, filters: []);
-      return null;
+    if (filters != null || filters?.value != null) {
+      final user = await _filterRequest
+          .userFilters(QueryModel(page: 0, count: 20, filters: [filters]));
+      final searchedUser =
+          user?.firstWhereOrNull((user) => user.id == filters?.value);
+      user?.first;
+      setState(currentState.copyWith(
+          nothingFound: searchedUser == null, selectedUser: searchedUser ?? UserModel()));
+    } else {
+      setState(
+          currentState.copyWith(nothingFound: true, selectedUser: UserModel()));
     }
-    final newFilters =
-        containsInt(filters.field) || containsLevel(filters.value)
-            ? Filters(field: filters.field, value: int.tryParse(filters.value))
-            : filters;
-    setState(currentState
-      ..copyWith(userFilters: [newFilters], page: 0, isAll: false));
-    uploadUsers(page: 0, isAll: false, filters: [newFilters]);
+    // if (filters == null) {
+    //   setState(currentState..copyWith(userFilters: [], page: 0, isAll: false));
+    //   uploadUsers(page: 0, isAll: false, filters: []);
+    //   return null;
+    // }
+    // final newFilters =
+    //     containsInt(filters.field) || containsLevel(filters.value)
+    //         ? Filters(field: filters.field, value: int.tryParse(filters.value))
+    //         : filters;
+    // setState(currentState
+    //   ..copyWith(userFilters: [newFilters], page: 0, isAll: false));
+    // uploadUsers(page: 0, isAll: false, filters: [newFilters]);
   }
 }
 
@@ -80,6 +93,7 @@ class ScreenState {
   final List<CategoryModel?> categories;
   final List<String>? titles;
   final bool isAll;
+  final bool nothingFound;
   final int page;
   final UserModel? selectedUser;
   final CategoryModel? selectedCategory;
@@ -91,6 +105,7 @@ class ScreenState {
       this.categories = const [],
       this.titles = const [],
       this.isAll = false,
+      this.nothingFound = false,
       this.page = 0,
       this.selectedUser,
       this.selectedCategory});
@@ -102,6 +117,7 @@ class ScreenState {
       List<CategoryModel?>? categories,
       List<String>? titles,
       bool? isAll,
+      bool? nothingFound,
       int? page,
       UserModel? selectedUser,
       CategoryModel? selectedCategory}) {
@@ -112,6 +128,7 @@ class ScreenState {
         categories: categories ?? this.categories,
         titles: titles ?? this.titles,
         isAll: isAll ?? this.isAll,
+        nothingFound: nothingFound ?? this.nothingFound,
         page: page ?? this.page,
         selectedCategory: selectedCategory ?? this.selectedCategory,
         selectedUser: selectedUser ?? this.selectedUser);

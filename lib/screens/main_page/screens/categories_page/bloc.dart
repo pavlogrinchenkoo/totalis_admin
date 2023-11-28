@@ -202,7 +202,7 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
   }
 
   Future<CategoryModel?> getCategory(int? id) async {
-    final res = await _categoriesRequest.get(id.toString());
+    final res = await _categoriesRequest.get(id);
     return res;
   }
 }

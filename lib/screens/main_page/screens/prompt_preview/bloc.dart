@@ -7,10 +7,10 @@ import 'package:totalis_admin/api/prompt/request.dart';
 import 'package:totalis_admin/api/user/dto.dart';
 import 'package:totalis_admin/api/user/request.dart';
 import 'package:totalis_admin/screens/main_page/screens/prompt_preview/page.dart';
-import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/checkins/bloc.dart';
 import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/message/bloc.dart';
-import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user/user_search_bloc.dart';
-import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user_category/user_category_search_bloc.dart';
+import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/new_checkin/bloc.dart';
+import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user/bloc.dart';
+import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user_category/bloc.dart';
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/bloc_base.dart';
 import 'package:totalis_admin/widgets/chage_page.dart';
@@ -66,38 +66,38 @@ class PromptPreviewBloc extends BlocBaseWithState<ScreenState> {
       BuildContext context,
       FieldModel? field,
       UserCategorySearchBloc userCategoryBloc,
-      MessagesSearchBloc messagesBloc,
       CheckinsSearchBloc checkinsBloc,
       UserSearchBloc userBloc) async {
+    setState(currentState.copyWith(loadingPreview: true));
     if (field?.title == 'Prompt') {
       if (userBloc.currentState.selectedUser?.id == null ||
-          userCategoryBloc.currentState.selectedItem?.id == null ||
-          messagesBloc.currentState.selectedItem?.id == null) {
+          userCategoryBloc.currentState.selectedItem?.id == null) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             backgroundColor: BC.green,
             content: const Text('Please select a user, category and message.'),
             duration: const Duration(seconds: 2)));
+        setState(currentState.copyWith(loadingPreview: false));
       }
       final string = await _promptRequest.promptCategory(
           field?.controller?.text ?? null,
           userBloc.currentState.selectedUser?.id,
           userCategoryBloc.currentState.selectedItem?.id,
-          messagesBloc.currentState.selectedItem?.id);
+          608);
       controller.text = string ?? '';
     } else if (field?.title == 'Prompt checkin') {
       if (userBloc.currentState.selectedUser?.id == null ||
-          checkinsBloc.currentState.selectedItem?.id == null ||
-          messagesBloc.currentState.selectedItem?.id == null) {
+          checkinsBloc.currentState.selectedItem?.id == null) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             backgroundColor: BC.green,
             content: const Text('Please select a user, checkin and message.'),
             duration: const Duration(seconds: 2)));
+        setState(currentState.copyWith(loadingPreview: false));
       }
       final string = await _promptRequest.promptCheckinCategory(
           field?.controller?.text ?? null,
           userBloc.currentState.selectedUser?.id,
           checkinsBloc.currentState.selectedItem?.id,
-          messagesBloc.currentState.selectedItem?.id);
+          608);
       controller.text = string ?? '';
     } else if (field?.title == 'Prompt checkin proposal') {
       if (userBloc.currentState.selectedUser?.id == null ||
@@ -106,6 +106,7 @@ class PromptPreviewBloc extends BlocBaseWithState<ScreenState> {
             backgroundColor: BC.green,
             content: const Text('Please select a user and category'),
             duration: const Duration(seconds: 2)));
+        setState(currentState.copyWith(loadingPreview: false));
       }
       final string = await _promptRequest.promptCheckinProposalCategory(
           field?.controller?.text ?? null,
@@ -113,6 +114,7 @@ class PromptPreviewBloc extends BlocBaseWithState<ScreenState> {
           userCategoryBloc.currentState.selectedItem?.id);
       controller.text = string ?? '';
     }
+    setState(currentState.copyWith(loadingPreview: false));
   }
 
   searchUser(Filters? filters) async {
@@ -127,7 +129,8 @@ class PromptPreviewBloc extends BlocBaseWithState<ScreenState> {
     uploadUsers(page: 0, isAll: false, filters: [filters]);
   }
 
-  previewLlc(BuildContext context, String text) async {
+  previewLlm(BuildContext context, String text) async {
+    setState(currentState.copyWith(loadingLlm: true));
     if (controller.text == '') {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: BC.green,
@@ -136,11 +139,14 @@ class PromptPreviewBloc extends BlocBaseWithState<ScreenState> {
     }
     final res = await _promptRequest.promptLLM(text);
     controllerLlm.text = res ?? '';
+    setState(currentState.copyWith(loadingLlm: false));
   }
 }
 
 class ScreenState {
   final bool loading;
+  final bool loadingPreview;
+  final bool loadingLlm;
   final List<UserModel?> users;
   final List<Filters?>? userFilters;
   final List<CategoryModel?> categories;
@@ -152,6 +158,8 @@ class ScreenState {
 
   ScreenState(
       {this.loading = false,
+      this.loadingPreview = false,
+      this.loadingLlm = false,
       this.users = const [],
       this.userFilters,
       this.categories = const [],
@@ -163,6 +171,8 @@ class ScreenState {
 
   ScreenState copyWith(
       {bool? loading,
+      bool? loadingPreview,
+      bool? loadingLlm,
       List<UserModel?>? users,
       List<Filters?>? userFilters,
       List<CategoryModel?>? categories,
@@ -173,6 +183,8 @@ class ScreenState {
       CategoryModel? selectedCategory}) {
     return ScreenState(
         loading: loading ?? this.loading,
+        loadingPreview: loadingPreview ?? this.loadingPreview,
+        loadingLlm: loadingLlm ?? this.loadingLlm,
         users: users ?? this.users,
         userFilters: userFilters ?? this.userFilters,
         categories: categories ?? this.categories,

@@ -1,26 +1,29 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/checkins/widget.dart';
+import 'package:totalis_admin/generated/assets.gen.dart';
 import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/message/widget.dart';
-import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user/user_search_bloc.dart'
+import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/new_checkin/widget.dart';
+import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user/bloc.dart'
     as ub;
-import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user_category/user_category_search_bloc.dart'
+import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user_category/bloc.dart'
     as ucb;
 import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/message/bloc.dart'
     as mb;
-import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/checkins/bloc.dart'
+import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/new_checkin/bloc.dart'
     as ckb;
+import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/theme/theme_extensions/app_button_theme.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
 import 'package:totalis_admin/widgets/app_bar_back_button.dart';
 import 'package:totalis_admin/widgets/chage_page.dart';
+import 'package:totalis_admin/widgets/custom_bottom_sheet_text_field.dart';
 import 'package:totalis_admin/widgets/custom_progress_indicator.dart';
 
 import 'bloc.dart';
-import 'widgets/user/user_search.dart';
-import 'widgets/user_category/user_category_search.dart';
+import 'widgets/user/widget.dart';
+import 'widgets/user_category/widget.dart';
 
 @RoutePage()
 class PromptPreviewPage extends StatefulWidget {
@@ -60,9 +63,9 @@ class _PromptPreviewPageState extends State<PromptPreviewPage> {
   void initState() {
     _bloc.init();
     userBloc.init();
-    userCategoryBloc.init();
+    // userCategoryBloc.init();
     messagesBloc.init();
-    checkinsBloc.init();
+    // checkinsBloc.init();
     super.initState();
   }
 
@@ -84,89 +87,124 @@ class _PromptPreviewPageState extends State<PromptPreviewPage> {
                   children: [
                     const AppBarBackButton(),
                     Space.h24,
-                    SizedBox(
-                      height: 500,
-                      child: Row(children: [
-                        if (widget.field?.title == 'Prompt' ||
-                            widget.field?.title == 'Prompt checkin proposal' ||
-                            widget.field?.title == 'Prompt checkin')
-                          Expanded(
-                            child: Row(
-                              children: [
-                                UserSearchWidget(bloc: userBloc),
-                                Space.w22,
-                              ],
-                            ),
+                    Row(children: [
+                      if (widget.field?.title == 'Prompt' ||
+                          widget.field?.title == 'Prompt checkin proposal' ||
+                          widget.field?.title == 'Prompt checkin')
+                        Expanded(
+                          child: Row(
+                            children: [
+                              UserSearchWidget(bloc: userBloc),
+                              Space.w22,
+                            ],
                           ),
-                        if (widget.field?.title == 'Prompt' ||
-                            widget.field?.title == 'Prompt checkin proposal')
-                          Expanded(
-                            child: Row(
-                              children: [
-                                UserCategorySearchWidget(
-                                    bloc: userCategoryBloc),
-                                Space.w22,
-                              ],
-                            ),
+                        ),
+                      if (widget.field?.title == 'Prompt' ||
+                          widget.field?.title == 'Prompt checkin proposal')
+                        UserCategorySearchWidget(
+                            bloc: userCategoryBloc, userBloc: userBloc),
+                      // if (widget.field?.title == 'Prompt' ||
+                      //     widget.field?.title == 'Prompt checkin')
+                      //   Expanded(
+                      //     child: Row(
+                      //       children: [
+                      //         MessagesSearchWidget(bloc: messagesBloc),
+                      //         Space.w22,
+                      //       ],
+                      //     ),
+                      //   ),
+                      if (widget.field?.title == 'Prompt checkin')
+                        CheckinsSearchWidget(
+                            bloc: checkinsBloc, userBloc: userBloc),
+                    ]),
+                    Space.h24,
+                    Stack(
+                      children: [
+                        FormBuilderTextField(
+                          // onChanged: (value) => js.context.callMethod('enableSpellCheck'),
+                          minLines: 10,
+                          maxLines: 10,
+                          controller: widget.field?.controller,
+                          name: 'Prompt',
+                          decoration: const InputDecoration(
+                            labelText: 'Prompt',
+                            hintText: 'Prompt',
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
-                        if (widget.field?.title == 'Prompt' ||
-                            widget.field?.title == 'Prompt checkin')
-                          Expanded(
-                            child: Row(
-                              children: [
-                                MessagesSearchWidget(bloc: messagesBloc),
-                                Space.w22,
-                              ],
-                            ),
-                          ),
-                        if (widget.field?.title == 'Prompt checkin')
-                          Expanded(
-                            child: Row(
-                              children: [
-                                CheckinsSearchWidget(bloc: checkinsBloc),
-                                Space.w22,
-                              ],
-                            ),
-                          ),
-                      ]),
+                          // validator: (widget.field?.required ?? false)
+                          //     ? FormBuilderValidators.required()
+                          //     : null,
+                        ),
+                        Positioned(
+                            right: 1,
+                            bottom: 1,
+                            child: InkWell(
+                              onTap: () => CustomBottomSheetTextField()
+                                  .show(context, widget.field),
+                              child: Container(
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                      color: BC.green,
+                                      borderRadius: BRadius.r6),
+                                  child: Assets.openBigTextfield.svg()),
+                            )),
+                      ],
                     ),
                     Space.h24,
-                    ElevatedButton(
-                        style: themeData
-                            .extension<AppButtonTheme>()!
-                            .primaryElevated,
-                        onPressed: () => _bloc.preview(
-                            context,
-                            widget.field,
-                            userCategoryBloc,
-                            messagesBloc,
-                            checkinsBloc,
-                            userBloc),
-                        child: const Text('Preview')),
+                    if (state.loadingPreview)
+                      const CustomProgressIndicator()
+                    else
+                      ElevatedButton(
+                          style: themeData
+                              .extension<AppButtonTheme>()!
+                              .primaryElevated,
+                          onPressed: () => _bloc.preview(context, widget.field,
+                              userCategoryBloc, checkinsBloc, userBloc),
+                          child: const Text('Preview')),
                     Space.h24,
-                    FormBuilderTextField(
-                      // onChanged: (value) => js.context.callMethod('enableSpellCheck'),
-                      minLines: 10,
-                      maxLines: 10,
-                      controller: _bloc.controller,
-                      name: 'Response',
-                      decoration: const InputDecoration(
-                        labelText: 'Response',
-                        hintText: 'Response',
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                      ),
-                      // validator: (widget.field?.required ?? false)
-                      //     ? FormBuilderValidators.required()
-                      //     : null,
+                    Stack(
+                      children: [
+                        FormBuilderTextField(
+                          // onChanged: (value) => js.context.callMethod('enableSpellCheck'),
+                          minLines: 10,
+                          maxLines: 10,
+                          controller: _bloc.controller,
+                          name: 'Response',
+                          decoration: const InputDecoration(
+                            labelText: 'Response',
+                            hintText: 'Response',
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                          // validator: (widget.field?.required ?? false)
+                          //     ? FormBuilderValidators.required()
+                          //     : null,
+                        ),
+                        Positioned(
+                            right: 1,
+                            bottom: 1,
+                            child: InkWell(
+                              onTap: () => CustomBottomSheetTextField()
+                                  .show(context, widget.field),
+                              child: Container(
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                      color: BC.green,
+                                      borderRadius: BRadius.r6),
+                                  child: Assets.openBigTextfield.svg()),
+                            )),
+                      ],
                     ),
                     Space.h24,
-                    ElevatedButton(
-                        style: themeData
-                            .extension<AppButtonTheme>()!
-                            .primaryElevated,
-                        onPressed: () =>
-                            _bloc.previewLlc(context, _bloc.controller.text),
-                        child: const Text('Preview LLM')),
+                    if (state.loadingLlm)
+                      const CustomProgressIndicator()
+                    else
+                      ElevatedButton(
+                          style: themeData
+                              .extension<AppButtonTheme>()!
+                              .primaryElevated,
+                          onPressed: () =>
+                              _bloc.previewLlm(context, _bloc.controller.text),
+                          child: const Text('Preview LLM')),
                     Space.h24,
                     FormBuilderTextField(
                       // onChanged: (value) => js.context.callMethod('enableSpellCheck'),

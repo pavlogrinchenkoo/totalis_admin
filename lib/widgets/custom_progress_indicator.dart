@@ -11,8 +11,8 @@ class CustomProgressIndicator extends StatelessWidget {
       children: [
         Center(
             child: SizedBox(
-                width: 40,
-                height: 40,
+                width: 38,
+                height: 38,
                 child: CircularProgressIndicator(
                     strokeWidth: 2, color: BC.green))),
       ],

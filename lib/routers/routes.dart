@@ -33,6 +33,7 @@ class AppRouter extends _$AppRouter {
       AutoRoute(path: 'variables', page: VariableRoute.page),
       AutoRoute(path: 'messages', page: MessageRoute.page),
       AutoRoute(path: 'system', page: SystemRoute.page),
+      AutoRoute(path: 'prompt-preview', page: PromptPreviewRoute.page),
     ]),
     AutoRoute(path: '/change', page: ChangeRoute.page),
   ];
