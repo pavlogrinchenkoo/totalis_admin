@@ -16,7 +16,7 @@ class UserRequest {
     return (res as List).map((e) => UserModel.fromJson(e)).toList();
   }
 
-  Future<UserModel?> get(String id) async {
+  Future<UserModel?> get(int? id) async {
     final res = await _request.get('api/admin/users/get/id/$id');
     if (res == null) return null;
     return UserModel.fromJson(res);

@@ -55,7 +55,10 @@ class UsersBloc extends BlocBaseWithState<ScreenState> {
       FieldModel(
           title: 'Avatar', type: FieldType.avatar, imageId: item?.image_id),
       FieldModel(
-          title: 'Is tester', type: FieldType.checkbox, value: item?.is_tester, enable: false),
+          title: 'Is tester',
+          type: FieldType.checkbox,
+          value: item?.is_tester,
+          enable: false),
       FieldModel(
           title: 'Sex',
           type: FieldType.dropdown,
@@ -89,7 +92,8 @@ class UsersBloc extends BlocBaseWithState<ScreenState> {
             fields.firstWhere((i) => i.title == 'First name').controller?.text,
         last_name:
             fields.firstWhere((i) => i.title == 'Last name').controller?.text,
-        is_tester: fields.firstWhere((i) => i.title == 'Is tester').value ?? false,
+        is_tester:
+            fields.firstWhere((i) => i.title == 'Is tester').value ?? false,
         sex: fields.firstWhere((i) => i.title == 'Sex').enumValue,
         birth: fields.firstWhere((i) => i.title == 'Birthday').controller?.text,
         coach_id: int.parse(
@@ -133,7 +137,7 @@ class UsersBloc extends BlocBaseWithState<ScreenState> {
   }
 
   Future<UserModel?> getUser(int? id) async {
-    final res = await _userRequest.get(id.toString());
+    final res = await _userRequest.get(id);
     return res;
   }
 }

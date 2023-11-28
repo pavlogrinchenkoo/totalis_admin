@@ -60,13 +60,11 @@ class UserSearchBloc extends BlocBaseWithState<ScreenState> {
 
   searchUser(Filters? filters) async {
     if (filters != null || filters?.value != null) {
-      final user = await _filterRequest
-          .userFilters(QueryModel(page: 0, count: 20, filters: [filters]));
-      final searchedUser =
-          user?.firstWhereOrNull((user) => user.id == filters?.value);
-      user?.first;
+      final user = await _usersRequest.get(filters?.value);
+      // final user = await _filterRequest
+      //     .userFilters(QueryModel(page: 0, count: 20, filters: [filters]));
       setState(currentState.copyWith(
-          nothingFound: searchedUser == null, selectedUser: searchedUser ?? UserModel()));
+          nothingFound: user?.id == null, selectedUser: user ?? UserModel()));
     } else {
       setState(
           currentState.copyWith(nothingFound: true, selectedUser: UserModel()));
