@@ -151,6 +151,8 @@ class _MessagePageState extends State<MessagePage> {
                                     child: Row(
                                       children: [
                                         SheetText(text: item?.id),
+                                        Space.w8,
+                                        const CustomOpenIcon()
                                       ],
                                     ))),
                                 DataCell(UserCategoryDataCellWidget(

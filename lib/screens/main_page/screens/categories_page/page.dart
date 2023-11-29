@@ -75,6 +75,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                 child: Row(
                                   children: [
                                     SheetText(text: item?.id),
+                                    Space.w8,
+                                    const CustomOpenIcon()
                                   ],
                                 ))),
                             DataCell(SheetText(text: item?.parent_id)),

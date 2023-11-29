@@ -73,7 +73,7 @@ class _CheckInsPageState extends State<CheckInsPage> {
                               ),
                           ],
                           rows: <DataRow>[
-                            for (final CheckInModel item in state.checkins)
+                            for (final item in state.checkins)
                               DataRow(
                                 cells: <DataCell>[
                                   DataCell(InkWell(
@@ -83,10 +83,26 @@ class _CheckInsPageState extends State<CheckInsPage> {
                                       child: Row(
                                         children: [
                                           SheetText(text: item.id),
+                                          Space.w8,
+                                          const CustomOpenIcon()
                                         ],
                                       ))),
-                                  DataCell(SheetText(
-                                      text: item.user_category_id)),
+                                  DataCell(InkWell(
+                                      borderRadius: BRadius.r6,
+                                      onTap: () async =>
+                                          _blocUserCategory.openChange(
+                                              context,
+                                              await _blocUserCategory
+                                                  .getUserCategory(
+                                                      item.user_category_id)),
+                                      child: Row(
+                                        children: [
+                                          SheetText(
+                                              text: item.user_category_id),
+                                          Space.w8,
+                                          const CustomOpenIcon()
+                                        ],
+                                      ))),
                                   DataCell(CategoryDataCellWidget(
                                       userCategoryId: item.user_category_id)),
                                   DataCell(SheetText(text: item.level)),

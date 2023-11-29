@@ -151,14 +151,26 @@ class _UserCategoriesPageState extends State<UserCategoriesPage> {
                                     borderRadius: BRadius.r6,
                                     onTap: () => _bloc.openChange(context, item,
                                         widget: CheckInWidget(id: item?.id)),
-                                    child: SheetText(text: item?.id))),
+                                    child: Row(
+                                      children: [
+                                        SheetText(text: item?.id),
+                                        Space.w8,
+                                        const CustomOpenIcon()
+                                      ],
+                                    ))),
                                 DataCell(InkWell(
                                     borderRadius: BRadius.r6,
                                     onTap: () async => _blocUsers.openChange(
                                         context,
                                         await _blocUsers
                                             .getUser(item?.user_id)),
-                                    child: SheetText(text: item?.user_id))),
+                                    child: Row(
+                                      children: [
+                                        SheetText(text: item?.user_id),
+                                        Space.w8,
+                                        const CustomOpenIcon()
+                                      ],
+                                    ))),
                                 DataCell(InkWell(
                                     borderRadius: BRadius.r6,
                                     onTap: () async =>
@@ -166,7 +178,13 @@ class _UserCategoriesPageState extends State<UserCategoriesPage> {
                                             context,
                                             await _blocCategories.getCategory(
                                                 item?.category_id)),
-                                    child: SheetText(text: item?.category_id))),
+                                    child: Row(
+                                      children: [
+                                        SheetText(text: item?.category_id),
+                                        Space.w8,
+                                        const CustomOpenIcon()
+                                      ],
+                                    ))),
                               ],
                             ),
                         ],

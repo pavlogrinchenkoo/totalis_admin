@@ -85,6 +85,8 @@ class _RecommendationPageState extends State<RecommendationPage> {
                                       child: Row(
                                         children: [
                                           SheetText(text: item?.id),
+                                          Space.w8,
+                                          const CustomOpenIcon()
                                         ],
                                       ))),
                                   DataCell(InkWell(
