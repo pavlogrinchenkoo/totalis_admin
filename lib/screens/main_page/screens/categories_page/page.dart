@@ -66,7 +66,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         ),
                     ],
                     rows: <DataRow>[
-                      for (final item in state.categories)
+                      for (final CategoryModel? item in state.categories)
                         DataRow(
                           cells: <DataCell>[
                             DataCell(InkWell(

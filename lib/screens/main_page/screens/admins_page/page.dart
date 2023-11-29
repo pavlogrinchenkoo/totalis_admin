@@ -60,7 +60,7 @@ class _AdminsPageState extends State<AdminsPage> {
                         ),
                     ],
                     rows: <DataRow>[
-                      for (final item in state.admins)
+                      for (final AdminModel? item in state.admins)
                         DataRow(
                           cells: <DataCell>[
                             DataCell(InkWell(
