@@ -132,60 +132,45 @@ class _UserCategoriesPageState extends State<UserCategoriesPage> {
                     ],
                   ),
                   Space.h24,
-                  CustomSheetWidget(
-                    columns: <DataColumn>[
-                      for (final title in titles)
-                        DataColumn(
-                          label: Expanded(
-                            child: Text(title),
-                          ),
-                        ),
-                    ],
-                    rows: <DataRow>[
-                      for (final item in state.items)
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(InkWell(
-                                borderRadius: BRadius.r6,
-                                onTap: () => _bloc.openChange(context, item,
-                                    widget: CheckInWidget(id: item?.id)),
-                                child: Row(
-                                  children: [
-                                    Expanded(child: SheetText(text: item?.id)),
-                                    Space.w16,
-                                    const CustomOpenIcon()
-                                  ],
-                                ))),
-                            DataCell(InkWell(
-                                borderRadius: BRadius.r6,
-                                onTap: () async => _blocUsers.openChange(
-                                    context,
-                                    await _blocUsers.getUser(item?.user_id)),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        child: SheetText(text: item?.user_id)),
-                                    Space.w16,
-                                    const CustomOpenIcon()
-                                  ],
-                                ))),
-                            DataCell(InkWell(
-                                borderRadius: BRadius.r6,
-                                onTap: () async => _blocCategories.openChange(
-                                    context,
-                                    await _blocCategories
-                                        .getCategory(item?.category_id)),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        child:
-                                            SheetText(text: item?.category_id)),
-                                    Space.w16,
-                                    const CustomOpenIcon()
-                                  ],
-                                ))),
-                          ],
-                        ),
+                  Row(
+                    children: [
+                      CustomSheetWidget(
+                        columns: <DataColumn>[
+                          for (final title in titles)
+                            DataColumn(
+                              label: Expanded(
+                                child: Text(title),
+                              ),
+                            ),
+                        ],
+                        rows: <DataRow>[
+                          for (final item in state.items)
+                            DataRow(
+                              cells: <DataCell>[
+                                DataCell(InkWell(
+                                    borderRadius: BRadius.r6,
+                                    onTap: () => _bloc.openChange(context, item,
+                                        widget: CheckInWidget(id: item?.id)),
+                                    child: SheetText(text: item?.id))),
+                                DataCell(InkWell(
+                                    borderRadius: BRadius.r6,
+                                    onTap: () async => _blocUsers.openChange(
+                                        context,
+                                        await _blocUsers
+                                            .getUser(item?.user_id)),
+                                    child: SheetText(text: item?.user_id))),
+                                DataCell(InkWell(
+                                    borderRadius: BRadius.r6,
+                                    onTap: () async =>
+                                        _blocCategories.openChange(
+                                            context,
+                                            await _blocCategories.getCategory(
+                                                item?.category_id)),
+                                    child: SheetText(text: item?.category_id))),
+                              ],
+                            ),
+                        ],
+                      ),
                     ],
                   ),
                 ],

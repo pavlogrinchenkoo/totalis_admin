@@ -36,7 +36,9 @@ class Request {
     final res = const JsonDecoder()
         .convert(const Utf8Decoder().convert(response.body.codeUnits));
     // alice.onHttpResponse(response);
-
+    if (response.statusCode == 500) {
+      return null;
+    }
     // alice.showInspector();
     if (response.statusCode == 401) {
       logout();
@@ -65,6 +67,10 @@ class Request {
         body: jsonEncode(body), headers: headers);
     final res = const JsonDecoder()
         .convert(const Utf8Decoder().convert(response.body.codeUnits));
+    if (response.statusCode == 500) {
+      return null;
+    }
+
     // alice.onHttpResponse(response);
     if (response.statusCode == 401) {
       logout();

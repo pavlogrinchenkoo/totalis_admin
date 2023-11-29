@@ -80,14 +80,8 @@ class _CheckInsPageState extends State<CheckInsPage> {
                                       borderRadius: BRadius.r6,
                                       onTap: () =>
                                           _bloc.openChange(context, item),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                              child: SheetText(text: item.id)),
-                                          Space.w16,
-                                          const CustomOpenIcon()
-                                        ],
-                                      ))),
+                                      child: Expanded(
+                                          child: SheetText(text: item.id)))),
                                   DataCell(InkWell(
                                       borderRadius: BRadius.r6,
                                       onTap: () async =>
@@ -96,15 +90,8 @@ class _CheckInsPageState extends State<CheckInsPage> {
                                               await _blocUserCategory
                                                   .getUserCategory(
                                                       item.user_category_id)),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                              child: SheetText(
-                                                  text: item.user_category_id)),
-                                          Space.w16,
-                                          const CustomOpenIcon()
-                                        ],
-                                      ))),
+                                      child: SheetText(
+                                          text: item.user_category_id))),
                                   DataCell(CategoryDataCellWidget(
                                       userCategoryId: item.user_category_id)),
                                   DataCell(SheetText(text: item.level)),

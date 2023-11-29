@@ -86,9 +86,8 @@ class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
       ),
       FieldModel(
         title: 'Muted for',
-        type: FieldType.text,
-        controller:
-            TextEditingController(text: (item?.muted_for ?? '').toString()),
+        type: FieldType.dateTime,
+        controller: TextEditingController(text: item?.muted_day),
       ),
       FieldModel(
         title: 'Chat summary long',
@@ -119,9 +118,12 @@ class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
   onSave(BuildContext context, List<FieldModel> fields, UserCategoryModel? item,
       {bool isCreate = false}) async {
     final newModel = UserCategoryModel(
-        user_id:
-            int.tryParse(fields.firstWhere((i) => i.title == 'User id').controller?.text ?? '0') ??
-                0,
+        user_id: int.tryParse(fields
+                    .firstWhere((i) => i.title == 'User id')
+                    .controller
+                    ?.text ??
+                '0') ??
+            0,
         category_id: int.tryParse(fields
                     .firstWhere((i) => i.title == 'Category id')
                     .controller
@@ -131,12 +133,8 @@ class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
         is_favorite: fields.firstWhere((i) => i.title == 'Is favorite').value,
         muted_day:
             fields.firstWhere((i) => i.title == 'Muted day').controller?.text,
-        muted_for: int.tryParse(fields
-                    .firstWhere((i) => i.title == 'Muted for')
-                    .controller
-                    ?.text ??
-                '0') ??
-            0,
+        muted_for:
+            fields.firstWhere((i) => i.title == 'Muted for').controller?.text,
         chat_summary_long: fields
             .firstWhere((i) => i.title == 'Chat summary long')
             .controller
@@ -193,13 +191,13 @@ class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
   }
 
   Future<UserCategoryModel?> getUserCategory(int? id) async {
-    if(id == null) return null;
+    if (id == null) return null;
     final res = await _userCategoriesRequest.get(id.toString());
     return res;
   }
 
   Future<int?> getUserCategoryId(int? id) async {
-    if(id == null) return null;
+    if (id == null) return null;
     final res = await _userCategoriesRequest.get(id.toString());
     return res?.category_id;
   }

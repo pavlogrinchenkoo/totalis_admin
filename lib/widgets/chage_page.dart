@@ -11,6 +11,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:image_downloader_web/image_downloader_web.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 import 'package:mime/mime.dart';
+import 'package:totalis_admin/api/categories/dto.dart';
 import 'package:totalis_admin/api/images/dto.dart';
 import 'package:totalis_admin/api/images/request.dart';
 import 'package:totalis_admin/generated/assets.gen.dart';
@@ -24,12 +25,19 @@ import 'package:totalis_admin/widgets/custom_bottom_sheet_text_field.dart';
 
 @RoutePage()
 class ChangePage extends StatelessWidget {
-  ChangePage({this.fields, this.title, this.onSave, this.widget, super.key});
+  ChangePage(
+      {this.fields,
+      this.title,
+      this.onSave,
+      this.widget,
+      this.category,
+      super.key});
 
   final List<FieldModel>? fields;
   final String? title;
   final void Function()? onSave;
   final Widget? widget;
+  final CategoryModel? category;
 
   final _formKey = GlobalKey<FormBuilderState>();
 
@@ -73,7 +81,9 @@ class ChangePage extends StatelessWidget {
                             width: 400,
                             padding: const EdgeInsets.only(top: 24),
                             child: CustomFieldWidget(
-                                field: field, formKey: _formKey),
+                                field: field,
+                                formKey: _formKey,
+                                category: category),
                           ),
                         widget ?? const SizedBox(),
                         Padding(
@@ -116,11 +126,13 @@ class ChangePage extends StatelessWidget {
 }
 
 class CustomFieldWidget extends StatefulWidget {
-  const CustomFieldWidget({this.field, this.formKey, this.onSave, super.key});
+  const CustomFieldWidget(
+      {this.field, this.formKey, this.onSave, this.category, super.key});
 
   final FieldModel? field;
   final GlobalKey<FormBuilderState>? formKey;
   final void Function()? onSave;
+  final CategoryModel? category;
 
   @override
   State<CustomFieldWidget> createState() => _CustomFieldWidgetState();
@@ -181,7 +193,7 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
                   )),
             ],
           ),
-          if (widget.field?.title == 'Prompt')
+          if (widget.field?.title == 'Prompt' && widget.category?.id != null)
             Column(
               children: [
                 Space.h16,
@@ -191,7 +203,8 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
                     if (widget.formKey?.currentState?.validate() ?? false) {
                       // Validation passed.
                       widget.onSave?.call();
-                      PromptPreviewBottomSheet().show(context, widget.field);
+                      PromptPreviewBottomSheet()
+                          .show(context, widget.field, widget.category?.id);
                     } else {
                       // Validation failed.
                     }
@@ -200,7 +213,8 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
                 ),
               ],
             ),
-          if (widget.field?.title == 'Prompt checkin')
+          if (widget.field?.title == 'Prompt checkin' &&
+              widget.category?.id != null)
             Column(
               children: [
                 Space.h16,
@@ -210,7 +224,8 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
                     if (widget.formKey?.currentState?.validate() ?? false) {
                       // Validation passed.
                       widget.onSave?.call();
-                      PromptPreviewBottomSheet().show(context, widget.field);
+                      PromptPreviewBottomSheet()
+                          .show(context, widget.field, widget.category?.id);
                     } else {
                       // Validation failed.
                     }
@@ -219,7 +234,8 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
                 ),
               ],
             ),
-          if (widget.field?.title == 'Prompt checkin proposal')
+          if (widget.field?.title == 'Prompt checkin proposal' &&
+              widget.category?.id != null)
             Column(
               children: [
                 Space.h16,
@@ -229,7 +245,8 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
                     if (widget.formKey?.currentState?.validate() ?? false) {
                       // Validation passed.
                       widget.onSave?.call();
-                      PromptPreviewBottomSheet().show(context, widget.field);
+                      PromptPreviewBottomSheet()
+                          .show(context, widget.field, widget.category?.id);
                     } else {
                       // Validation failed.
                     }

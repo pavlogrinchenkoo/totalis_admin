@@ -37,6 +37,7 @@ abstract class _$AppRouter extends RootStackRouter {
           title: args.title,
           onSave: args.onSave,
           widget: args.widget,
+          category: args.category,
           key: args.key,
         ),
       );
@@ -83,13 +84,7 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: PromptPreviewPage(
           field: args.field,
-          needUser: args.needUser,
-          needUserCategory: args.needUserCategory,
-          needMessages: args.needMessages,
-          needCheckins: args.needCheckins,
-          isPrompt: args.isPrompt,
-          isPromptCheckinProposal: args.isPromptCheckinProposal,
-          isPromptCheckin: args.isPromptCheckin,
+          categoryId: args.categoryId,
           key: args.key,
         ),
       );
@@ -163,6 +158,7 @@ class ChangeRoute extends PageRouteInfo<ChangeRouteArgs> {
     String? title,
     void Function()? onSave,
     Widget? widget,
+    CategoryModel? category,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
@@ -172,6 +168,7 @@ class ChangeRoute extends PageRouteInfo<ChangeRouteArgs> {
             title: title,
             onSave: onSave,
             widget: widget,
+            category: category,
             key: key,
           ),
           initialChildren: children,
@@ -188,6 +185,7 @@ class ChangeRouteArgs {
     this.title,
     this.onSave,
     this.widget,
+    this.category,
     this.key,
   });
 
@@ -199,11 +197,13 @@ class ChangeRouteArgs {
 
   final Widget? widget;
 
+  final CategoryModel? category;
+
   final Key? key;
 
   @override
   String toString() {
-    return 'ChangeRouteArgs{fields: $fields, title: $title, onSave: $onSave, widget: $widget, key: $key}';
+    return 'ChangeRouteArgs{fields: $fields, title: $title, onSave: $onSave, widget: $widget, category: $category, key: $key}';
   }
 }
 
@@ -305,26 +305,14 @@ class MessageRoute extends PageRouteInfo<void> {
 class PromptPreviewRoute extends PageRouteInfo<PromptPreviewRouteArgs> {
   PromptPreviewRoute({
     FieldModel? field,
-    bool needUser = false,
-    bool needUserCategory = false,
-    bool needMessages = false,
-    bool needCheckins = false,
-    bool isPrompt = false,
-    bool isPromptCheckinProposal = false,
-    bool isPromptCheckin = false,
+    int? categoryId,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           PromptPreviewRoute.name,
           args: PromptPreviewRouteArgs(
             field: field,
-            needUser: needUser,
-            needUserCategory: needUserCategory,
-            needMessages: needMessages,
-            needCheckins: needCheckins,
-            isPrompt: isPrompt,
-            isPromptCheckinProposal: isPromptCheckinProposal,
-            isPromptCheckin: isPromptCheckin,
+            categoryId: categoryId,
             key: key,
           ),
           initialChildren: children,
@@ -339,37 +327,19 @@ class PromptPreviewRoute extends PageRouteInfo<PromptPreviewRouteArgs> {
 class PromptPreviewRouteArgs {
   const PromptPreviewRouteArgs({
     this.field,
-    this.needUser = false,
-    this.needUserCategory = false,
-    this.needMessages = false,
-    this.needCheckins = false,
-    this.isPrompt = false,
-    this.isPromptCheckinProposal = false,
-    this.isPromptCheckin = false,
+    this.categoryId,
     this.key,
   });
 
   final FieldModel? field;
 
-  final bool needUser;
-
-  final bool needUserCategory;
-
-  final bool needMessages;
-
-  final bool needCheckins;
-
-  final bool isPrompt;
-
-  final bool isPromptCheckinProposal;
-
-  final bool isPromptCheckin;
+  final int? categoryId;
 
   final Key? key;
 
   @override
   String toString() {
-    return 'PromptPreviewRouteArgs{field: $field, needUser: $needUser, needUserCategory: $needUserCategory, needMessages: $needMessages, needCheckins: $needCheckins, isPrompt: $isPrompt, isPromptCheckinProposal: $isPromptCheckinProposal, isPromptCheckin: $isPromptCheckin, key: $key}';
+    return 'PromptPreviewRouteArgs{field: $field, categoryId: $categoryId, key: $key}';
   }
 }
 

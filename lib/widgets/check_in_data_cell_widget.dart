@@ -34,13 +34,7 @@ class _CheckInDataCellWidgetState extends State<CheckInDataCellWidget> {
       return InkWell(
           borderRadius: BRadius.r6,
           onTap: () async => _blocCheckIn.openChange(context, checkIn),
-          child: Row(
-            children: [
-              Expanded(child: SheetText(text: checkIn?.id)),
-              Space.w16,
-              const CustomOpenIcon()
-            ],
-          ));
+          child: SheetText(text: checkIn?.id));
     }
   }
 

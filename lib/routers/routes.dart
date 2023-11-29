@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:totalis_admin/api/categories/dto.dart';
 import 'package:totalis_admin/screens/auth_page/page.dart';
 import 'package:totalis_admin/screens/main_page/page.dart';
 import 'package:totalis_admin/screens/main_page/screens/admins_page/page.dart';

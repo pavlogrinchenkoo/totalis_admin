@@ -66,13 +66,7 @@ class _UsersPageState extends State<UsersPage> {
                             DataCell(InkWell(
                                 borderRadius: BRadius.r6,
                                 onTap: () => _bloc.openChange(context, item),
-                                child: Row(
-                                  children: [
-                                    Expanded(child: SheetText(text: item?.id)),
-                                    Space.w16,
-                                    const CustomOpenIcon()
-                                  ],
-                                ))),
+                                child: SheetText(text: item?.id))),
                             DataCell(Row(
                               children: [
                                 CustomCircle(imageId: item?.image_id),

@@ -82,14 +82,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
                                       borderRadius: BRadius.r6,
                                       onTap: () =>
                                           _bloc.openChange(context, item),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                              child: SheetText(text: item?.id)),
-                                          Space.w16,
-                                          const CustomOpenIcon()
-                                        ],
-                                      ))),
+                                      child: SheetText(text: item?.id))),
                                   DataCell(InkWell(
                                       borderRadius: BRadius.r6,
                                       onTap: () async =>
@@ -97,15 +90,8 @@ class _RecommendationPageState extends State<RecommendationPage> {
                                               context,
                                               await _blocCheckIns.getCheckIn(
                                                   item?.checkin_id)),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                              child: SheetText(
-                                                  text: item?.checkin_id)),
-                                          Space.w16,
-                                          const CustomOpenIcon()
-                                        ],
-                                      ))),
+                                      child:
+                                          SheetText(text: item?.checkin_id))),
                                   for (final w in _userCategoryAndCategory(
                                       item?.checkin_id))
                                     DataCell(w),
@@ -127,7 +113,9 @@ class _RecommendationPageState extends State<RecommendationPage> {
   _userCategoryAndCategory(int? id) {
     final checkIn = _blocCheckIns.getCheckIn(id);
     return [
-      UserCategoryDataCellWidget(checkIn: checkIn,),
+      UserCategoryDataCellWidget(
+        checkIn: checkIn,
+      ),
       CategoryDataCellWidget(
         checkIn: checkIn,
       )

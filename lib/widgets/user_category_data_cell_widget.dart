@@ -40,13 +40,7 @@ class _UserCategoryDataCellWidgetState
           borderRadius: BRadius.r6,
           onTap: () async =>
               _blocUserCategory.openChange(context, userCategory),
-          child: Row(
-            children: [
-              Expanded(child: SheetText(text: userCategory?.id)),
-              Space.w16,
-              const CustomOpenIcon()
-            ],
-          ));
+          child: SheetText(text: userCategory?.id));
     }
   }
 

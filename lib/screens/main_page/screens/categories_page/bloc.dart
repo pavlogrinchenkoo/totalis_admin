@@ -109,6 +109,7 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
     context.router.push(ChangeRoute(
         fields: fields,
         title: 'Category',
+        category: item,
         onSave: () =>
             {onSave(context, fields, item, isCreate: item?.id == null)}));
   }

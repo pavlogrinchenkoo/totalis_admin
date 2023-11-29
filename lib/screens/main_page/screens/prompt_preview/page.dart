@@ -27,25 +27,10 @@ import 'widgets/user_category/widget.dart';
 
 @RoutePage()
 class PromptPreviewPage extends StatefulWidget {
-  const PromptPreviewPage(
-      {this.field,
-      this.needUser = false,
-      this.needUserCategory = false,
-      this.needMessages = false,
-      this.needCheckins = false,
-      this.isPrompt = false,
-      this.isPromptCheckinProposal = false,
-      this.isPromptCheckin = false,
-      super.key});
+  const PromptPreviewPage({this.field, this.categoryId, super.key});
 
   final FieldModel? field;
-  final bool needUser;
-  final bool needUserCategory;
-  final bool needMessages;
-  final bool needCheckins;
-  final bool isPrompt;
-  final bool isPromptCheckinProposal;
-  final bool isPromptCheckin;
+  final int? categoryId;
 
   @override
   State<PromptPreviewPage> createState() => _PromptPreviewPageState();
@@ -85,24 +70,24 @@ class _PromptPreviewPageState extends State<PromptPreviewPage> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    const AppBarBackButton(),
+                    Row(
+                      children: [
+                        const AppBarBackButton(),
+                        Space.w16,
+                        Text(widget.field?.title ?? '',
+                            style: BS.med20.apply(color: BC.white))
+                      ],
+                    ),
                     Space.h24,
                     Row(children: [
                       if (widget.field?.title == 'Prompt' ||
                           widget.field?.title == 'Prompt checkin proposal' ||
                           widget.field?.title == 'Prompt checkin')
-                        Expanded(
-                          child: Row(
-                            children: [
-                              UserSearchWidget(bloc: userBloc),
-                              Space.w22,
-                            ],
-                          ),
-                        ),
-                      if (widget.field?.title == 'Prompt' ||
-                          widget.field?.title == 'Prompt checkin proposal')
-                        UserCategorySearchWidget(
-                            bloc: userCategoryBloc, userBloc: userBloc),
+                        UserSearchWidget(bloc: userBloc),
+                      // if (widget.field?.title == 'Prompt' ||
+                      //     widget.field?.title == 'Prompt checkin proposal')
+                      //   UserCategorySearchWidget(
+                      //       bloc: userCategoryBloc, userBloc: userBloc),
                       // if (widget.field?.title == 'Prompt' ||
                       //     widget.field?.title == 'Prompt checkin')
                       //   Expanded(
@@ -113,9 +98,9 @@ class _PromptPreviewPageState extends State<PromptPreviewPage> {
                       //       ],
                       //     ),
                       //   ),
-                      if (widget.field?.title == 'Prompt checkin')
-                        CheckinsSearchWidget(
-                            bloc: checkinsBloc, userBloc: userBloc),
+                      // if (widget.field?.title == 'Prompt checkin')
+                      //   CheckinsSearchWidget(
+                      //       bloc: checkinsBloc, userBloc: userBloc),
                     ]),
                     Space.h24,
                     Stack(
@@ -125,10 +110,10 @@ class _PromptPreviewPageState extends State<PromptPreviewPage> {
                           minLines: 10,
                           maxLines: 10,
                           controller: widget.field?.controller,
-                          name: 'Prompt',
-                          decoration: const InputDecoration(
-                            labelText: 'Prompt',
-                            hintText: 'Prompt',
+                          name: widget.field?.title ?? '',
+                          decoration: InputDecoration(
+                            labelText: widget.field?.title ?? '',
+                            hintText: widget.field?.title ?? '',
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                           // validator: (widget.field?.required ?? false)
@@ -158,8 +143,8 @@ class _PromptPreviewPageState extends State<PromptPreviewPage> {
                           style: themeData
                               .extension<AppButtonTheme>()!
                               .primaryElevated,
-                          onPressed: () => _bloc.preview(context, widget.field,
-                              userCategoryBloc, checkinsBloc, userBloc),
+                          onPressed: () => _bloc.preview(context, userBloc,
+                              widget.categoryId, widget.field),
                           child: const Text('Preview')),
                     Space.h24,
                     Stack(
@@ -195,6 +180,19 @@ class _PromptPreviewPageState extends State<PromptPreviewPage> {
                       ],
                     ),
                     Space.h24,
+                    FormBuilderTextField(
+                      // onChanged: (value) => js.context.callMethod('enableSpellCheck'),
+                      minLines: 1,
+                      maxLines: 10,
+                      controller: _bloc.controllerMessage,
+                      name: 'Message',
+                      decoration: const InputDecoration(
+                        labelText: 'Message',
+                        hintText: 'Message',
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                    Space.h24,
                     if (state.loadingLlm)
                       const CustomProgressIndicator()
                     else
@@ -228,10 +226,7 @@ class _PromptPreviewPageState extends State<PromptPreviewPage> {
 }
 
 class PromptPreviewBottomSheet {
-  show(
-    BuildContext context,
-    FieldModel? field,
-  ) {
+  show(BuildContext context, FieldModel? field, int? categoryId) {
     return showGeneralDialog(
         context: context,
         barrierColor: Colors.black12.withOpacity(0.6),
@@ -242,7 +237,7 @@ class PromptPreviewBottomSheet {
         pageBuilder: (context, __, ___) {
           return Material(
             color: Colors.transparent,
-            child: PromptPreviewPage(field: field),
+            child: PromptPreviewPage(field: field, categoryId: categoryId),
           );
         });
   }

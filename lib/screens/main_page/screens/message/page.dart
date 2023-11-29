@@ -131,40 +131,36 @@ class _MessagePageState extends State<MessagePage> {
                     ],
                   ),
                   Space.h24,
-                  CustomSheetWidget(
-                    columns: <DataColumn>[
-                      for (final title in titles)
-                        DataColumn(
-                          label: Expanded(
-                            child: Text(title),
-                          ),
-                        ),
-                    ],
-                    rows: <DataRow>[
-                      for (final item in state.messages)
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(InkWell(
-                                borderRadius: BRadius.r6,
-                                onTap: () => _bloc.openChange(context, item),
-                                child: Row(
-                                  children: [
-                                    Expanded(child: SheetText(text: item?.id)),
-                                    Space.w16,
-                                    const CustomOpenIcon()
-                                  ],
-                                ))),
-                            DataCell(UserCategoryDataCellWidget(
-                                userCategoryId: item?.user_category_id)),
-                            DataCell(CheckInDataCellWidget(
-                                checkInId: item?.checkin_id)),
-                            DataCell(
-                                SheetText(text: _getStringRole(item?.role))),
-                            DataCell(SheetText(text: item?.text)),
-                            DataCell(SheetText(text: item?.tokens_used)),
-                            DataCell(SheetText(text: item?.gpt_version)),
-                          ],
-                        ),
+                  Row(
+                    children: [
+                      CustomSheetWidget(
+                        columns: <DataColumn>[
+                          for (final title in titles)
+                            DataColumn(
+                              label: Text(title),
+                            ),
+                        ],
+                        rows: <DataRow>[
+                          for (final item in state.messages)
+                            DataRow(
+                              cells: <DataCell>[
+                                DataCell(InkWell(
+                                    borderRadius: BRadius.r6,
+                                    onTap: () => _bloc.openChange(context, item),
+                                    child: SheetText(text: item?.id))),
+                                DataCell(UserCategoryDataCellWidget(
+                                    userCategoryId: item?.user_category_id)),
+                                DataCell(CheckInDataCellWidget(
+                                    checkInId: item?.checkin_id)),
+                                DataCell(
+                                    SheetText(text: _getStringRole(item?.role))),
+                                DataCell(SheetText(text: item?.text)),
+                                DataCell(SheetText(text: item?.tokens_used)),
+                                DataCell(SheetText(text: item?.gpt_version)),
+                              ],
+                            ),
+                        ],
+                      ),
                     ],
                   ),
                 ],
@@ -180,6 +176,8 @@ class _MessagePageState extends State<MessagePage> {
         return 'User';
       case RoleEnum.Assistant:
         return 'Assistant';
+      case RoleEnum.System:
+        return 'System';
       default:
         return '';
     }

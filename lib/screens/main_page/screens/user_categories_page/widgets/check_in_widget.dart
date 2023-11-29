@@ -48,13 +48,7 @@ class _CheckInWidgetState extends State<CheckInWidget> {
                       InkWell(
                           borderRadius: BRadius.r6,
                           onTap: () => _bloc.openChange(context, item),
-                          child: Row(
-                            children: [
-                              const CustomOpenIcon(),
-                              Space.w16,
-                              SheetText(text: item.id),
-                            ],
-                          )),
+                          child:SheetText(text: item?.id)),
                       Space.w8,
                       Text(item.summary ?? '')
                     ],

@@ -72,13 +72,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                             DataCell(InkWell(
                                 borderRadius: BRadius.r6,
                                 onTap: () => _bloc.openChange(context, item),
-                                child: Row(
-                                  children: [
-                                    Expanded(child: SheetText(text: item?.id)),
-                                    Space.w16,
-                                    const CustomOpenIcon()
-                                  ],
-                                ))),
+                                child: Expanded(child: SheetText(text: item?.id)))),
                             DataCell(SheetText(text: item?.parent_id)),
                             DataCell(SheetText(text: item?.sort_order)),
                             DataCell(SheetText(text: item?.name)),

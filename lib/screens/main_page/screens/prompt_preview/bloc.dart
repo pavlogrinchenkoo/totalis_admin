@@ -23,6 +23,7 @@ class PromptPreviewBloc extends BlocBaseWithState<ScreenState> {
   final FilterRequest _filterRequest = FilterRequest();
   final TextEditingController controller = TextEditingController();
   final TextEditingController controllerLlm = TextEditingController();
+  final TextEditingController controllerMessage = TextEditingController();
 
   PromptPreviewBloc() {
     setState(ScreenState());
@@ -62,59 +63,86 @@ class PromptPreviewBloc extends BlocBaseWithState<ScreenState> {
     setState(currentState.copyWith(selectedCategory: category));
   }
 
-  preview(
-      BuildContext context,
-      FieldModel? field,
-      UserCategorySearchBloc userCategoryBloc,
-      CheckinsSearchBloc checkinsBloc,
-      UserSearchBloc userBloc) async {
+  preview(BuildContext context, UserSearchBloc userBloc, int? categoryId,
+      FieldModel? field) async {
     setState(currentState.copyWith(loadingPreview: true));
+    if (userBloc.currentState.selectedUser?.id == null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: BC.green,
+          content: const Text('Please select a user, category and message.'),
+          duration: const Duration(seconds: 2)));
+      setState(currentState.copyWith(loadingPreview: false));
+    }
     if (field?.title == 'Prompt') {
-      if (userBloc.currentState.selectedUser?.id == null ||
-          userCategoryBloc.currentState.selectedItem?.id == null) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            backgroundColor: BC.green,
-            content: const Text('Please select a user, category and message.'),
-            duration: const Duration(seconds: 2)));
-        setState(currentState.copyWith(loadingPreview: false));
-      }
       final string = await _promptRequest.promptCategory(
-          field?.controller?.text ?? null,
+          field?.controller?.text,
+          controllerMessage.text,
           userBloc.currentState.selectedUser?.id,
-          userCategoryBloc.currentState.selectedItem?.id,
-          608);
+          categoryId);
       controller.text = string ?? '';
     } else if (field?.title == 'Prompt checkin') {
-      if (userBloc.currentState.selectedUser?.id == null ||
-          checkinsBloc.currentState.selectedItem?.id == null) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            backgroundColor: BC.green,
-            content: const Text('Please select a user, checkin and message.'),
-            duration: const Duration(seconds: 2)));
-        setState(currentState.copyWith(loadingPreview: false));
-      }
       final string = await _promptRequest.promptCheckinCategory(
-          field?.controller?.text ?? null,
+          field?.controller?.text,
+          controllerMessage.text,
           userBloc.currentState.selectedUser?.id,
-          checkinsBloc.currentState.selectedItem?.id,
-          608);
+          categoryId);
       controller.text = string ?? '';
     } else if (field?.title == 'Prompt checkin proposal') {
-      if (userBloc.currentState.selectedUser?.id == null ||
-          userCategoryBloc.currentState.selectedItem?.id == null) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            backgroundColor: BC.green,
-            content: const Text('Please select a user and category'),
-            duration: const Duration(seconds: 2)));
-        setState(currentState.copyWith(loadingPreview: false));
-      }
       final string = await _promptRequest.promptCheckinProposalCategory(
-          field?.controller?.text ?? null,
+          field?.controller?.text,
+          controllerMessage.text,
           userBloc.currentState.selectedUser?.id,
-          userCategoryBloc.currentState.selectedItem?.id);
+          categoryId);
       controller.text = string ?? '';
     }
     setState(currentState.copyWith(loadingPreview: false));
+
+    // if (field?.title == 'Prompt') {
+    //   if (userBloc.currentState.selectedUser?.id == null ||
+    //       userCategoryBloc.currentState.selectedItem?.id == null) {
+    //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //         backgroundColor: BC.green,
+    //         content: const Text('Please select a user, category and message.'),
+    //         duration: const Duration(seconds: 2)));
+    //     setState(currentState.copyWith(loadingPreview: false));
+    //   }
+    //   final string = await _promptRequest.promptCategory(
+    //       field?.controller?.text ?? null,
+    //       userBloc.currentState.selectedUser?.id,
+    //       userCategoryBloc.currentState.selectedItem?.id,
+    //       608);
+    //   controller.text = string ?? '';
+    // } else if (field?.title == 'Prompt checkin') {
+    //   if (userBloc.currentState.selectedUser?.id == null ||
+    //       checkinsBloc.currentState.selectedItem?.id == null) {
+    //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //         backgroundColor: BC.green,
+    //         content: const Text('Please select a user, checkin and message.'),
+    //         duration: const Duration(seconds: 2)));
+    //     setState(currentState.copyWith(loadingPreview: false));
+    //   }
+    //   final string = await _promptRequest.promptCheckinCategory(
+    //       field?.controller?.text ?? null,
+    //       userBloc.currentState.selectedUser?.id,
+    //       checkinsBloc.currentState.selectedItem?.id,
+    //       608);
+    //   controller.text = string ?? '';
+    // } else if (field?.title == 'Prompt checkin proposal') {
+    //   if (userBloc.currentState.selectedUser?.id == null ||
+    //       userCategoryBloc.currentState.selectedItem?.id == null) {
+    //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //         backgroundColor: BC.green,
+    //         content: const Text('Please select a user and category'),
+    //         duration: const Duration(seconds: 2)));
+    //     setState(currentState.copyWith(loadingPreview: false));
+    //   }
+    //   final string = await _promptRequest.promptCheckinProposalCategory(
+    //       field?.controller?.text ?? null,
+    //       userBloc.currentState.selectedUser?.id,
+    //       userCategoryBloc.currentState.selectedItem?.id);
+    //   controller.text = string ?? '';
+    // }
+    // setState(currentState.copyWith(loadingPreview: false));
   }
 
   searchUser(Filters? filters) async {

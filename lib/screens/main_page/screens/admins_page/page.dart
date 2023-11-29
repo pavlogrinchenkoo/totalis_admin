@@ -6,7 +6,6 @@ import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_checkbox.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
-import 'package:totalis_admin/widgets/custom_open_icon.dart';
 import 'package:totalis_admin/widgets/custom_progress_indicator.dart';
 import 'package:totalis_admin/widgets/custom_sheet_header_widget.dart';
 import 'package:totalis_admin/widgets/custom_sheet_widget.dart';
@@ -67,13 +66,7 @@ class _AdminsPageState extends State<AdminsPage> {
                             DataCell(InkWell(
                                 borderRadius: BRadius.r6,
                                 onTap: () => _bloc.openChange(context, item),
-                                child: Row(
-                                  children: [
-                                    Expanded(child: SheetText(text: item?.id)),
-                                    Space.w16,
-                                    const CustomOpenIcon()
-                                  ],
-                                ))),
+                                child: Expanded(child: SheetText(text: item?.id)))),
                             DataCell(SheetText(text: item?.name)),
                             DataCell(SheetText(text: item?.mail)),
                             DataCell(CustomCheckbox(

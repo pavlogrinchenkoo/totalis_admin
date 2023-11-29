@@ -10,7 +10,7 @@ class UserCategoryRequestModel {
   int? category_id;
   bool? is_favorite;
   String? muted_day;
-  int? muted_for;
+  String? muted_for;
   String? chat_summary_long;
   String? chat_summary_short;
   bool? used_chat;
@@ -21,7 +21,7 @@ class UserCategoryRequestModel {
     this.category_id,
     this.is_favorite = false,
     this.muted_day = '',
-    this.muted_for = 0,
+    this.muted_for = '',
     this.chat_summary_long = '',
     this.chat_summary_short = '',
     this.used_chat = false,
@@ -40,7 +40,7 @@ class UserCategoryModel {
   int? category_id;
   bool? is_favorite;
   String? muted_day;
-  int? muted_for;
+  String? muted_for;
   String? chat_summary_long;
   String? chat_summary_short;
   bool? used_chat;
