@@ -82,7 +82,11 @@ class _RecommendationPageState extends State<RecommendationPage> {
                                       borderRadius: BRadius.r6,
                                       onTap: () =>
                                           _bloc.openChange(context, item),
-                                      child: SheetText(text: item?.id))),
+                                      child: Row(
+                                        children: [
+                                          SheetText(text: item?.id),
+                                        ],
+                                      ))),
                                   DataCell(InkWell(
                                       borderRadius: BRadius.r6,
                                       onTap: () async =>

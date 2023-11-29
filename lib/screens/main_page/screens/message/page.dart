@@ -146,14 +146,19 @@ class _MessagePageState extends State<MessagePage> {
                               cells: <DataCell>[
                                 DataCell(InkWell(
                                     borderRadius: BRadius.r6,
-                                    onTap: () => _bloc.openChange(context, item),
-                                    child: SheetText(text: item?.id))),
+                                    onTap: () =>
+                                        _bloc.openChange(context, item),
+                                    child: Row(
+                                      children: [
+                                        SheetText(text: item?.id),
+                                      ],
+                                    ))),
                                 DataCell(UserCategoryDataCellWidget(
                                     userCategoryId: item?.user_category_id)),
                                 DataCell(CheckInDataCellWidget(
                                     checkInId: item?.checkin_id)),
-                                DataCell(
-                                    SheetText(text: _getStringRole(item?.role))),
+                                DataCell(SheetText(
+                                    text: _getStringRole(item?.role))),
                                 DataCell(SheetText(text: item?.text)),
                                 DataCell(SheetText(text: item?.tokens_used)),
                                 DataCell(SheetText(text: item?.gpt_version)),
