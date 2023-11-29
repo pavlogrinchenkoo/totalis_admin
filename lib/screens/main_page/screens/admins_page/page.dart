@@ -66,7 +66,7 @@ class _AdminsPageState extends State<AdminsPage> {
                             DataCell(InkWell(
                                 borderRadius: BRadius.r6,
                                 onTap: () => _bloc.openChange(context, item),
-                                child: Expanded(child: SheetText(text: item?.id)))),
+                                child: SheetText(text: item?.id))),
                             DataCell(SheetText(text: item?.name)),
                             DataCell(SheetText(text: item?.mail)),
                             DataCell(CustomCheckbox(

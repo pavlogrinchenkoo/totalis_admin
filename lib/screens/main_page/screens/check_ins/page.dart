@@ -80,8 +80,7 @@ class _CheckInsPageState extends State<CheckInsPage> {
                                       borderRadius: BRadius.r6,
                                       onTap: () =>
                                           _bloc.openChange(context, item),
-                                      child: Expanded(
-                                          child: SheetText(text: item.id)))),
+                                      child: SheetText(text: item.id))),
                                   DataCell(InkWell(
                                       borderRadius: BRadius.r6,
                                       onTap: () async =>

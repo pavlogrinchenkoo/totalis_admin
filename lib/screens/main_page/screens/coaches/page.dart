@@ -75,8 +75,7 @@ class _CoachesPageState extends State<CoachesPage> {
                                       borderRadius: BRadius.r6,
                                       onTap: () =>
                                           _bloc.openChange(context, item),
-                                      child: Expanded(
-                                          child: SheetText(text: item?.id)))),
+                                      child: SheetText(text: item?.id))),
                                   DataCell(Row(
                                     children: [
                                       CustomCircle(imageId: item?.image_id),
