@@ -31,7 +31,7 @@ class _AdminsPageState extends State<AdminsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final titles = ['Id', 'Users name', 'Email', 'Enabled', 'Super admin'];
+    final titles = ['Id', 'Name', 'Email', 'Enabled', 'Super admin'];
 
     return CustomStreamBuilder(
         bloc: _bloc,
@@ -68,10 +68,9 @@ class _AdminsPageState extends State<AdminsPage> {
                                 borderRadius: BRadius.r6,
                                 onTap: () => _bloc.openChange(context, item),
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     SheetText(text: item?.id),
-                                    Space.w8,
-                                    const CustomOpenIcon()
                                   ],
                                 ))),
                             DataCell(SheetText(text: item?.name)),

@@ -8,6 +8,7 @@ part 'dto.g.dart';
 class CategoryModelRequest {
   int? parent_id;
   String? name;
+  String? name_long;
   int? icon_id;
   int? sort_order;
   String? description;
@@ -26,6 +27,7 @@ class CategoryModelRequest {
   CategoryModelRequest({
     this.parent_id,
     this.name,
+    this.name_long,
     this.icon_id,
     this.sort_order,
     this.description,
@@ -52,6 +54,7 @@ class CategoryModelRequest {
 class CategoryModel {
   int? parent_id;
   String? name;
+  String? name_long;
   int? icon_id;
   int? sort_order;
   String? description;
@@ -72,6 +75,7 @@ class CategoryModel {
   CategoryModel({
     this.parent_id,
     this.name,
+    this.name_long,
     this.icon_id,
     this.sort_order,
     this.description,

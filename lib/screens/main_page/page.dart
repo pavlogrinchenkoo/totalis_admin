@@ -3,6 +3,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:totalis_admin/routers/routes.dart';
 import 'package:totalis_admin/screens/main_page/bloc.dart';
+import 'package:totalis_admin/screens/main_page/screens/models_chat_gpt/page.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/widgets/custom_auto_tabs_scaffold.dart';
 import 'package:totalis_admin/widgets/custom_side_bar.dart';
@@ -40,6 +41,7 @@ class _MainPageState extends State<MainPage> {
               VariableRoute(),
               MessageRoute(),
               SystemRoute(),
+              ModelsChatGptRoute(),
             ],
             bodyBuilder: (_, tabsRouter) {
               return CustomSideBar(

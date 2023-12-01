@@ -51,7 +51,7 @@ class CoachesBloc extends BlocBaseWithState<ScreenState> {
       ),
       FieldModel(
         title: 'Sex',
-        type: FieldType.dropdown,
+        type: FieldType.enums,
         enumValue: item?.sex,
         values: SexEnum.values,
         required: true,

@@ -11,6 +11,7 @@ CategoryModelRequest _$CategoryModelRequestFromJson(
     CategoryModelRequest(
       parent_id: json['parent_id'] as int?,
       name: json['name'] as String?,
+      name_long: json['name_long'] as String?,
       icon_id: json['icon_id'] as int?,
       sort_order: json['sort_order'] as int?,
       description: json['description'] as String?,
@@ -32,6 +33,7 @@ Map<String, dynamic> _$CategoryModelRequestToJson(
     <String, dynamic>{
       'parent_id': instance.parent_id,
       'name': instance.name,
+      'name_long': instance.name_long,
       'icon_id': instance.icon_id,
       'sort_order': instance.sort_order,
       'description': instance.description,
@@ -52,6 +54,7 @@ CategoryModel _$CategoryModelFromJson(Map<String, dynamic> json) =>
     CategoryModel(
       parent_id: json['parent_id'] as int?,
       name: json['name'] as String?,
+      name_long: json['name_long'] as String?,
       icon_id: json['icon_id'] as int?,
       sort_order: json['sort_order'] as int?,
       description: json['description'] as String?,
@@ -74,6 +77,7 @@ Map<String, dynamic> _$CategoryModelToJson(CategoryModel instance) =>
     <String, dynamic>{
       'parent_id': instance.parent_id,
       'name': instance.name,
+      'name_long': instance.name_long,
       'icon_id': instance.icon_id,
       'sort_order': instance.sort_order,
       'description': instance.description,

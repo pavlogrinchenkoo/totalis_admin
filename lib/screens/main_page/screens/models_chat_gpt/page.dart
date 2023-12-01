@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:totalis_admin/api/models_chat_gpt/dto.dart';
 import 'package:totalis_admin/theme/theme_extensions/app_button_theme.dart';
 import 'package:totalis_admin/api/filters/dto.dart';
 import 'package:totalis_admin/api/messages/dto.dart';
@@ -8,7 +9,6 @@ import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
 import 'package:totalis_admin/widgets/check_in_data_cell_widget.dart';
-import 'package:totalis_admin/widgets/custom_open_icon.dart';
 import 'package:totalis_admin/widgets/custom_progress_indicator.dart';
 import 'package:totalis_admin/widgets/custom_sheet_header_widget.dart';
 import 'package:totalis_admin/widgets/custom_sheet_widget.dart';
@@ -18,15 +18,15 @@ import 'package:totalis_admin/widgets/user_category_data_cell_widget.dart';
 import 'bloc.dart';
 
 @RoutePage()
-class MessagePage extends StatefulWidget {
-  const MessagePage({super.key});
+class ModelsChatGptPage extends StatefulWidget {
+  const ModelsChatGptPage({super.key});
 
   @override
-  State<MessagePage> createState() => _MessagePageState();
+  State<ModelsChatGptPage> createState() => _ModelsChatGptPageState();
 }
 
-class _MessagePageState extends State<MessagePage> {
-  final MessageBloc _bloc = MessageBloc();
+class _ModelsChatGptPageState extends State<ModelsChatGptPage> {
+  final ModelsChatGptBloc _bloc = ModelsChatGptBloc();
   List<DropdownMenuItem<String>> fields =
       ['id', 'user_category_id', 'text'].map((e) {
     return DropdownMenuItem(
@@ -51,21 +51,15 @@ class _MessagePageState extends State<MessagePage> {
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
     final titles = [
       'Id',
-      'User category id',
-      'Сheckin',
-      'Role',
-      'Text',
-      'Token',
-      'GPT version',
+      'Model',
     ];
 
     return CustomStreamBuilder(
         bloc: _bloc,
         builder: (context, ScreenState state) {
-          if (state.loading && state.messages.isEmpty) {
+          if (state.loading) {
             return const CustomProgressIndicator();
           } else {
             return Scaffold(
@@ -78,56 +72,56 @@ class _MessagePageState extends State<MessagePage> {
                   Row(
                     children: [
                       CustomSheetHeaderWidget(
-                          title: 'Messages',
+                          title: 'Model chat gpt',
                           onSave: () =>
-                              _bloc.openChange(context, MessageModel())),
+                              _bloc.openChange(context, ModelsChatGptModel())),
                       Space.w20,
-                      Expanded(
-                        flex: 1,
-                        child: FormBuilderDropdown(
-                            name: 'Select field',
-                            decoration: const InputDecoration(
-                              labelText: 'Select field',
-                              border: OutlineInputBorder(),
-                              hoverColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                            ),
-                            focusColor: Colors.transparent,
-                            initialValue: fields.first.value,
-                            onChanged: (String? value) => setState(() {
-                                  field = value;
-                                }),
-                            items: fields),
-                      ),
-                      Space.w16,
-                      Expanded(
-                        flex: 2,
-                        child: FormBuilderTextField(
-                          onChanged: (value) =>
-                              value == '' ? _bloc.onSearch(null) : null,
-                          controller: controller,
-                          name: 'Message search',
-                          decoration: const InputDecoration(
-                            labelText: 'Message search',
-                            hintText: 'Message search',
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                        ),
-                      ),
-                      Space.w16,
-                      ElevatedButton(
-                          style: themeData
-                              .extension<AppButtonTheme>()!
-                              .primaryElevated,
-                          onPressed: () => controller.text != ''
-                              ? _bloc.onSearch(
-                                  Filters(
-                                      field:
-                                          field ?? fields.first.value ?? 'id',
-                                      value: controller.text),
-                                )
-                              : null,
-                          child: const Text('Search')),
+                      //   Expanded(
+                      //     flex: 1,
+                      //     child: FormBuilderDropdown(
+                      //         name: 'Select field',
+                      //         decoration: const InputDecoration(
+                      //           labelText: 'Select field',
+                      //           border: OutlineInputBorder(),
+                      //           hoverColor: Colors.transparent,
+                      //           focusColor: Colors.transparent,
+                      //         ),
+                      //         focusColor: Colors.transparent,
+                      //         initialValue: fields.first.value,
+                      //         onChanged: (String? value) => setState(() {
+                      //               field = value;
+                      //             }),
+                      //         items: fields),
+                      //   ),
+                      //   Space.w16,
+                      //   Expanded(
+                      //     flex: 2,
+                      //     child: FormBuilderTextField(
+                      //       onChanged: (value) =>
+                      //           value == '' ? _bloc.onSearch(null) : null,
+                      //       controller: controller,
+                      //       name: 'Message search',
+                      //       decoration: const InputDecoration(
+                      //         labelText: 'Message search',
+                      //         hintText: 'Message search',
+                      //         floatingLabelBehavior: FloatingLabelBehavior.always,
+                      //       ),
+                      //     ),
+                      //   ),
+                      //   Space.w16,
+                      //   ElevatedButton(
+                      //       style: themeData
+                      //           .extension<AppButtonTheme>()!
+                      //           .primaryElevated,
+                      //       onPressed: () => controller.text != ''
+                      //           ? _bloc.onSearch(
+                      //               Filters(
+                      //                   field:
+                      //                       field ?? fields.first.value ?? 'id',
+                      //                   value: controller.text),
+                      //             )
+                      //           : null,
+                      //       child: const Text('Search')),
                     ],
                   ),
                   Space.h24,
@@ -141,7 +135,7 @@ class _MessagePageState extends State<MessagePage> {
                             ),
                         ],
                         rows: <DataRow>[
-                          for (final item in state.messages)
+                          for (final item in state.models)
                             DataRow(
                               cells: <DataCell>[
                                 DataCell(InkWell(
@@ -155,15 +149,7 @@ class _MessagePageState extends State<MessagePage> {
                                         SheetText(text: item?.id),
                                       ],
                                     ))),
-                                DataCell(UserCategoryDataCellWidget(
-                                    userCategoryId: item?.user_category_id)),
-                                DataCell(CheckInDataCellWidget(
-                                    checkInId: item?.checkin_id)),
-                                DataCell(SheetText(
-                                    text: _getStringRole(item?.role))),
-                                DataCell(SheetText(text: item?.text)),
-                                DataCell(SheetText(text: item?.tokens_used)),
-                                DataCell(SheetText(text: item?.gpt_version)),
+                                DataCell(SheetText(text: item?.value)),
                               ],
                             ),
                         ],

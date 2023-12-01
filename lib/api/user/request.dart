@@ -27,6 +27,12 @@ class UserRequest {
     if (res == null) return null;
     return UserModel.fromJson(res);
   }
+
+  Future<UserModel?> delete(int? id) async {
+    final res = await _request.get('api/admin/users/remove/id/$id');
+    if (res == null) return null;
+    return UserModel.fromJson(res);
+  }
 }
 
 enum SexEnum { M, F, N }

@@ -73,10 +73,9 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                 borderRadius: BRadius.r6,
                                 onTap: () => _bloc.openChange(context, item),
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     SheetText(text: item?.id),
-                                    Space.w8,
-                                    const CustomOpenIcon()
                                   ],
                                 ))),
                             DataCell(SheetText(text: item?.parent_id)),

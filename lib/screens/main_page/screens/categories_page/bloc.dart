@@ -42,6 +42,10 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
       FieldModel(
           title: 'Name', controller: TextEditingController(text: item?.name)),
       FieldModel(
+          title: 'Name long',
+          type: FieldType.bigText,
+          controller: TextEditingController(text: item?.name)),
+      FieldModel(
           title: 'Image', type: FieldType.avatar, imageId: item?.icon_id),
       FieldModel(
           title: 'Sorted order',
@@ -49,6 +53,7 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
               TextEditingController(text: (item?.sort_order ?? 0).toString())),
       FieldModel(
           title: 'Description',
+          type: FieldType.bigText,
           controller: TextEditingController(text: item?.description)),
       FieldModel(
           enable: false,
@@ -123,6 +128,8 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
         id: item?.id,
         time_create: item?.time_create,
         name: fields.firstWhere((i) => i.title == 'Name').controller?.text,
+        name_long:
+            fields.firstWhere((i) => i.title == 'Name long').controller?.text,
         icon_id: fields.firstWhere((i) => i.title == 'Image').imageId,
         sort_order: int.parse(fields
                 .firstWhere((i) => i.title == 'Sorted order')
@@ -182,6 +189,7 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
     final requestModel = CategoryModelRequest(
         parent_id: newModel.parent_id,
         name: newModel.name,
+        name_long: newModel.name_long,
         icon_id: newModel.icon_id,
         sort_order: newModel.sort_order,
         description: newModel.description,

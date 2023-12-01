@@ -5,6 +5,7 @@ import 'package:totalis_admin/screens/auth_page/page.dart';
 import 'package:totalis_admin/screens/main_page/page.dart';
 import 'package:totalis_admin/screens/main_page/screens/admins_page/page.dart';
 import 'package:totalis_admin/screens/main_page/screens/message/page.dart';
+import 'package:totalis_admin/screens/main_page/screens/models_chat_gpt/page.dart';
 import 'package:totalis_admin/screens/main_page/screens/prompt_preview/page.dart';
 import 'package:totalis_admin/screens/main_page/screens/systems/page.dart';
 import 'package:totalis_admin/widgets/chage_page.dart';
@@ -35,6 +36,7 @@ class AppRouter extends _$AppRouter {
       AutoRoute(path: 'messages', page: MessageRoute.page),
       AutoRoute(path: 'system', page: SystemRoute.page),
       AutoRoute(path: 'prompt-preview', page: PromptPreviewRoute.page),
+      AutoRoute(path: 'models-chat-gpt', page: ModelsChatGptRoute.page),
     ]),
     AutoRoute(path: '/change', page: ChangeRoute.page),
   ];

@@ -38,7 +38,12 @@ class _CategoryDataCellWidgetState extends State<CategoryDataCellWidget> {
           borderRadius: BRadius.r6,
           onTap: () async => _blocCategories.openChange(
               context, await _blocCategories.getCategory(id)),
-          child: SheetText(text: id));
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SheetText(text: id),
+            ],
+          ));
     }
   }
 

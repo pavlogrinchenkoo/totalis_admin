@@ -152,10 +152,10 @@ class _UserCategoriesPageState extends State<UserCategoriesPage> {
                                     onTap: () => _bloc.openChange(context, item,
                                         widget: CheckInWidget(id: item?.id)),
                                     child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         SheetText(text: item?.id),
-                                        Space.w8,
-                                        const CustomOpenIcon()
                                       ],
                                     ))),
                                 DataCell(InkWell(
@@ -165,10 +165,10 @@ class _UserCategoriesPageState extends State<UserCategoriesPage> {
                                         await _blocUsers
                                             .getUser(item?.user_id)),
                                     child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         SheetText(text: item?.user_id),
-                                        Space.w8,
-                                        const CustomOpenIcon()
                                       ],
                                     ))),
                                 DataCell(InkWell(
@@ -179,10 +179,10 @@ class _UserCategoriesPageState extends State<UserCategoriesPage> {
                                             await _blocCategories.getCategory(
                                                 item?.category_id)),
                                     child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         SheetText(text: item?.category_id),
-                                        Space.w8,
-                                        const CustomOpenIcon()
                                       ],
                                     ))),
                               ],

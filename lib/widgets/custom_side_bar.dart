@@ -24,6 +24,8 @@ class CustomSideBar extends StatelessWidget {
     CustomSideBarItem(title: 'Variables', icon: Assets.variables.svg()),
     CustomSideBarItem(title: 'Messages', icon: Assets.messages.svg()),
     CustomSideBarItem(title: 'System', icon: const Icon(Icons.settings)),
+    CustomSideBarItem(
+        title: 'Models Chat Gpt', icon: const Icon(Icons.model_training)),
   ];
 
   @override

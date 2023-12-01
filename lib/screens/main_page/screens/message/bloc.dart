@@ -99,7 +99,7 @@ class MessageBloc extends BlocBaseWithState<ScreenState> {
       ),
       FieldModel(
         title: 'Role',
-        type: FieldType.dropdown,
+        type: FieldType.enums,
         required: true,
         values: RoleEnum.values,
         enumValue: item?.role,

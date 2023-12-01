@@ -81,10 +81,10 @@ class _CheckInsPageState extends State<CheckInsPage> {
                                       onTap: () =>
                                           _bloc.openChange(context, item),
                                       child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           SheetText(text: item.id),
-                                          Space.w8,
-                                          const CustomOpenIcon()
                                         ],
                                       ))),
                                   DataCell(InkWell(
@@ -96,11 +96,11 @@ class _CheckInsPageState extends State<CheckInsPage> {
                                                   .getUserCategory(
                                                       item.user_category_id)),
                                       child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           SheetText(
                                               text: item.user_category_id),
-                                          Space.w8,
-                                          const CustomOpenIcon()
                                         ],
                                       ))),
                                   DataCell(CategoryDataCellWidget(

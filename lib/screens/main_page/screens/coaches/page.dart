@@ -77,15 +77,9 @@ class _CoachesPageState extends State<CoachesPage> {
                                       onTap: () =>
                                           _bloc.openChange(context, item),
                                       child: Row(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              SheetText(text: item?.id),
-                                              Space.w8,
-                                              const CustomOpenIcon()
-                                            ],
-                                          )
-                                        ],
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [SheetText(text: item?.id)],
                                       ))),
                                   DataCell(Row(
                                     children: [

@@ -1,20 +1,23 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:totalis_admin/api/filters/dto.dart';
+import 'package:totalis_admin/api/filters/request.dart';
+import 'package:totalis_admin/api/models_chat_gpt/dto.dart';
 import 'package:totalis_admin/api/system/dto.dart';
 import 'package:totalis_admin/api/system/request.dart';
 import 'package:totalis_admin/api/variable/dto.dart';
-import 'package:totalis_admin/api/variable/request.dart';
 import 'package:totalis_admin/routers/routes.dart';
 import 'package:totalis_admin/utils/bloc_base.dart';
 import 'package:totalis_admin/widgets/chage_page.dart';
+import 'package:collection/collection.dart';
 
 class SystemBloc extends BlocBaseWithState<ScreenState> {
   @override
   ScreenState get currentState => super.currentState!;
-  final VariableRequest _variableRequest = VariableRequest();
   final SystemRequest _systemRequest = SystemRequest();
   final GoogleSignIn? googleSignIn = GoogleSignIn();
+  final FilterRequest _filterRequest = FilterRequest();
 
   SystemBloc() {
     setState(ScreenState());
@@ -23,7 +26,20 @@ class SystemBloc extends BlocBaseWithState<ScreenState> {
   Future<void> init() async {
     setState(ScreenState(loading: true));
     final system = await _systemRequest.get();
-    setState(currentState.copyWith(loading: false, system: system));
+    final models = await initModels();
+    final currentModel = models?.firstWhereOrNull(
+            (model) => model.value == system?.model_gpt_version) ??
+        models?.first;
+    setState(currentState.copyWith(
+        loading: false,
+        system: system,
+        models: models,
+        currentModel: currentModel?.value));
+  }
+
+  Future<List<ModelsChatGptModel>?> initModels() async {
+    return await _filterRequest
+        .modelsFilters(QueryModel(page: 0, count: 20, filters: []));
   }
 
   openChange(BuildContext context, SystemModel? item) {
@@ -35,7 +51,9 @@ class SystemBloc extends BlocBaseWithState<ScreenState> {
       ),
       FieldModel(
         title: 'Model gpt version',
-        type: FieldType.text,
+        type: FieldType.dropdown,
+        enumValue: currentState.currentModel,
+        values: currentState.models.map((e) => e?.value ?? '').toList(),
         controller: TextEditingController(text: item?.model_gpt_version),
       ),
       FieldModel(
@@ -121,10 +139,8 @@ class SystemBloc extends BlocBaseWithState<ScreenState> {
     final newModel = SystemModel(
         openapi_key:
             fields.firstWhere((i) => i.title == 'Openapi key').controller?.text,
-        model_gpt_version: fields
-            .firstWhere((i) => i.title == 'Model gpt version')
-            .controller
-            ?.text,
+        model_gpt_version:
+            fields.firstWhere((i) => i.title == 'Model gpt version').enumValue,
         prompt_why:
             fields.firstWhere((i) => i.title == 'Prompt why').controller?.text,
         prompt_how:
@@ -157,7 +173,8 @@ class SystemBloc extends BlocBaseWithState<ScreenState> {
 
     final res = await _systemRequest.change(newModel);
     if (context.mounted) context.router.pop();
-    setState(currentState.copyWith(system: res));
+    setState(currentState.copyWith(
+        system: res, currentModel: res?.model_gpt_version));
   }
 }
 
@@ -166,22 +183,30 @@ class ScreenState {
   final List<VariableModel?> variables;
   final SystemModel? system;
   final List<String>? titles;
+  final List<ModelsChatGptModel?> models;
+  final String? currentModel;
 
   ScreenState(
       {this.loading = false,
       this.variables = const [],
       this.system,
-      this.titles = const []});
+      this.titles = const [],
+      this.models = const [],
+      this.currentModel});
 
   ScreenState copyWith(
       {bool? loading,
       List<VariableModel?>? variables,
       SystemModel? system,
-      List<String>? titles}) {
+      List<String>? titles,
+      List<ModelsChatGptModel?>? models,
+      String? currentModel}) {
     return ScreenState(
         loading: loading ?? this.loading,
         variables: variables ?? this.variables,
         system: system ?? this.system,
-        titles: titles ?? this.titles);
+        titles: titles ?? this.titles,
+        models: models ?? this.models,
+        currentModel: currentModel ?? this.currentModel);
   }
 }

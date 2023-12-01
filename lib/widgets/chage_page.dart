@@ -29,6 +29,7 @@ class ChangePage extends StatelessWidget {
       {this.fields,
       this.title,
       this.onSave,
+      this.onDelete,
       this.widget,
       this.category,
       super.key});
@@ -36,6 +37,7 @@ class ChangePage extends StatelessWidget {
   final List<FieldModel>? fields;
   final String? title;
   final void Function()? onSave;
+  final void Function()? onDelete;
   final Widget? widget;
   final CategoryModel? category;
 
@@ -90,24 +92,41 @@ class ChangePage extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 36),
                           child: Align(
                             alignment: Alignment.centerLeft,
-                            child: SizedBox(
-                              height: 36.0,
-                              width: 100.0,
-                              child: ElevatedButton(
-                                style: themeData
-                                    .extension<AppButtonTheme>()!
-                                    .primaryElevated,
-                                onPressed: () {
-                                  if (_formKey.currentState?.validate() ??
-                                      false) {
-                                    // Validation passed.
-                                    onSave?.call();
-                                  } else {
-                                    // Validation failed.
-                                  }
-                                },
-                                child: const Text('Save'),
-                              ),
+                            child: Row(
+                              children: [
+                                ElevatedButton(
+                                  style: themeData
+                                      .extension<AppButtonTheme>()!
+                                      .primaryElevated,
+                                  onPressed: () {
+                                    if (_formKey.currentState?.validate() ??
+                                        false) {
+                                      // Validation passed.
+                                      onSave?.call();
+                                    } else {
+                                      // Validation failed.
+                                    }
+                                  },
+                                  child: const Text('Save'),
+                                ),
+                                Space.w16,
+                                if (onDelete != null)
+                                  ElevatedButton(
+                                    style: themeData
+                                        .extension<AppButtonTheme>()!
+                                        .errorElevated,
+                                    onPressed: () {
+                                      if (_formKey.currentState?.validate() ??
+                                          false) {
+                                        // Validation passed.
+                                        onDelete?.call();
+                                      } else {
+                                        // Validation failed.
+                                      }
+                                    },
+                                    child: const Text('Delete'),
+                                  ),
+                              ],
                             ),
                           ),
                         ),
@@ -209,7 +228,7 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
                       // Validation failed.
                     }
                   },
-                  child: const Text('Propmpt preview'),
+                  child: const Text('Prompt preview'),
                 ),
               ],
             ),
@@ -230,7 +249,7 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
                       // Validation failed.
                     }
                   },
-                  child: const Text('Propmpt preview'),
+                  child: const Text('Prompt preview'),
                 ),
               ],
             ),
@@ -251,7 +270,7 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
                       // Validation failed.
                     }
                   },
-                  child: const Text('Propmpt preview'),
+                  child: const Text('Prompt preview'),
                 ),
               ],
             )
@@ -313,6 +332,23 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
         ],
       );
     } else if (widget.field?.type == FieldType.dropdown) {
+      return FormBuilderDropdown(
+        name: widget.field?.title ?? '',
+        decoration: InputDecoration(
+          labelText: widget.field?.title ?? '',
+          border: const OutlineInputBorder(),
+          hoverColor: Colors.transparent,
+          focusColor: Colors.transparent,
+        ),
+        focusColor: Colors.transparent,
+        onChanged: (value) => widget.field?.enumValue = value,
+        validator: FormBuilderValidators.required(),
+        initialValue: widget.field?.enumValue,
+        items: (widget.field?.values ?? [])
+            .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+            .toList(),
+      );
+    } else if (widget.field?.type == FieldType.enums) {
       return FormBuilderDropdown(
         name: widget.field?.title ?? '',
         decoration: InputDecoration(
@@ -502,4 +538,13 @@ class FieldModel {
   }
 }
 
-enum FieldType { checkbox, text, bigText, email, avatar, dropdown, dateTime }
+enum FieldType {
+  checkbox,
+  text,
+  bigText,
+  email,
+  avatar,
+  dropdown,
+  enums,
+  dateTime
+}

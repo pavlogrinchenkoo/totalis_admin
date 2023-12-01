@@ -36,6 +36,7 @@ abstract class _$AppRouter extends RootStackRouter {
           fields: args.fields,
           title: args.title,
           onSave: args.onSave,
+          onDelete: args.onDelete,
           widget: args.widget,
           category: args.category,
           key: args.key,
@@ -75,6 +76,12 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const MessagePage(),
+      );
+    },
+    ModelsChatGptRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ModelsChatGptPage(),
       );
     },
     PromptPreviewRoute.name: (routeData) {
@@ -157,6 +164,7 @@ class ChangeRoute extends PageRouteInfo<ChangeRouteArgs> {
     List<FieldModel>? fields,
     String? title,
     void Function()? onSave,
+    void Function()? onDelete,
     Widget? widget,
     CategoryModel? category,
     Key? key,
@@ -167,6 +175,7 @@ class ChangeRoute extends PageRouteInfo<ChangeRouteArgs> {
             fields: fields,
             title: title,
             onSave: onSave,
+            onDelete: onDelete,
             widget: widget,
             category: category,
             key: key,
@@ -184,6 +193,7 @@ class ChangeRouteArgs {
     this.fields,
     this.title,
     this.onSave,
+    this.onDelete,
     this.widget,
     this.category,
     this.key,
@@ -195,6 +205,8 @@ class ChangeRouteArgs {
 
   final void Function()? onSave;
 
+  final void Function()? onDelete;
+
   final Widget? widget;
 
   final CategoryModel? category;
@@ -203,7 +215,7 @@ class ChangeRouteArgs {
 
   @override
   String toString() {
-    return 'ChangeRouteArgs{fields: $fields, title: $title, onSave: $onSave, widget: $widget, category: $category, key: $key}';
+    return 'ChangeRouteArgs{fields: $fields, title: $title, onSave: $onSave, onDelete: $onDelete, widget: $widget, category: $category, key: $key}';
   }
 }
 
@@ -296,6 +308,20 @@ class MessageRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'MessageRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ModelsChatGptPage]
+class ModelsChatGptRoute extends PageRouteInfo<void> {
+  const ModelsChatGptRoute({List<PageRouteInfo>? children})
+      : super(
+          ModelsChatGptRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ModelsChatGptRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

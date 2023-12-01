@@ -83,10 +83,10 @@ class _RecommendationPageState extends State<RecommendationPage> {
                                       onTap: () =>
                                           _bloc.openChange(context, item),
                                       child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           SheetText(text: item?.id),
-                                          Space.w8,
-                                          const CustomOpenIcon()
                                         ],
                                       ))),
                                   DataCell(InkWell(
@@ -96,8 +96,13 @@ class _RecommendationPageState extends State<RecommendationPage> {
                                               context,
                                               await _blocCheckIns.getCheckIn(
                                                   item?.checkin_id)),
-                                      child:
-                                          SheetText(text: item?.checkin_id))),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          SheetText(text: item?.checkin_id),
+                                        ],
+                                      ))),
                                   for (final w in _userCategoryAndCategory(
                                       item?.checkin_id))
                                     DataCell(w),

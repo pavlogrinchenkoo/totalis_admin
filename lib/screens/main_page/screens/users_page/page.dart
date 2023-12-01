@@ -67,10 +67,9 @@ class _UsersPageState extends State<UsersPage> {
                                 borderRadius: BRadius.r6,
                                 onTap: () => _bloc.openChange(context, item),
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     SheetText(text: item?.id),
-                                    Space.w8,
-                                    const CustomOpenIcon()
                                   ],
                                 ))),
                             DataCell(Row(

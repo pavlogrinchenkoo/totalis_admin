@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:totalis_admin/api/user/dto.dart';
@@ -61,7 +62,7 @@ class UsersBloc extends BlocBaseWithState<ScreenState> {
           enable: false),
       FieldModel(
           title: 'Sex',
-          type: FieldType.dropdown,
+          type: FieldType.enums,
           required: true,
           values: SexEnum.values,
           enumValue: item?.sex),
@@ -78,6 +79,7 @@ class UsersBloc extends BlocBaseWithState<ScreenState> {
     context.router.push(ChangeRoute(
         fields: fields,
         title: 'User',
+        onDelete: () => onDelete(context, item),
         onSave: () =>
             {onSave(context, fields, item, isCreate: item?.id == null)}));
   }
@@ -129,16 +131,28 @@ class UsersBloc extends BlocBaseWithState<ScreenState> {
   }
 
   void replaceItem(UserModel? changed, UserModel? newUser) {
-    if (changed?.id == null) return;
+    // if (changed?.id == null) return;
     final admins = [...currentState.users];
     final index = admins.indexWhere((users) => users?.id == newUser?.id);
-    admins.replaceRange(index, index + 1, [changed]);
+    if (changed == null) {
+      admins.removeAt(index);
+    } else {
+      admins.replaceRange(index, index + 1, [changed]);
+    }
     setState(currentState.copyWith(users: admins));
   }
 
   Future<UserModel?> getUser(int? id) async {
     final res = await _userRequest.get(id);
     return res;
+  }
+
+  onDelete(BuildContext context, UserModel? item) async {
+    showCustomDialog(context, DialogType.error, () async {
+      final res = await _userRequest.delete(item?.id);
+      if (context.mounted && res != null) context.router.pop();
+      replaceItem(null, item);
+    }, () => context.router.pop());
   }
 }
 

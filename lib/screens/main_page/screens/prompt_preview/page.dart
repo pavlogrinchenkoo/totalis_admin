@@ -168,8 +168,12 @@ class _PromptPreviewPageState extends State<PromptPreviewPage> {
                             right: 1,
                             bottom: 1,
                             child: InkWell(
-                              onTap: () => CustomBottomSheetTextField()
-                                  .show(context, widget.field),
+                              onTap: () => CustomBottomSheetTextField().show(
+                                  context,
+                                  FieldModel(
+                                      controller: _bloc.controller,
+                                      title: 'Response',
+                                      enable: true)),
                               child: Container(
                                   padding: const EdgeInsets.all(4),
                                   decoration: BoxDecoration(
