@@ -36,6 +36,7 @@ abstract class _$AppRouter extends RootStackRouter {
           fields: args.fields,
           title: args.title,
           onSave: args.onSave,
+          onSavePrompt: args.onSavePrompt,
           onDelete: args.onDelete,
           widget: args.widget,
           category: args.category,
@@ -92,6 +93,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: PromptPreviewPage(
           field: args.field,
           categoryId: args.categoryId,
+          onSave: args.onSave,
           key: args.key,
         ),
       );
@@ -164,6 +166,7 @@ class ChangeRoute extends PageRouteInfo<ChangeRouteArgs> {
     List<FieldModel>? fields,
     String? title,
     void Function()? onSave,
+    void Function()? onSavePrompt,
     void Function()? onDelete,
     Widget? widget,
     CategoryModel? category,
@@ -175,6 +178,7 @@ class ChangeRoute extends PageRouteInfo<ChangeRouteArgs> {
             fields: fields,
             title: title,
             onSave: onSave,
+            onSavePrompt: onSavePrompt,
             onDelete: onDelete,
             widget: widget,
             category: category,
@@ -193,6 +197,7 @@ class ChangeRouteArgs {
     this.fields,
     this.title,
     this.onSave,
+    this.onSavePrompt,
     this.onDelete,
     this.widget,
     this.category,
@@ -205,6 +210,8 @@ class ChangeRouteArgs {
 
   final void Function()? onSave;
 
+  final void Function()? onSavePrompt;
+
   final void Function()? onDelete;
 
   final Widget? widget;
@@ -215,7 +222,7 @@ class ChangeRouteArgs {
 
   @override
   String toString() {
-    return 'ChangeRouteArgs{fields: $fields, title: $title, onSave: $onSave, onDelete: $onDelete, widget: $widget, category: $category, key: $key}';
+    return 'ChangeRouteArgs{fields: $fields, title: $title, onSave: $onSave, onSavePrompt: $onSavePrompt, onDelete: $onDelete, widget: $widget, category: $category, key: $key}';
   }
 }
 
@@ -332,6 +339,7 @@ class PromptPreviewRoute extends PageRouteInfo<PromptPreviewRouteArgs> {
   PromptPreviewRoute({
     FieldModel? field,
     int? categoryId,
+    void Function()? onSave,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
@@ -339,6 +347,7 @@ class PromptPreviewRoute extends PageRouteInfo<PromptPreviewRouteArgs> {
           args: PromptPreviewRouteArgs(
             field: field,
             categoryId: categoryId,
+            onSave: onSave,
             key: key,
           ),
           initialChildren: children,
@@ -354,6 +363,7 @@ class PromptPreviewRouteArgs {
   const PromptPreviewRouteArgs({
     this.field,
     this.categoryId,
+    this.onSave,
     this.key,
   });
 
@@ -361,11 +371,13 @@ class PromptPreviewRouteArgs {
 
   final int? categoryId;
 
+  final void Function()? onSave;
+
   final Key? key;
 
   @override
   String toString() {
-    return 'PromptPreviewRouteArgs{field: $field, categoryId: $categoryId, key: $key}';
+    return 'PromptPreviewRouteArgs{field: $field, categoryId: $categoryId, onSave: $onSave, key: $key}';
   }
 }
 

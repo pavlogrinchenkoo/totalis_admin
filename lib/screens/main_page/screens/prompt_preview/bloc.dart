@@ -169,6 +169,13 @@ class PromptPreviewBloc extends BlocBaseWithState<ScreenState> {
     controllerLlm.text = res ?? '';
     setState(currentState.copyWith(loadingLlm: false));
   }
+
+  onSave() {
+    setState(currentState.copyWith(saved: true));
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(currentState.copyWith(saved: false));
+    });
+  }
 }
 
 class ScreenState {
@@ -183,6 +190,7 @@ class ScreenState {
   final int page;
   final UserModel? selectedUser;
   final CategoryModel? selectedCategory;
+  final bool saved;
 
   ScreenState(
       {this.loading = false,
@@ -195,7 +203,8 @@ class ScreenState {
       this.isAll = false,
       this.page = 0,
       this.selectedUser,
-      this.selectedCategory});
+      this.selectedCategory,
+      this.saved = false});
 
   ScreenState copyWith(
       {bool? loading,
@@ -208,7 +217,8 @@ class ScreenState {
       bool? isAll,
       int? page,
       UserModel? selectedUser,
-      CategoryModel? selectedCategory}) {
+      CategoryModel? selectedCategory,
+      bool? saved}) {
     return ScreenState(
         loading: loading ?? this.loading,
         loadingPreview: loadingPreview ?? this.loadingPreview,
@@ -220,6 +230,7 @@ class ScreenState {
         isAll: isAll ?? this.isAll,
         page: page ?? this.page,
         selectedCategory: selectedCategory ?? this.selectedCategory,
-        selectedUser: selectedUser ?? this.selectedUser);
+        selectedUser: selectedUser ?? this.selectedUser,
+        saved: saved ?? this.saved);
   }
 }

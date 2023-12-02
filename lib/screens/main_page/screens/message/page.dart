@@ -1,6 +1,9 @@
 import 'package:auto_route/annotations.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user/widget.dart';
+import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user_category/widget.dart';
 import 'package:totalis_admin/theme/theme_extensions/app_button_theme.dart';
 import 'package:totalis_admin/api/filters/dto.dart';
 import 'package:totalis_admin/api/messages/dto.dart';
@@ -8,13 +11,15 @@ import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
 import 'package:totalis_admin/widgets/check_in_data_cell_widget.dart';
-import 'package:totalis_admin/widgets/custom_open_icon.dart';
 import 'package:totalis_admin/widgets/custom_progress_indicator.dart';
 import 'package:totalis_admin/widgets/custom_sheet_header_widget.dart';
 import 'package:totalis_admin/widgets/custom_sheet_widget.dart';
 import 'package:totalis_admin/widgets/sheets_text.dart';
 import 'package:totalis_admin/widgets/user_category_data_cell_widget.dart';
-
+import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user/bloc.dart'
+    as ub;
+import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user_category/bloc.dart'
+    as ucb;
 import 'bloc.dart';
 
 @RoutePage()
@@ -27,6 +32,10 @@ class MessagePage extends StatefulWidget {
 
 class _MessagePageState extends State<MessagePage> {
   final MessageBloc _bloc = MessageBloc();
+  final ub.UserSearchBloc userBloc = ub.UserSearchBloc();
+  final ucb.UserCategorySearchBloc userCategoryBloc =
+      ucb.UserCategorySearchBloc();
+
   List<DropdownMenuItem<String>> fields =
       ['id', 'user_category_id', 'text'].map((e) {
     return DropdownMenuItem(
@@ -82,52 +91,63 @@ class _MessagePageState extends State<MessagePage> {
                           onSave: () =>
                               _bloc.openChange(context, MessageModel())),
                       Space.w20,
-                      Expanded(
-                        flex: 1,
-                        child: FormBuilderDropdown(
-                            name: 'Select field',
-                            decoration: const InputDecoration(
-                              labelText: 'Select field',
-                              border: OutlineInputBorder(),
-                              hoverColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                            ),
-                            focusColor: Colors.transparent,
-                            initialValue: fields.first.value,
-                            onChanged: (String? value) => setState(() {
-                                  field = value;
-                                }),
-                            items: fields),
-                      ),
-                      Space.w16,
-                      Expanded(
-                        flex: 2,
-                        child: FormBuilderTextField(
-                          onChanged: (value) =>
-                              value == '' ? _bloc.onSearch(null) : null,
-                          controller: controller,
-                          name: 'Message search',
-                          decoration: const InputDecoration(
-                            labelText: 'Message search',
-                            hintText: 'Message search',
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                        ),
-                      ),
-                      Space.w16,
-                      ElevatedButton(
-                          style: themeData
-                              .extension<AppButtonTheme>()!
-                              .primaryElevated,
-                          onPressed: () => controller.text != ''
-                              ? _bloc.onSearch(
-                                  Filters(
-                                      field:
-                                          field ?? fields.first.value ?? 'id',
-                                      value: controller.text),
-                                )
-                              : null,
-                          child: const Text('Search')),
+                      UserSearchWidget(bloc: userBloc),
+                      Space.w20,
+                      UserCategorySearchWidget(
+                          bloc: userCategoryBloc,
+                          userBloc: userBloc,
+                          onChange: () => _bloc.onSearch(Filters(
+                              field: 'user_category_id',
+                              value: userCategoryBloc
+                                  .currentState.selectedItem?.id)),
+                          onClear: () => _bloc.onSearch(null)),
+
+                      // Expanded(
+                      //   flex: 1,
+                      //   child: FormBuilderDropdown(
+                      //       name: 'Select field',
+                      //       decoration: const InputDecoration(
+                      //         labelText: 'Select field',
+                      //         border: OutlineInputBorder(),
+                      //         hoverColor: Colors.transparent,
+                      //         focusColor: Colors.transparent,
+                      //       ),
+                      //       focusColor: Colors.transparent,
+                      //       initialValue: fields.first.value,
+                      //       onChanged: (String? value) => setState(() {
+                      //             field = value;
+                      //           }),
+                      //       items: fields),
+                      // ),
+                      // Space.w16,
+                      // Expanded(
+                      //   flex: 2,
+                      //   child: FormBuilderTextField(
+                      //     onChanged: (value) =>
+                      //         value == '' ? _bloc.onSearch(null) : null,
+                      //     controller: controller,
+                      //     name: 'Message search',
+                      //     decoration: const InputDecoration(
+                      //       labelText: 'Message search',
+                      //       hintText: 'Message search',
+                      //       floatingLabelBehavior: FloatingLabelBehavior.always,
+                      //     ),
+                      //   ),
+                      // ),
+                      // Space.w16,
+                      // ElevatedButton(
+                      //     style: themeData
+                      //         .extension<AppButtonTheme>()!
+                      //         .primaryElevated,
+                      //     onPressed: () => controller.text != ''
+                      //         ? _bloc.onSearch(
+                      //             Filters(
+                      //                 field:
+                      //                     field ?? fields.first.value ?? 'id',
+                      //                 value: controller.text),
+                      //           )
+                      //         : null,
+                      //     child: const Text('Search')),
                     ],
                   ),
                   Space.h24,
@@ -155,8 +175,8 @@ class _MessagePageState extends State<MessagePage> {
                                         SheetText(text: item?.id),
                                       ],
                                     ))),
-                                DataCell(UserCategoryDataCellWidget(
-                                    userCategoryId: item?.user_category_id)),
+                                DataCell(
+                                    SheetText(text: item?.user_category_id)),
                                 DataCell(CheckInDataCellWidget(
                                     checkInId: item?.checkin_id)),
                                 DataCell(SheetText(

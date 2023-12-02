@@ -29,6 +29,7 @@ class ChangePage extends StatelessWidget {
       {this.fields,
       this.title,
       this.onSave,
+      this.onSavePrompt,
       this.onDelete,
       this.widget,
       this.category,
@@ -37,6 +38,7 @@ class ChangePage extends StatelessWidget {
   final List<FieldModel>? fields;
   final String? title;
   final void Function()? onSave;
+  final void Function()? onSavePrompt;
   final void Function()? onDelete;
   final Widget? widget;
   final CategoryModel? category;
@@ -85,7 +87,8 @@ class ChangePage extends StatelessWidget {
                             child: CustomFieldWidget(
                                 field: field,
                                 formKey: _formKey,
-                                category: category),
+                                category: category,
+                                onSavePrompt: onSavePrompt),
                           ),
                         widget ?? const SizedBox(),
                         Padding(
@@ -146,11 +149,17 @@ class ChangePage extends StatelessWidget {
 
 class CustomFieldWidget extends StatefulWidget {
   const CustomFieldWidget(
-      {this.field, this.formKey, this.onSave, this.category, super.key});
+      {this.field,
+      this.formKey,
+      this.onSave,
+      this.category,
+      this.onSavePrompt,
+      super.key});
 
   final FieldModel? field;
   final GlobalKey<FormBuilderState>? formKey;
   final void Function()? onSave;
+  final void Function()? onSavePrompt;
   final CategoryModel? category;
 
   @override
@@ -222,8 +231,8 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
                     if (widget.formKey?.currentState?.validate() ?? false) {
                       // Validation passed.
                       widget.onSave?.call();
-                      PromptPreviewBottomSheet()
-                          .show(context, widget.field, widget.category?.id);
+                      PromptPreviewBottomSheet().show(context, widget.field,
+                          widget.category?.id, widget.onSavePrompt);
                     } else {
                       // Validation failed.
                     }
@@ -243,8 +252,8 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
                     if (widget.formKey?.currentState?.validate() ?? false) {
                       // Validation passed.
                       widget.onSave?.call();
-                      PromptPreviewBottomSheet()
-                          .show(context, widget.field, widget.category?.id);
+                      PromptPreviewBottomSheet().show(context, widget.field,
+                          widget.category?.id, widget.onSavePrompt);
                     } else {
                       // Validation failed.
                     }
@@ -264,8 +273,8 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
                     if (widget.formKey?.currentState?.validate() ?? false) {
                       // Validation passed.
                       widget.onSave?.call();
-                      PromptPreviewBottomSheet()
-                          .show(context, widget.field, widget.category?.id);
+                      PromptPreviewBottomSheet().show(context, widget.field,
+                          widget.category?.id, widget.onSavePrompt);
                     } else {
                       // Validation failed.
                     }

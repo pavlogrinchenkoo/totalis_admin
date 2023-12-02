@@ -66,10 +66,14 @@ class UserCategorySearchBloc extends BlocBaseWithState<ScreenState> {
   //   uploadItems(page: 0, isAll: false, filters: [newFilters]);
   // }
 
-  Future<void> setUser(UserModel? selectedUser) async {
+  Future<void> setUser(UserModel? selectedUser,
+      {void Function()? onClear}) async {
     if (selectedUser == null || selectedUser.id == null) {
       setState(currentState.copyWith(
           selectedUser: UserModel(), userCategories: [], categories: []));
+      if (onClear != null) {
+        onClear.call();
+      }
     } else {
       final userCategories = await _filterRequest.userCategoryFilters(
           QueryModel(

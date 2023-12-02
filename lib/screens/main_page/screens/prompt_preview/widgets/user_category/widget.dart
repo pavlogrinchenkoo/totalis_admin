@@ -15,11 +15,15 @@ class UserCategorySearchWidget extends StatefulWidget {
   const UserCategorySearchWidget({
     required this.bloc,
     required this.userBloc,
+    this.onChange,
+    this.onClear,
     super.key,
   });
 
   final UserCategorySearchBloc bloc;
   final ub.UserSearchBloc userBloc;
+  final void Function()? onChange;
+  final void Function()? onClear;
 
   @override
   State<UserCategorySearchWidget> createState() =>
@@ -28,6 +32,7 @@ class UserCategorySearchWidget extends StatefulWidget {
 
 class _UserCategorySearchWidgetState extends State<UserCategorySearchWidget> {
   final TextEditingController controller = TextEditingController();
+
   // List<DropdownMenuItem<String>> fields =
   //     ['id', 'category_id', 'user_id'].map((e) {
   //   return DropdownMenuItem(
@@ -50,7 +55,6 @@ class _UserCategorySearchWidgetState extends State<UserCategorySearchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
     return CustomStreamBuilder(
         bloc: widget.userBloc,
         builder: (context, ub.ScreenState ubState) {
@@ -58,7 +62,7 @@ class _UserCategorySearchWidgetState extends State<UserCategorySearchWidget> {
               bloc: widget.bloc,
               builder: (context, ScreenState state) {
                 if (state.selectedUser?.id != ubState.selectedUser?.id) {
-                  widget.bloc.setUser(ubState.selectedUser);
+                  widget.bloc.setUser(ubState.selectedUser, onClear: widget.onClear);
                 }
                 return Expanded(
                   child: Column(
@@ -84,8 +88,14 @@ class _UserCategorySearchWidgetState extends State<UserCategorySearchWidget> {
                                 initialValue: state.categories.isNotEmpty
                                     ? state.categories.first
                                     : null,
-                                onChanged: (value) => widget.bloc
-                                    .setCategory(value as CategoryModel?, state.userCategories),
+                                onChanged: (value) {
+                                  widget.bloc.setCategory(
+                                      value as CategoryModel?,
+                                      state.userCategories);
+                                  if (widget.onChange != null) {
+                                    widget.onChange!();
+                                  }
+                                },
                                 items: state.categories.isNotEmpty
                                     ? state.categories.map((e) {
                                         return DropdownMenuItem(
@@ -142,9 +152,9 @@ class _UserCategorySearchWidgetState extends State<UserCategorySearchWidget> {
         });
   }
 
-  // void _scrollListener() {
-  //   if (_scrollController.position.extentAfter < 500) {
-  //     widget.bloc.uploadItems();
-  //   }
-  // }
+// void _scrollListener() {
+//   if (_scrollController.position.extentAfter < 500) {
+//     widget.bloc.uploadItems();
+//   }
+// }
 }

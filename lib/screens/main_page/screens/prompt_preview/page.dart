@@ -2,8 +2,6 @@ import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:totalis_admin/generated/assets.gen.dart';
-import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/message/widget.dart';
-import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/new_checkin/widget.dart';
 import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user/bloc.dart'
     as ub;
 import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user_category/bloc.dart'
@@ -27,10 +25,12 @@ import 'widgets/user_category/widget.dart';
 
 @RoutePage()
 class PromptPreviewPage extends StatefulWidget {
-  const PromptPreviewPage({this.field, this.categoryId, super.key});
+  const PromptPreviewPage(
+      {this.field, this.categoryId, this.onSave, super.key});
 
   final FieldModel? field;
   final int? categoryId;
+  final void Function()? onSave;
 
   @override
   State<PromptPreviewPage> createState() => _PromptPreviewPageState();
@@ -136,16 +136,30 @@ class _PromptPreviewPageState extends State<PromptPreviewPage> {
                       ],
                     ),
                     Space.h24,
-                    if (state.loadingPreview)
-                      const CustomProgressIndicator()
-                    else
-                      ElevatedButton(
-                          style: themeData
-                              .extension<AppButtonTheme>()!
-                              .primaryElevated,
-                          onPressed: () => _bloc.preview(context, userBloc,
-                              widget.categoryId, widget.field),
-                          child: const Text('Preview')),
+                    Row(
+                      children: [
+                        if (state.loadingPreview)
+                          const CustomProgressIndicator()
+                        else
+                          ElevatedButton(
+                              style: themeData
+                                  .extension<AppButtonTheme>()!
+                                  .primaryElevated,
+                              onPressed: () => _bloc.preview(context, userBloc,
+                                  widget.categoryId, widget.field),
+                              child: const Text('Preview')),
+                        Space.w52,
+                        ElevatedButton(
+                            style: themeData
+                                .extension<AppButtonTheme>()!
+                                .primaryElevated,
+                            onPressed: () {
+                              widget.onSave?.call();
+                              _bloc.onSave();
+                            },
+                            child: Text(state.saved ? 'Saved' : 'Save prompt')),
+                      ],
+                    ),
                     Space.h24,
                     Stack(
                       children: [
@@ -230,7 +244,8 @@ class _PromptPreviewPageState extends State<PromptPreviewPage> {
 }
 
 class PromptPreviewBottomSheet {
-  show(BuildContext context, FieldModel? field, int? categoryId) {
+  show(BuildContext context, FieldModel? field, int? categoryId,
+      void Function()? onSave) {
     return showGeneralDialog(
         context: context,
         barrierColor: Colors.black12.withOpacity(0.6),
@@ -241,7 +256,8 @@ class PromptPreviewBottomSheet {
         pageBuilder: (context, __, ___) {
           return Material(
             color: Colors.transparent,
-            child: PromptPreviewPage(field: field, categoryId: categoryId),
+            child: PromptPreviewPage(
+                field: field, categoryId: categoryId, onSave: onSave),
           );
         });
   }

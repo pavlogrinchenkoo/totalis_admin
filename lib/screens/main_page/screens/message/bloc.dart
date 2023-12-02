@@ -53,13 +53,8 @@ class MessageBloc extends BlocBaseWithState<ScreenState> {
       uploadItems(page: 0, isAll: false, filters: []);
       return null;
     }
-    final newFilters =
-        containsInt(filters.field) || containsLevel(filters.value)
-            ? Filters(field: filters.field, value: int.tryParse(filters.value))
-            : filters;
-    setState(
-        currentState..copyWith(filters: [newFilters], page: 0, isAll: false));
-    uploadItems(page: 0, isAll: false, filters: [newFilters]);
+    setState(currentState..copyWith(filters: [filters], page: 0, isAll: false));
+    uploadItems(page: 0, isAll: false, filters: [filters]);
   }
 
   openChange(BuildContext context, MessageModel? item) {

@@ -116,11 +116,15 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
         title: 'Category',
         category: item,
         onSave: () =>
-            {onSave(context, fields, item, isCreate: item?.id == null)}));
+            {onSave(context, fields, item, isCreate: item?.id == null)},
+        onSavePrompt: () => {
+              onSave(context, fields, item,
+                  isCreate: item?.id == null, needPop: false)
+            }));
   }
 
   onSave(BuildContext context, List<FieldModel> fields, CategoryModel? item,
-      {bool isCreate = false}) async {
+      {bool isCreate = false, bool needPop = true}) async {
     final newModel = CategoryModel(
         parent_id: int.tryParse(
             fields.firstWhere((i) => i.title == 'Parent id').controller?.text ??
@@ -167,7 +171,7 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
     }
     final res = await _categoriesRequest.change(newModel);
     replaceItem(res, newModel);
-    if (context.mounted) context.router.pop();
+    if (context.mounted && needPop) context.router.pop();
   }
 
   void replaceItem(CategoryModel? changed, CategoryModel? newUser) {

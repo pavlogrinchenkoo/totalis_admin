@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:totalis_admin/api/filters/dto.dart';
-import 'package:totalis_admin/theme/theme_extensions/app_button_theme.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/debouncer.dart';
 import 'package:totalis_admin/utils/spaces.dart';
 
-import '../check_items.dart';
 import 'bloc.dart';
 
 class UserSearchWidget extends StatefulWidget {
