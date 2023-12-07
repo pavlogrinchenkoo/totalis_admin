@@ -97,6 +97,7 @@ class ChangePage extends StatelessWidget {
                             alignment: Alignment.centerLeft,
                             child: Row(
                               children: [
+                                if (onSave != null)
                                 ElevatedButton(
                                   style: themeData
                                       .extension<AppButtonTheme>()!

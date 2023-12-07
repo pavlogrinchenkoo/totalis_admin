@@ -33,6 +33,9 @@ class _CustomSheetWidgetState extends State<CustomSheetWidget> {
         ),
         child: DataTable(
             horizontalMargin: 10,
+            dataRowMaxHeight: double.infinity,
+            // Code to be changed.
+            dataRowMinHeight: 60,
             columnSpacing: 16,
             checkboxHorizontalMargin: 0,
             showCheckboxColumn: false,

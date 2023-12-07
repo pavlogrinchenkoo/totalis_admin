@@ -88,7 +88,7 @@ class MessageBloc extends BlocBaseWithState<ScreenState> {
       ),
       FieldModel(
         title: 'Text',
-        type: FieldType.text,
+        type: FieldType.bigText,
         required: true,
         controller: TextEditingController(text: item?.text),
       ),
@@ -117,9 +117,10 @@ class MessageBloc extends BlocBaseWithState<ScreenState> {
 
     context.router.push(ChangeRoute(
         fields: fields,
-        title: 'New message',
-        onSave: () =>
-            {onSave(context, fields, item, isCreate: item?.id == null)}));
+        title: 'Message',
+        onSave: item?.id == null
+            ? () => {onSave(context, fields, item, isCreate: item?.id == null)}
+            : null));
   }
 
   onSave(BuildContext context, List<FieldModel> fields, MessageModel? item,

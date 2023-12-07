@@ -66,9 +66,8 @@ class _MessagePageState extends State<MessagePage> {
       'User category id',
       'Сheckin',
       'Role',
-      'Text',
       'Token',
-      'GPT version',
+      'Text',
     ];
 
     return CustomStreamBuilder(
@@ -80,10 +79,9 @@ class _MessagePageState extends State<MessagePage> {
             return Scaffold(
                 body: Container(
               padding: const EdgeInsets.all(16),
-              child: ListView(
-                controller: _scrollController,
-                shrinkWrap: true,
+              child: Column(
                 children: [
+                  Space.h8,
                   Row(
                     children: [
                       CustomSheetHeaderWidget(
@@ -101,94 +99,53 @@ class _MessagePageState extends State<MessagePage> {
                               value: userCategoryBloc
                                   .currentState.selectedItem?.id)),
                           onClear: () => _bloc.onSearch(null)),
-
-                      // Expanded(
-                      //   flex: 1,
-                      //   child: FormBuilderDropdown(
-                      //       name: 'Select field',
-                      //       decoration: const InputDecoration(
-                      //         labelText: 'Select field',
-                      //         border: OutlineInputBorder(),
-                      //         hoverColor: Colors.transparent,
-                      //         focusColor: Colors.transparent,
-                      //       ),
-                      //       focusColor: Colors.transparent,
-                      //       initialValue: fields.first.value,
-                      //       onChanged: (String? value) => setState(() {
-                      //             field = value;
-                      //           }),
-                      //       items: fields),
-                      // ),
-                      // Space.w16,
-                      // Expanded(
-                      //   flex: 2,
-                      //   child: FormBuilderTextField(
-                      //     onChanged: (value) =>
-                      //         value == '' ? _bloc.onSearch(null) : null,
-                      //     controller: controller,
-                      //     name: 'Message search',
-                      //     decoration: const InputDecoration(
-                      //       labelText: 'Message search',
-                      //       hintText: 'Message search',
-                      //       floatingLabelBehavior: FloatingLabelBehavior.always,
-                      //     ),
-                      //   ),
-                      // ),
-                      // Space.w16,
-                      // ElevatedButton(
-                      //     style: themeData
-                      //         .extension<AppButtonTheme>()!
-                      //         .primaryElevated,
-                      //     onPressed: () => controller.text != ''
-                      //         ? _bloc.onSearch(
-                      //             Filters(
-                      //                 field:
-                      //                     field ?? fields.first.value ?? 'id',
-                      //                 value: controller.text),
-                      //           )
-                      //         : null,
-                      //     child: const Text('Search')),
                     ],
                   ),
                   Space.h24,
-                  Row(
-                    children: [
-                      CustomSheetWidget(
-                        columns: <DataColumn>[
-                          for (final title in titles)
-                            DataColumn(
-                              label: Text(title),
-                            ),
-                        ],
-                        rows: <DataRow>[
-                          for (final item in state.messages)
-                            DataRow(
-                              cells: <DataCell>[
-                                DataCell(InkWell(
-                                    borderRadius: BRadius.r6,
-                                    onTap: () =>
-                                        _bloc.openChange(context, item),
+                  Expanded(
+                    child: ListView(
+                      controller: _scrollController,
+                      shrinkWrap: true,
+                      children: [
+                        CustomSheetWidget(
+                          columns: <DataColumn>[
+                            for (final title in titles)
+                              DataColumn(
+                                label: Expanded(child: Text(title)),
+                              ),
+                          ],
+                          rows: <DataRow>[
+                            for (final item in state.messages)
+                              DataRow(
+                                onSelectChanged: (bool? selected) =>
+                                    _bloc.openChange(context, item),
+                                cells: <DataCell>[
+                                  DataCell(SheetText(text: item?.id)),
+                                  DataCell(
+                                      SheetText(text: item?.user_category_id)),
+                                  DataCell(CheckInDataCellWidget(
+                                      checkInId: item?.checkin_id)),
+                                  DataCell(SheetText(
+                                      text: _getStringRole(item?.role))),
+                                  DataCell(SheetText(text: item?.tokens_used)),
+                                  DataCell(Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 8),
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
                                       children: [
-                                        SheetText(text: item?.id),
+                                        Expanded(
+                                          child: Text(
+                                              (item?.text ?? "").toString()),
+                                        ),
                                       ],
-                                    ))),
-                                DataCell(
-                                    SheetText(text: item?.user_category_id)),
-                                DataCell(CheckInDataCellWidget(
-                                    checkInId: item?.checkin_id)),
-                                DataCell(SheetText(
-                                    text: _getStringRole(item?.role))),
-                                DataCell(SheetText(text: item?.text)),
-                                DataCell(SheetText(text: item?.tokens_used)),
-                                DataCell(SheetText(text: item?.gpt_version)),
-                              ],
-                            ),
-                        ],
-                      ),
-                    ],
+                                    ),
+                                  )),
+                                ],
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

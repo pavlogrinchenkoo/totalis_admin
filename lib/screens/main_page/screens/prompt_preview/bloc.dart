@@ -76,21 +76,18 @@ class PromptPreviewBloc extends BlocBaseWithState<ScreenState> {
     if (field?.title == 'Prompt') {
       final string = await _promptRequest.promptCategory(
           field?.controller?.text,
-          controllerMessage.text,
           userBloc.currentState.selectedUser?.id,
           categoryId);
       controller.text = string ?? '';
     } else if (field?.title == 'Prompt checkin') {
       final string = await _promptRequest.promptCheckinCategory(
           field?.controller?.text,
-          controllerMessage.text,
           userBloc.currentState.selectedUser?.id,
           categoryId);
       controller.text = string ?? '';
     } else if (field?.title == 'Prompt checkin proposal') {
       final string = await _promptRequest.promptCheckinProposalCategory(
           field?.controller?.text,
-          controllerMessage.text,
           userBloc.currentState.selectedUser?.id,
           categoryId);
       controller.text = string ?? '';
@@ -165,7 +162,10 @@ class PromptPreviewBloc extends BlocBaseWithState<ScreenState> {
           content: const Text('Please select a user and category'),
           duration: const Duration(seconds: 2)));
     }
-    final res = await _promptRequest.promptLLM(text);
+    final res = await _promptRequest.promptLLM(
+      text,
+      controllerMessage.text,
+    );
     controllerLlm.text = res ?? '';
     setState(currentState.copyWith(loadingLlm: false));
   }
