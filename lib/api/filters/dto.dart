@@ -21,13 +21,30 @@ class Filters {
 }
 
 @JsonSerializable()
+class Orders {
+  String field;
+  bool desc;
+
+  Orders({
+    required this.field,
+    required this.desc,
+  });
+
+  factory Orders.fromJson(Map<String, dynamic> json) => _$OrdersFromJson(json);
+
+  Map<String, dynamic> toJson() => _$OrdersToJson(this);
+}
+
+@JsonSerializable()
 class QueryModel {
   List<Filters?>? filters;
+  List<Orders?> orders;
   int? page;
   int? count;
 
   QueryModel({
     this.filters,
+    this.orders = const [],
     this.page,
     this.count,
   });

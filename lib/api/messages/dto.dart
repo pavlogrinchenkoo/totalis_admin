@@ -64,4 +64,4 @@ class MessageModel {
   Map<String, dynamic> toJson() => _$MessageModelToJson(this);
 }
 
-enum RoleEnum { User, Assistant, System }
+enum RoleEnum { User, Assistant, System, PreAssistant }

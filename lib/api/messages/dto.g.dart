@@ -35,6 +35,7 @@ const _$RoleEnumEnumMap = {
   RoleEnum.User: 'User',
   RoleEnum.Assistant: 'Assistant',
   RoleEnum.System: 'System',
+  RoleEnum.PreAssistant: 'PreAssistant',
 };
 
 MessageModel _$MessageModelFromJson(Map<String, dynamic> json) => MessageModel(

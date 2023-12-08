@@ -16,6 +16,7 @@ class MessageBloc extends BlocBaseWithState<ScreenState> {
   final MessagesRequest _messageRequest = MessagesRequest();
   final FilterRequest _filterRequest = FilterRequest();
   final GoogleSignIn? googleSignIn = GoogleSignIn();
+  List<Filters?> filters = [];
 
   MessageBloc() {
     setState(ScreenState());
@@ -29,30 +30,38 @@ class MessageBloc extends BlocBaseWithState<ScreenState> {
 
   Future<void> uploadItems(
       {int? page, bool? isAll, List<Filters?>? filters}) async {
-    if (currentState.isAll && filters == null) return;
+    if ((currentState.isAll && filters == null) || currentState.loadingMore) {
+      return;
+    }
+    setState(currentState.copyWith(loadingMore: true));
     final items = await _filterRequest.messagesFilters(QueryModel(
         page: page ?? currentState.page,
         count: 20,
-        filters: filters ?? currentState.filters ?? []));
+        filters: filters ?? currentState.filters,
+        orders: [Orders(field: 'id', desc: true)]));
     if (items != null) {
       final List<MessageModel?> newItems =
           page == 0 ? [...items] : [...currentState.messages, ...items];
       final newIsAll = (items.length) < 20;
       setState(currentState.copyWith(
           messages: newItems,
+          filters: filters ?? currentState.filters,
           page: (page ?? currentState.page) + 1,
           isAll: newIsAll));
     } else {
       setState(currentState.copyWith(isAll: true));
     }
+    setState(currentState.copyWith(loadingMore: false));
   }
 
   onSearch(Filters? filters) async {
     if (filters == null) {
+      this.filters = [];
       setState(currentState..copyWith(filters: [], page: 0, isAll: false));
       uploadItems(page: 0, isAll: false, filters: []);
       return null;
     }
+    this.filters = [filters];
     setState(currentState..copyWith(filters: [filters], page: 0, isAll: false));
     uploadItems(page: 0, isAll: false, filters: [filters]);
   }
@@ -193,6 +202,7 @@ class MessageBloc extends BlocBaseWithState<ScreenState> {
 
 class ScreenState {
   final bool loading;
+  final bool loadingMore;
   final List<MessageModel?> messages;
   final List<String>? titles;
   final List<Filters?>? filters;
@@ -201,6 +211,7 @@ class ScreenState {
 
   ScreenState(
       {this.loading = false,
+      this.loadingMore = false,
       this.messages = const [],
       this.titles = const [],
       this.filters = const [],
@@ -209,6 +220,8 @@ class ScreenState {
 
   ScreenState copyWith(
       {bool? loading,
+      bool? loadingMore,
+      bool? hasListener,
       List<MessageModel?>? messages,
       List<String>? titles,
       List<Filters?>? filters,
@@ -216,6 +229,7 @@ class ScreenState {
       int? page}) {
     return ScreenState(
         loading: loading ?? this.loading,
+        loadingMore: loadingMore ?? this.loadingMore,
         messages: messages ?? this.messages,
         titles: titles ?? this.titles,
         filters: filters ?? this.filters,

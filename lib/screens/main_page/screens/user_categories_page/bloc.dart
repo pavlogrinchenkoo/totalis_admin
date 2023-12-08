@@ -29,22 +29,28 @@ class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
 
   Future<void> uploadItems(
       {int? page, bool? isAll, List<Filters?>? filters}) async {
-    if (currentState.isAll && filters == null) return;
+    if ((currentState.isAll && filters == null) || currentState.loadingMore) {
+      return;
+    }
+    setState(currentState.copyWith(loadingMore: true));
     final items = await _filterRequest.userCategoryFilters(QueryModel(
         page: page ?? currentState.page,
         count: 20,
-        filters: filters ?? currentState.filters ?? []));
+        filters: filters ?? currentState.filters));
     if (items != null) {
-      final List<UserCategoryModel?> newItems =
-          page == 0 ? [...items] : [...currentState.items, ...items];
+      final List<UserCategoryModel?> newItems = page == 0
+          ? [...items, ...items, ...items]
+          : [...currentState.items, ...items, ...items, ...items];
       final newIsAll = (items.length) < 20;
       setState(currentState.copyWith(
           items: newItems,
+          filters: filters ?? currentState.filters,
           page: (page ?? currentState.page) + 1,
           isAll: newIsAll));
     } else {
       setState(currentState.copyWith(isAll: true));
     }
+    setState(currentState.copyWith(loadingMore: false));
   }
 
   onSearch(Filters? filters) async {
@@ -205,6 +211,7 @@ class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
 
 class ScreenState {
   final bool loading;
+  final bool loadingMore;
   final List<UserCategoryModel?> items;
   final List<String>? titles;
   final List<Filters?>? filters;
@@ -213,6 +220,7 @@ class ScreenState {
 
   ScreenState(
       {this.loading = false,
+      this.loadingMore = false,
       this.items = const [],
       this.titles = const [],
       this.filters = const [],
@@ -221,6 +229,7 @@ class ScreenState {
 
   ScreenState copyWith(
       {bool? loading,
+      bool? loadingMore,
       List<UserCategoryModel?>? items,
       List<String>? titles,
       List<Filters?>? filters,
@@ -228,6 +237,7 @@ class ScreenState {
       int? page}) {
     return ScreenState(
         loading: loading ?? this.loading,
+        loadingMore: loadingMore ?? this.loadingMore,
         items: items ?? this.items,
         titles: titles ?? this.titles,
         filters: filters ?? this.filters,
