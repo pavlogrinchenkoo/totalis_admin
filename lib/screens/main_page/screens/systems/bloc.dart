@@ -145,29 +145,29 @@ class SystemBloc extends BlocBaseWithState<ScreenState> {
             fields.firstWhere((i) => i.title == 'Prompt why').controller?.text,
         prompt_how:
             fields.firstWhere((i) => i.title == 'Prompt how').controller?.text,
-        model_temperature: int.parse(fields
+        model_temperature: double.parse(fields
                 .firstWhere((i) => i.title == 'Model temperature')
                 .controller
                 ?.text ??
             '0'),
-        model_max_response_token: int.parse(fields
+        model_max_response_token: double.parse(fields
                 .firstWhere((i) => i.title == 'Model max response token')
                 .controller
                 ?.text ??
             '0'),
-        model_presence_penalty: int.parse(fields
+        model_presence_penalty: double.parse(fields
                 .firstWhere((i) => i.title == 'Model presence penalty')
                 .controller
                 ?.text ??
             '0'),
-        model_frequency_penalty: int.parse(
+        model_frequency_penalty: double.parse(
             fields.firstWhere((i) => i.title == 'Model frequency penalty').controller?.text ?? '0'),
-        context_limit: int.parse(fields.firstWhere((i) => i.title == 'Context limit').controller?.text ?? '0'),
-        show_msg_history: int.parse(fields.firstWhere((i) => i.title == 'Show msg history').controller?.text ?? '0'),
-        summarize_frequency: int.parse(fields.firstWhere((i) => i.title == 'Summarize frequency').controller?.text ?? '0'),
-        test_days_forward: int.parse(fields.firstWhere((i) => i.title == 'Test days forward').controller?.text ?? '0'),
-        login_timeout: int.parse(fields.firstWhere((i) => i.title == 'Login timeout').controller?.text ?? '0'),
-        message_cache: int.parse(fields.firstWhere((i) => i.title == 'Message cache').controller?.text ?? '0'),
+        context_limit: double.parse(fields.firstWhere((i) => i.title == 'Context limit').controller?.text ?? '0'),
+        show_msg_history: double.parse(fields.firstWhere((i) => i.title == 'Show msg history').controller?.text ?? '0'),
+        summarize_frequency: double.parse(fields.firstWhere((i) => i.title == 'Summarize frequency').controller?.text ?? '0'),
+        test_days_forward: double.parse(fields.firstWhere((i) => i.title == 'Test days forward').controller?.text ?? '0'),
+        login_timeout: double.parse(fields.firstWhere((i) => i.title == 'Login timeout').controller?.text ?? '0'),
+        message_cache: double.parse(fields.firstWhere((i) => i.title == 'Message cache').controller?.text ?? '0'),
         id: item?.id,
         time_create: item?.time_create);
 

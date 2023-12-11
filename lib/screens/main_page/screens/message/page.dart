@@ -156,6 +156,8 @@ class _MessagePageState extends State<MessagePage> {
         return 'User';
       case RoleEnum.Assistant:
         return 'Assistant';
+      case RoleEnum.PreAssistant:
+        return 'PreAssistant';
       case RoleEnum.System:
         return 'System';
       default:

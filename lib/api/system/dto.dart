@@ -10,16 +10,16 @@ class SystemModel {
   String? model_gpt_version;
   String? prompt_why;
   String? prompt_how;
-  int? model_temperature;
-  int? model_max_response_token;
-  int? model_presence_penalty;
-  int? model_frequency_penalty;
-  int? context_limit;
-  int? show_msg_history;
-  int? summarize_frequency;
-  int? test_days_forward;
-  int? login_timeout;
-  int? message_cache;
+  double? model_temperature;
+  double? model_max_response_token;
+  double? model_presence_penalty;
+  double? model_frequency_penalty;
+  double? context_limit;
+  double? show_msg_history;
+  double? summarize_frequency;
+  double? test_days_forward;
+  double? login_timeout;
+  double? message_cache;
   int? id;
   String? time_create;
 
