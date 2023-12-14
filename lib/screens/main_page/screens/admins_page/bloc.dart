@@ -72,7 +72,7 @@ class AdminsBloc extends BlocBaseWithState<ScreenState> {
   onSave(BuildContext context, List<FieldModel> fields, AdminModel? item,
       {bool isCreate = false}) async {
     final newModel = AdminModel(
-        firebase_uid: item?.firebase_uid,
+        firebase_uid: fields.firstWhere((i) => i.title == 'Firebase uid').controller?.text,
         id: item?.id,
         time_create: item?.time_create,
         name: fields.firstWhere((i) => i.title == 'Name').controller?.text,

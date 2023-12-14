@@ -44,7 +44,7 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
       FieldModel(
           title: 'Name long',
           type: FieldType.bigText,
-          controller: TextEditingController(text: item?.name)),
+          controller: TextEditingController(text: item?.name_long)),
       FieldModel(
           title: 'Image', type: FieldType.avatar, imageId: item?.icon_id),
       FieldModel(

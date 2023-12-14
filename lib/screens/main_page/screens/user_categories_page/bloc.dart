@@ -38,9 +38,8 @@ class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
         count: 20,
         filters: filters ?? currentState.filters));
     if (items != null) {
-      final List<UserCategoryModel?> newItems = page == 0
-          ? [...items, ...items, ...items]
-          : [...currentState.items, ...items, ...items, ...items];
+      final List<UserCategoryModel?> newItems =
+          page == 0 ? [...items] : [...currentState.items, ...items];
       final newIsAll = (items.length) < 20;
       setState(currentState.copyWith(
           items: newItems,
