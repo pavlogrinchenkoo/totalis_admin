@@ -2,12 +2,12 @@ import 'package:totalis_admin/api/user/dto.dart';
 import 'package:totalis_admin/api/user/request.dart';
 import 'package:totalis_admin/utils/bloc_base.dart';
 
-class UserBloc extends BlocBaseWithState<ScreenState> {
+class UserWidgetBloc extends BlocBaseWithState<ScreenState> {
   @override
   ScreenState get currentState => super.currentState!;
   final UserRequest _request = UserRequest();
 
-  UserBloc() {
+  UserWidgetBloc() {
     setState(ScreenState());
   }
 

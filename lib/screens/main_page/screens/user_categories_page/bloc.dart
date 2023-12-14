@@ -197,13 +197,13 @@ class UserCategoriesBloc extends BlocBaseWithState<ScreenState> {
 
   Future<UserCategoryModel?> getUserCategory(int? id) async {
     if (id == null) return null;
-    final res = await _userCategoriesRequest.get(id.toString());
+    final res = await _userCategoriesRequest.get(id);
     return res;
   }
 
   Future<int?> getUserCategoryId(int? id) async {
     if (id == null) return null;
-    final res = await _userCategoriesRequest.get(id.toString());
+    final res = await _userCategoriesRequest.get(id);
     return res?.category_id;
   }
 }

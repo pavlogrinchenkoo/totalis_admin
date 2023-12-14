@@ -10,7 +10,7 @@ class UserCategoriesRequest {
     return UserCategoryModel.fromJson(res);
   }
 
-  Future<UserCategoryModel?> get(String id) async {
+  Future<UserCategoryModel?> get(int? id) async {
     final res = await _request.get('api/admin/user_category/get/id/$id');
     if (res == null) return null;
     return UserCategoryModel.fromJson(res);

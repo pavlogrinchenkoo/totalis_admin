@@ -1,9 +1,13 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
-import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user/widget.dart';
-import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user_category/widget.dart';
 import 'package:totalis_admin/api/filters/dto.dart';
 import 'package:totalis_admin/api/messages/dto.dart';
+import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user/bloc.dart'
+    as ub;
+import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user/widget.dart';
+import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user_category/bloc.dart'
+    as ucb;
+import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user_category/widget.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
 import 'package:totalis_admin/widgets/check_in_data_cell_widget.dart';
@@ -11,11 +15,9 @@ import 'package:totalis_admin/widgets/custom_progress_indicator.dart';
 import 'package:totalis_admin/widgets/custom_sheet_header_widget.dart';
 import 'package:totalis_admin/widgets/custom_sheet_widget.dart';
 import 'package:totalis_admin/widgets/sheets_text.dart';
-import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user/bloc.dart'
-    as ub;
-import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user_category/bloc.dart'
-    as ucb;
+
 import 'bloc.dart';
+import 'user_and_category/page.dart';
 
 @RoutePage()
 class MessagePage extends StatefulWidget {
@@ -32,7 +34,7 @@ class _MessagePageState extends State<MessagePage> {
       ucb.UserCategorySearchBloc();
 
   List<DropdownMenuItem<String>> fields =
-      ['id', 'user_category_id', 'text'].map((e) {
+      ['id', 'user_category_id', 'User and category', 'text'].map((e) {
     return DropdownMenuItem(
         value: e, child: Text(e.toString().split('.').last));
   }).toList();
@@ -59,7 +61,8 @@ class _MessagePageState extends State<MessagePage> {
     final themeData = Theme.of(context);
     final titles = [
       'Id',
-      'User category id',
+      'UC ID',
+      'User and category',
       'Сheckin',
       'Role',
       'Token',
@@ -118,7 +121,12 @@ class _MessagePageState extends State<MessagePage> {
                                 cells: <DataCell>[
                                   DataCell(SheetText(text: item?.id)),
                                   DataCell(
-                                      SheetText(text: item?.user_category_id)),
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 16),
+                                        child: SheetText(text: item?.user_category_id),
+                                      )),
+                                  DataCell(UserAndCategoryWidget(
+                                      userCategoryId: item?.user_category_id)),
                                   DataCell(CheckInDataCellWidget(
                                       checkInId: item?.checkin_id)),
                                   DataCell(SheetText(

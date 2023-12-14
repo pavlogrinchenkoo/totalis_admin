@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:totalis_admin/api/categories/dto.dart';
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
-import 'package:totalis_admin/widgets/sheets_text.dart';
 
 import 'bloc.dart';
 
@@ -37,9 +36,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SheetText(
-                        text:
-                        '${widget.categoryId}: ${state.category?.name ?? ''}'),
+                    Expanded(child: Text('${widget.categoryId}: ${state.category?.name ?? ''}')),
                   ],
                 ));
           } else {
