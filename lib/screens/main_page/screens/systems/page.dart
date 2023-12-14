@@ -53,28 +53,31 @@ class _SystemPageState extends State<SystemPage> {
                   Space.h24,
                   Expanded(
                     child: ListView(
-                      scrollDirection: Axis.horizontal,
                       children: [
-                        CustomSheetWidget(
-                          columns: <DataColumn>[
-                            for (final title in titles)
-                              DataColumn(
-                                label: Expanded(
-                                  child: Text(title),
-                                ),
-                              ),
-                          ],
-                          rows: <DataRow>[
-                            for (final item in (state.system ?? SystemModel())
-                                .toJson()
-                                .keys)
-                              DataRow(
-                                cells: <DataCell>[
-                                  DataCell(SheetText(text: item)),
-                                  DataCell(SheetText(
-                                      text: state.system?.toJson()[item])),
-                                ],
-                              ),
+                        Row(
+                          children: [
+                            CustomSheetWidget(
+                              columns: <DataColumn>[
+                                for (final title in titles)
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Text(title),
+                                    ),
+                                  ),
+                              ],
+                              rows: <DataRow>[
+                                for (final item in (state.system ?? SystemModel())
+                                    .toJson()
+                                    .keys)
+                                  DataRow(
+                                    cells: <DataCell>[
+                                      DataCell(SheetText(text: item)),
+                                      DataCell(SheetText(
+                                          text: state.system?.toJson()[item])),
+                                    ],
+                                  ),
+                              ],
+                            ),
                           ],
                         ),
                       ],

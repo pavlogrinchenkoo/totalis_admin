@@ -7,7 +7,6 @@ import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
 import 'package:totalis_admin/widgets/category_data_cell_widget.dart';
-import 'package:totalis_admin/widgets/custom_open_icon.dart';
 import 'package:totalis_admin/widgets/custom_progress_indicator.dart';
 import 'package:totalis_admin/widgets/custom_sheet_header_widget.dart';
 import 'package:totalis_admin/widgets/custom_sheet_widget.dart';
@@ -26,11 +25,19 @@ class CheckInsPage extends StatefulWidget {
 class _CheckInsPageState extends State<CheckInsPage> {
   final CheckInsBloc _bloc = CheckInsBloc();
   final ub.UserCategoriesBloc _blocUserCategory = ub.UserCategoriesBloc();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     _bloc.init();
+    _scrollController.addListener(_scrollListener);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    super.dispose();
   }
 
   @override
@@ -61,55 +68,59 @@ class _CheckInsPageState extends State<CheckInsPage> {
                   Space.h24,
                   Expanded(
                     child: ListView(
-                      scrollDirection: Axis.horizontal,
+                      controller: _scrollController,
                       children: [
-                        CustomSheetWidget(
-                          columns: <DataColumn>[
-                            for (final title in titles)
-                              DataColumn(
-                                label: Expanded(
-                                  child: Text(title),
-                                ),
-                              ),
-                          ],
-                          rows: <DataRow>[
-                            for (final item in state.checkins)
-                              DataRow(
-                                cells: <DataCell>[
-                                  DataCell(InkWell(
-                                      borderRadius: BRadius.r6,
-                                      onTap: () =>
-                                          _bloc.openChange(context, item),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SheetText(text: item.id),
-                                        ],
-                                      ))),
-                                  DataCell(InkWell(
-                                      borderRadius: BRadius.r6,
-                                      onTap: () async =>
-                                          _blocUserCategory.openChange(
-                                              context,
-                                              await _blocUserCategory
-                                                  .getUserCategory(
-                                                      item.user_category_id)),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SheetText(
-                                              text: item.user_category_id),
-                                        ],
-                                      ))),
-                                  DataCell(CategoryDataCellWidget(
-                                      userCategoryId: item.user_category_id)),
-                                  DataCell(SheetText(text: item.level)),
-                                  DataCell(SheetText(text: item.date)),
-                                  DataCell(SheetText(text: item.summary)),
-                                ],
-                              ),
+                        Row(
+                          children: [
+                            CustomSheetWidget(
+                              columns: <DataColumn>[
+                                for (final title in titles)
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Text(title),
+                                    ),
+                                  ),
+                              ],
+                              rows: <DataRow>[
+                                for (final item in state.checkins)
+                                  DataRow(
+                                    cells: <DataCell>[
+                                      DataCell(InkWell(
+                                          borderRadius: BRadius.r6,
+                                          onTap: () =>
+                                              _bloc.openChange(context, item),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SheetText(text: item.id),
+                                            ],
+                                          ))),
+                                      DataCell(InkWell(
+                                          borderRadius: BRadius.r6,
+                                          onTap: () async =>
+                                              _blocUserCategory.openChange(
+                                                  context,
+                                                  await _blocUserCategory
+                                                      .getUserCategory(
+                                                          item.user_category_id)),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SheetText(
+                                                  text: item.user_category_id),
+                                            ],
+                                          ))),
+                                      DataCell(CategoryDataCellWidget(
+                                          userCategoryId: item.user_category_id)),
+                                      DataCell(SheetText(text: item.level)),
+                                      DataCell(SheetText(text: item.date)),
+                                      DataCell(SheetText(text: item.summary)),
+                                    ],
+                                  ),
+                              ],
+                            ),
                           ],
                         ),
                       ],
@@ -120,5 +131,11 @@ class _CheckInsPageState extends State<CheckInsPage> {
             ));
           }
         });
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.extentAfter < 500) {
+      _bloc.uploadItems();
+    }
   }
 }

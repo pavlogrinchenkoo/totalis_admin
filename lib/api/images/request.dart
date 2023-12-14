@@ -11,6 +11,7 @@ class ImageRequest {
   }
 
   Future<ImageModel?> get(String? id) async {
+    if (id == null) return null;
     final res = await _request.get('api/admin/image/get/id/$id');
     if (res == null) return null;
     return ImageModel.fromJson(res);

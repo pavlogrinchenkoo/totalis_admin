@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:totalis_admin/api/coaches/dto.dart';
 import 'package:totalis_admin/api/coaches/request.dart';
+import 'package:totalis_admin/api/filters/dto.dart';
+import 'package:totalis_admin/api/filters/request.dart';
 import 'package:totalis_admin/api/user/request.dart';
 import 'package:totalis_admin/routers/routes.dart';
 import 'package:totalis_admin/utils/bloc_base.dart';
@@ -13,6 +15,7 @@ class CoachesBloc extends BlocBaseWithState<ScreenState> {
   ScreenState get currentState => super.currentState!;
   final CoachesRequest _coachesRequest = CoachesRequest();
   final GoogleSignIn? googleSignIn = GoogleSignIn();
+  final FilterRequest _filterRequest = FilterRequest();
 
   CoachesBloc() {
     setState(ScreenState());
@@ -20,8 +23,8 @@ class CoachesBloc extends BlocBaseWithState<ScreenState> {
 
   Future<void> init() async {
     setState(ScreenState(loading: true));
-    final coaches = await _coachesRequest.getAll();
-    setState(currentState.copyWith(loading: false, coaches: coaches ?? []));
+    await uploadItems();
+    setState(currentState.copyWith(loading: false));
   }
 
   openChange(BuildContext context, CoachesModel? item) {
@@ -114,21 +117,77 @@ class CoachesBloc extends BlocBaseWithState<ScreenState> {
     replaceItem(res, newModel);
     if (context.mounted) context.router.pop();
   }
+
+  Future<void> uploadItems(
+      {int? page, bool? isAll, List<Filters?>? filters}) async {
+    if ((currentState.isAll && filters == null) || currentState.loadingMore) {
+      return;
+    }
+    setState(currentState.copyWith(loadingMore: true));
+    final items = await _filterRequest.coachesFilters(QueryModel(
+        page: page ?? currentState.page,
+        count: 20,
+        filters: filters ?? currentState.filters,
+        orders: [Orders(field: 'id', desc: true)]));
+    if (items != null) {
+      final List<CoachesModel?> newItems = page == 0
+          ? [...items]
+          : [
+              ...currentState.coaches,
+              ...items,
+              ...items,
+              ...items,
+              ...items,
+              ...items,
+              ...items,
+              ...items
+            ];
+      final newIsAll = (items.length) < 20;
+      setState(currentState.copyWith(
+          coaches: newItems,
+          filters: filters ?? currentState.filters,
+          page: (page ?? currentState.page) + 1,
+          isAll: newIsAll));
+    } else {
+      setState(currentState.copyWith(isAll: true));
+    }
+    setState(currentState.copyWith(loadingMore: false));
+  }
 }
 
 class ScreenState {
   final bool loading;
+  final bool loadingMore;
   final List<CoachesModel?> coaches;
   final List<String>? titles;
+  final List<Filters?>? filters;
+  final bool isAll;
+  final int page;
 
   ScreenState(
-      {this.loading = false, this.coaches = const [], this.titles = const []});
+      {this.loading = false,
+      this.loadingMore = false,
+      this.coaches = const [],
+      this.titles = const [],
+      this.filters = const [],
+      this.isAll = false,
+      this.page = 0});
 
   ScreenState copyWith(
-      {bool? loading, List<CoachesModel?>? coaches, List<String>? titles}) {
+      {bool? loading,
+      bool? loadingMore,
+      List<CoachesModel?>? coaches,
+      List<String>? titles,
+      List<Filters?>? filters,
+      bool? isAll,
+      int? page}) {
     return ScreenState(
         loading: loading ?? this.loading,
+        loadingMore: loadingMore ?? this.loadingMore,
         coaches: coaches ?? this.coaches,
-        titles: titles ?? this.titles);
+        titles: titles ?? this.titles,
+        filters: filters ?? this.filters,
+        isAll: isAll ?? this.isAll,
+        page: page ?? this.page);
   }
 }

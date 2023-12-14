@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:totalis_admin/api/check_ins/dto.dart';
 import 'package:totalis_admin/api/check_ins/request.dart';
+import 'package:totalis_admin/api/filters/dto.dart';
+import 'package:totalis_admin/api/filters/request.dart';
 import 'package:totalis_admin/routers/routes.dart';
 import 'package:totalis_admin/utils/bloc_base.dart';
 import 'package:totalis_admin/widgets/chage_page.dart';
@@ -12,6 +14,7 @@ class CheckInsBloc extends BlocBaseWithState<ScreenState> {
   ScreenState get currentState => super.currentState!;
   final CheckInsRequest _checkInsRequest = CheckInsRequest();
   final GoogleSignIn? googleSignIn = GoogleSignIn();
+  final FilterRequest _filterRequest = FilterRequest();
 
   CheckInsBloc() {
     setState(ScreenState());
@@ -19,8 +22,8 @@ class CheckInsBloc extends BlocBaseWithState<ScreenState> {
 
   Future<void> init() async {
     setState(ScreenState(loading: true));
-    final coaches = await _checkInsRequest.getAll();
-    setState(currentState.copyWith(loading: false, checkins: coaches ?? []));
+    await uploadItems();
+    setState(currentState.copyWith(loading: false));
   }
 
   openChange(BuildContext context, CheckInModel? item) {
@@ -130,25 +133,70 @@ class CheckInsBloc extends BlocBaseWithState<ScreenState> {
   }
 
   Future<CheckInModel?> getCheckIn(int? id) async {
-    if(id == null) return null;
+    if (id == null) return null;
     final res = await _checkInsRequest.get(id.toString());
     return res;
+  }
+
+  Future<void> uploadItems(
+      {int? page, bool? isAll, List<Filters?>? filters}) async {
+    if ((currentState.isAll && filters == null) || currentState.loadingMore) {
+      return;
+    }
+    setState(currentState.copyWith(loadingMore: true));
+    final items = await _filterRequest.checkinsFilters(QueryModel(
+        page: page ?? currentState.page,
+        count: 20,
+        filters: filters ?? currentState.filters,
+        orders: [Orders(field: 'id', desc: true)]));
+    if (items != null) {
+      final List<CheckInModel> newItems =
+          page == 0 ? [...items] : [...currentState.checkins, ...items];
+      final newIsAll = (items.length) < 20;
+      setState(currentState.copyWith(
+          checkins: newItems,
+          filters: filters ?? currentState.filters,
+          page: (page ?? currentState.page) + 1,
+          isAll: newIsAll));
+    } else {
+      setState(currentState.copyWith(isAll: true));
+    }
+    setState(currentState.copyWith(loadingMore: false));
   }
 }
 
 class ScreenState {
   final bool loading;
+  final bool loadingMore;
   final List<CheckInModel> checkins;
   final List<String>? titles;
+  final List<Filters?>? filters;
+  final bool isAll;
+  final int page;
 
   ScreenState(
-      {this.loading = false, this.checkins = const [], this.titles = const []});
+      {this.loading = false,
+      this.loadingMore = false,
+      this.checkins = const [],
+      this.titles = const [],
+      this.filters = const [],
+      this.isAll = false,
+      this.page = 0});
 
   ScreenState copyWith(
-      {bool? loading, List<CheckInModel>? checkins, List<String>? titles}) {
+      {bool? loading,
+      bool? loadingMore,
+      List<CheckInModel>? checkins,
+      List<String>? titles,
+      List<Filters?>? filters,
+      bool? isAll,
+      int? page}) {
     return ScreenState(
-        loading: loading ?? this.loading,
-        checkins: checkins ?? this.checkins,
-        titles: titles ?? this.titles);
+      loading: loading ?? this.loading,
+      loadingMore: loadingMore ?? this.loadingMore,
+      checkins: checkins ?? this.checkins,
+      titles: titles ?? this.titles,
+      filters: filters ?? this.filters,
+    );
   }
 }

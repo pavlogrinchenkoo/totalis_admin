@@ -1,8 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:totalis_admin/api/filters/dto.dart';
+import 'package:totalis_admin/api/filters/request.dart';
 import 'package:totalis_admin/api/user/dto.dart';
 import 'package:totalis_admin/api/user/request.dart';
 import 'package:totalis_admin/routers/routes.dart';
@@ -15,6 +16,7 @@ class UsersBloc extends BlocBaseWithState<ScreenState> {
   ScreenState get currentState => super.currentState!;
   final UserRequest _userRequest = UserRequest();
   final GoogleSignIn? googleSignIn = GoogleSignIn();
+  final FilterRequest _filterRequest = FilterRequest();
 
   UsersBloc() {
     setState(ScreenState());
@@ -22,14 +24,8 @@ class UsersBloc extends BlocBaseWithState<ScreenState> {
 
   Future<void> init() async {
     setState(ScreenState(loading: true));
-    final users = await _userRequest.getAll();
-    getTitles(items: users);
-    setState(currentState.copyWith(loading: false, users: users ?? []));
-  }
-
-  getTitles({required List<dynamic>? items}) {
-    final titles = getTitlesCustom(items: items);
-    setState(currentState.copyWith(titles: titles));
+    await uploadItems();
+    setState(currentState.copyWith(loading: false));
   }
 
   changeIsTester(UserModel? item, bool isTester) async {
@@ -155,21 +151,63 @@ class UsersBloc extends BlocBaseWithState<ScreenState> {
       replaceItem(null, item);
     }, () => context.router.pop());
   }
+
+  Future<void> uploadItems(
+      {int? page, bool? isAll, List<Filters?>? filters}) async {
+    if ((currentState.isAll && filters == null) || currentState.loadingMore) {
+      return;
+    }
+    setState(currentState.copyWith(loadingMore: true));
+    final items = await _filterRequest.userFilters(QueryModel(
+        page: page ?? currentState.page,
+        count: 20,
+        filters: filters ?? currentState.filters,
+        orders: [Orders(field: 'id', desc: true)]));
+    if (items != null) {
+      final List<UserModel?> newItems =
+          page == 0 ? [...items] : [...currentState.users, ...items];
+      final newIsAll = (items.length) < 20;
+      setState(currentState.copyWith(
+          users: newItems,
+          filters: filters ?? currentState.filters,
+          page: (page ?? currentState.page) + 1,
+          isAll: newIsAll));
+    } else {
+      setState(currentState.copyWith(isAll: true));
+    }
+    setState(currentState.copyWith(loadingMore: false));
+  }
 }
 
 class ScreenState {
   final bool loading;
+  final bool loadingMore;
   final List<UserModel?> users;
-  final List<String>? titles;
+  final List<Filters?>? filters;
+  final bool isAll;
+  final int page;
 
   ScreenState(
-      {this.loading = false, this.users = const [], this.titles = const []});
+      {this.loading = false,
+      this.loadingMore = false,
+      this.users = const [],
+      this.filters = const [],
+      this.isAll = false,
+      this.page = 0});
 
   ScreenState copyWith(
-      {bool? loading, List<UserModel?>? users, List<String>? titles}) {
+      {bool? loading,
+      bool? loadingMore,
+      List<UserModel?>? users,
+      List<Filters?>? filters,
+      bool? isAll,
+      int? page}) {
     return ScreenState(
         loading: loading ?? this.loading,
+        loadingMore: loadingMore ?? this.loadingMore,
         users: users ?? this.users,
-        titles: titles ?? this.titles);
+        filters: filters ?? this.filters,
+        isAll: isAll ?? this.isAll,
+        page: page ?? this.page);
   }
 }

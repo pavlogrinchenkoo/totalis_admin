@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:totalis_admin/api/filters/dto.dart';
+import 'package:totalis_admin/api/filters/request.dart';
 import 'package:totalis_admin/api/recommendation/dto.dart';
 import 'package:totalis_admin/api/recommendation/request.dart';
 import 'package:totalis_admin/routers/routes.dart';
@@ -12,6 +14,7 @@ class RecommendationBloc extends BlocBaseWithState<ScreenState> {
   ScreenState get currentState => super.currentState!;
   final RecommendationRequest _recommendationRequest = RecommendationRequest();
   final GoogleSignIn? googleSignIn = GoogleSignIn();
+  final FilterRequest _filterRequest = FilterRequest();
 
   RecommendationBloc() {
     setState(ScreenState());
@@ -99,25 +102,67 @@ class RecommendationBloc extends BlocBaseWithState<ScreenState> {
     replaceItem(res, newModel);
     if (context.mounted) context.router.pop();
   }
+
+  Future<void> uploadItems(
+      {int? page, bool? isAll, List<Filters?>? filters}) async {
+    if ((currentState.isAll && filters == null) || currentState.loadingMore) {
+      return;
+    }
+    setState(currentState.copyWith(loadingMore: true));
+    final items = await _filterRequest.recommendationFilters(QueryModel(
+        page: page ?? currentState.page,
+        count: 20,
+        filters: filters ?? currentState.filters,
+        orders: [Orders(field: 'id', desc: true)]));
+    if (items != null) {
+      final List<RecommendationModel?> newItems =
+          page == 0 ? [...items] : [...currentState.recommendations, ...items];
+      final newIsAll = (items.length) < 20;
+      setState(currentState.copyWith(
+          recommendations: newItems,
+          filters: filters ?? currentState.filters,
+          page: (page ?? currentState.page) + 1,
+          isAll: newIsAll));
+    } else {
+      setState(currentState.copyWith(isAll: true));
+    }
+    setState(currentState.copyWith(loadingMore: false));
+  }
 }
 
 class ScreenState {
   final bool loading;
+  final bool loadingMore;
   final List<RecommendationModel?> recommendations;
   final List<String>? titles;
+  final List<Filters?>? filters;
+  final bool isAll;
+  final int page;
 
   ScreenState(
       {this.loading = false,
+      this.loadingMore = false,
       this.recommendations = const [],
-      this.titles = const []});
+      this.titles = const [],
+      this.filters,
+      this.isAll = false,
+      this.page = 0});
 
   ScreenState copyWith(
       {bool? loading,
+      bool? loadingMore,
       List<RecommendationModel?>? recommendations,
-      List<String>? titles}) {
+      List<String>? titles,
+      List<Filters?>? filters,
+      bool? isAll,
+      int? page}) {
     return ScreenState(
         loading: loading ?? this.loading,
+        loadingMore: loadingMore ?? this.loadingMore,
         recommendations: recommendations ?? this.recommendations,
-        titles: titles ?? this.titles);
+        titles: titles ?? this.titles,
+        filters: filters ?? this.filters,
+        isAll: isAll ?? this.isAll,
+        page: page ?? this.page);
   }
 }

@@ -7,7 +7,6 @@ import 'package:totalis_admin/api/messages/dto.dart';
 import 'package:totalis_admin/api/messages/request.dart';
 import 'package:totalis_admin/routers/routes.dart';
 import 'package:totalis_admin/utils/bloc_base.dart';
-import 'package:totalis_admin/utils/custom_function.dart';
 import 'package:totalis_admin/widgets/chage_page.dart';
 
 class MessageBloc extends BlocBaseWithState<ScreenState> {

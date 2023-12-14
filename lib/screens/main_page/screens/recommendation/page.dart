@@ -7,7 +7,6 @@ import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
 import 'package:totalis_admin/widgets/category_data_cell_widget.dart';
-import 'package:totalis_admin/widgets/custom_open_icon.dart';
 import 'package:totalis_admin/widgets/custom_progress_indicator.dart';
 import 'package:totalis_admin/widgets/custom_sheet_header_widget.dart';
 import 'package:totalis_admin/widgets/custom_sheet_widget.dart';
@@ -27,11 +26,19 @@ class RecommendationPage extends StatefulWidget {
 class _RecommendationPageState extends State<RecommendationPage> {
   final RecommendationBloc _bloc = RecommendationBloc();
   final cb.CheckInsBloc _blocCheckIns = cb.CheckInsBloc();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     _bloc.init();
+    _scrollController.addListener(_scrollListener);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    super.dispose();
   }
 
   @override
@@ -63,52 +70,57 @@ class _RecommendationPageState extends State<RecommendationPage> {
                   Space.h24,
                   Expanded(
                     child: ListView(
-                      scrollDirection: Axis.horizontal,
+                      controller: _scrollController,
                       children: [
-                        CustomSheetWidget(
-                          columns: <DataColumn>[
-                            for (final title in titles)
-                              DataColumn(
-                                label: Expanded(
-                                  child: Text(title),
-                                ),
-                              ),
-                          ],
-                          rows: <DataRow>[
-                            for (final item in state.recommendations)
-                              DataRow(
-                                cells: <DataCell>[
-                                  DataCell(InkWell(
-                                      borderRadius: BRadius.r6,
-                                      onTap: () =>
-                                          _bloc.openChange(context, item),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SheetText(text: item?.id),
-                                        ],
-                                      ))),
-                                  DataCell(InkWell(
-                                      borderRadius: BRadius.r6,
-                                      onTap: () async =>
-                                          _blocCheckIns.openChange(
-                                              context,
-                                              await _blocCheckIns.getCheckIn(
-                                                  item?.checkin_id)),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SheetText(text: item?.checkin_id),
-                                        ],
-                                      ))),
-                                  for (final w in _userCategoryAndCategory(
-                                      item?.checkin_id))
-                                    DataCell(w),
-                                  DataCell(SheetText(text: item?.text)),
-                                ],
-                              ),
+                        Row(
+                          children: [
+                            CustomSheetWidget(
+                              columns: <DataColumn>[
+                                for (final title in titles)
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Text(title),
+                                    ),
+                                  ),
+                              ],
+                              rows: <DataRow>[
+                                for (final item in state.recommendations)
+                                  DataRow(
+                                    cells: <DataCell>[
+                                      DataCell(InkWell(
+                                          borderRadius: BRadius.r6,
+                                          onTap: () =>
+                                              _bloc.openChange(context, item),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SheetText(text: item?.id),
+                                            ],
+                                          ))),
+                                      DataCell(InkWell(
+                                          borderRadius: BRadius.r6,
+                                          onTap: () async =>
+                                              _blocCheckIns.openChange(
+                                                  context,
+                                                  await _blocCheckIns
+                                                      .getCheckIn(
+                                                          item?.checkin_id)),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SheetText(text: item?.checkin_id),
+                                            ],
+                                          ))),
+                                      for (final w in _userCategoryAndCategory(
+                                          item?.checkin_id))
+                                        DataCell(w),
+                                      DataCell(SheetText(text: item?.text)),
+                                    ],
+                                  ),
+                              ],
+                            ),
                           ],
                         ),
                       ],
@@ -131,5 +143,11 @@ class _RecommendationPageState extends State<RecommendationPage> {
         checkIn: checkIn,
       )
     ];
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.extentAfter < 500) {
+      _bloc.uploadItems();
+    }
   }
 }

@@ -5,7 +5,6 @@ import 'package:totalis_admin/screens/main_page/screens/categories_page/bloc.dar
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
-import 'package:totalis_admin/widgets/custom_open_icon.dart';
 import 'package:totalis_admin/widgets/custom_progress_indicator.dart';
 import 'package:totalis_admin/widgets/custom_sheet_header_widget.dart';
 import 'package:totalis_admin/widgets/custom_sheet_widget.dart';
@@ -21,11 +20,19 @@ class CategoriesPage extends StatefulWidget {
 
 class _CategoriesPageState extends State<CategoriesPage> {
   final CategoriesBloc _bloc = CategoriesBloc();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     _bloc.init();
+    _scrollController.addListener(_scrollListener);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    super.dispose();
   }
 
   @override
@@ -56,47 +63,66 @@ class _CategoriesPageState extends State<CategoriesPage> {
                       title: 'Categories',
                       onSave: () => _bloc.openChange(context, CategoryModel())),
                   Space.h24,
-                  CustomSheetWidget(
-                    columns: <DataColumn>[
-                      for (final title in titles)
-                        DataColumn(
-                          label: Expanded(
-                            child: Text(title),
-                          ),
-                        ),
-                    ],
-                    rows: <DataRow>[
-                      for (final CategoryModel? item in state.categories)
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(InkWell(
-                                borderRadius: BRadius.r6,
-                                onTap: () => _bloc.openChange(context, item),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SheetText(text: item?.id),
-                                  ],
-                                ))),
-                            DataCell(SheetText(text: item?.parent_id)),
-                            DataCell(SheetText(text: item?.sort_order)),
-                            DataCell(SheetText(text: item?.name)),
-                            // DataCell(SheetText(text: item?.description)),
-                            // DataCell(CustomCheckbox(
-                            //   value: item?.is_home,
-                            //   onChanged: (value) =>
-                            //       _bloc.changeIsHome(item, value),
-                            // )),
-                            // DataCell(
-                            //     SheetText(text: item?.subcategories_title)),
+                  Expanded(
+                    child: ListView(
+                      controller: _scrollController,
+                      children: [
+                        Row(
+                          children: [
+                            CustomSheetWidget(
+                              columns: <DataColumn>[
+                                for (final title in titles)
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Text(title),
+                                    ),
+                                  ),
+                              ],
+                              rows: <DataRow>[
+                                for (final CategoryModel? item in state.categories)
+                                  DataRow(
+                                    cells: <DataCell>[
+                                      DataCell(InkWell(
+                                          borderRadius: BRadius.r6,
+                                          onTap: () =>
+                                              _bloc.openChange(context, item),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SheetText(text: item?.id),
+                                            ],
+                                          ))),
+                                      DataCell(SheetText(text: item?.parent_id)),
+                                      DataCell(SheetText(text: item?.sort_order)),
+                                      DataCell(SheetText(text: item?.name)),
+                                      // DataCell(SheetText(text: item?.description)),
+                                      // DataCell(CustomCheckbox(
+                                      //   value: item?.is_home,
+                                      //   onChanged: (value) =>
+                                      //       _bloc.changeIsHome(item, value),
+                                      // )),
+                                      // DataCell(
+                                      //     SheetText(text: item?.subcategories_title)),
+                                    ],
+                                  ),
+                              ],
+                            ),
                           ],
                         ),
-                    ],
+                      ],
+                    ),
                   )
                 ],
               ),
             ));
           }
         });
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.extentAfter < 500) {
+      _bloc.uploadItems();
+    }
   }
 }

@@ -5,7 +5,6 @@ import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
 import 'package:totalis_admin/widgets/custom_circle_avatar.dart';
-import 'package:totalis_admin/widgets/custom_open_icon.dart';
 import 'package:totalis_admin/widgets/custom_progress_indicator.dart';
 import 'package:totalis_admin/widgets/custom_sheet_header_widget.dart';
 import 'package:totalis_admin/widgets/custom_sheet_widget.dart';
@@ -23,11 +22,19 @@ class CoachesPage extends StatefulWidget {
 
 class _CoachesPageState extends State<CoachesPage> {
   final CoachesBloc _bloc = CoachesBloc();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     _bloc.init();
+    _scrollController.addListener(_scrollListener);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    super.dispose();
   }
 
   @override
@@ -50,6 +57,7 @@ class _CoachesPageState extends State<CoachesPage> {
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   CustomSheetHeaderWidget(
                       title: 'Coaches',
@@ -57,41 +65,45 @@ class _CoachesPageState extends State<CoachesPage> {
                   Space.h24,
                   Expanded(
                     child: ListView(
-                      scrollDirection: Axis.horizontal,
+                      controller: _scrollController,
                       children: [
-                        CustomSheetWidget(
-                          columns: <DataColumn>[
-                            for (final title in titles)
-                              DataColumn(
-                                label: Expanded(
-                                  child: Text(title),
-                                ),
-                              ),
-                          ],
-                          rows: <DataRow>[
-                            for (final item in state.coaches)
-                              DataRow(
-                                cells: <DataCell>[
-                                  DataCell(InkWell(
-                                      borderRadius: BRadius.r6,
-                                      onTap: () =>
-                                          _bloc.openChange(context, item),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [SheetText(text: item?.id)],
-                                      ))),
-                                  DataCell(Row(
-                                    children: [
-                                      CustomCircle(imageId: item?.image_id),
-                                      Space.w16,
-                                      SheetText(text: item?.name),
+                        Row(
+                          children: [
+                            CustomSheetWidget(
+                              columns: <DataColumn>[
+                                for (final title in titles)
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Text(title),
+                                    ),
+                                  ),
+                              ],
+                              rows: <DataRow>[
+                                for (final item in state.coaches)
+                                  DataRow(
+                                    cells: <DataCell>[
+                                      DataCell(InkWell(
+                                          borderRadius: BRadius.r6,
+                                          onTap: () =>
+                                              _bloc.openChange(context, item),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [SheetText(text: item?.id)],
+                                          ))),
+                                      DataCell(Row(
+                                        children: [
+                                          CustomCircle(imageId: item?.image_id),
+                                          Space.w16,
+                                          SheetText(text: item?.name),
+                                        ],
+                                      )),
+                                      DataCell(SheetText(text: item?.prompt)),
+                                      DataCell(SheetText(text: item?.description)),
                                     ],
-                                  )),
-                                  DataCell(SheetText(text: item?.prompt)),
-                                  DataCell(SheetText(text: item?.description)),
-                                ],
-                              ),
+                                  ),
+                              ],
+                            ),
                           ],
                         ),
                       ],
@@ -102,5 +114,11 @@ class _CoachesPageState extends State<CoachesPage> {
             ));
           }
         });
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.extentAfter < 500) {
+      _bloc.uploadItems();
+    }
   }
 }

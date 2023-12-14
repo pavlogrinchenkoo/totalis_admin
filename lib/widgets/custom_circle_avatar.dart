@@ -50,9 +50,9 @@ class _CustomCircleState extends State<CustomCircle> {
   }
 
   Future<void> _loadImage(int? imageId) async {
+    if (imageId == null) return;
     final res = await _imageRequest.get(imageId.toString());
     if (res == null) return;
-
     setState(() {
       image = res;
     });
