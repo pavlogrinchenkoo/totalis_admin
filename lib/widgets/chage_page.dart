@@ -292,16 +292,19 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
         ],
       );
     } else if (widget.field?.type == FieldType.checkbox) {
-      return FormBuilderCheckbox(
-        checkColor: BC.white,
-        activeColor: BC.green,
-        name: widget.field?.title ?? '',
-        enabled: widget.field?.enable ?? true,
-        initialValue: widget.field?.value ?? false,
-        onChanged: (value) => onChanged(value ?? false),
-        title: Text(widget.field?.title ?? '',
-            style: BS.med14.apply(color: BC.black)),
-        validator: FormBuilderValidators.required(),
+      return Theme(
+        data: ThemeData(unselectedWidgetColor: BC.green),
+        child: FormBuilderCheckbox(
+          checkColor: BC.white,
+          activeColor: BC.green,
+          name: widget.field?.title ?? '',
+          enabled: widget.field?.enable ?? true,
+          initialValue: widget.field?.value ?? false,
+          onChanged: (value) => onChanged(value ?? false),
+          title: Text(widget.field?.title ?? '',
+              style: BS.med14.apply(color: BC.black)),
+          validator: FormBuilderValidators.required(),
+        ),
       );
     } else if (widget.field?.type == FieldType.email) {
       return FormBuilderTextField(
@@ -341,7 +344,8 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(widget.field?.title ?? ''),
+          Text(widget.field?.title ?? '',
+              style: BS.med14.apply(color: BC.black)),
           Space.w8,
           _AvatarWidget(
               imageId: widget.field?.imageId,
