@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:totalis_admin/api/filters/dto.dart';
+import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/theme/theme_extensions/app_button_theme.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
@@ -53,6 +54,8 @@ class _CheckinsSearchWidgetState extends State<CheckinsSearchWidget> {
                     Expanded(
                       flex: 1,
                       child: FormBuilderDropdown(
+                          dropdownColor: BC.white,
+                          style: BS.med14.apply(color: BC.black),
                           name: 'Select field',
                           decoration: const InputDecoration(
                             labelText: 'Select field',
@@ -75,6 +78,7 @@ class _CheckinsSearchWidgetState extends State<CheckinsSearchWidget> {
                             value == '' ? widget.bloc.searchUser(null) : null,
                         controller: controller,
                         name: 'User search',
+                        style: BS.med14.apply(color: BC.black),
                         decoration: const InputDecoration(
                           labelText: 'User search',
                           hintText: 'User search',

@@ -4,6 +4,7 @@ import 'package:totalis_admin/api/categories/dto.dart';
 import 'package:totalis_admin/api/filters/dto.dart';
 import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user/bloc.dart'
     as ub;
+import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/theme/theme_extensions/app_button_theme.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
@@ -68,6 +69,8 @@ class _CheckinsSearchWidgetState extends State<CheckinsSearchWidget> {
                           Expanded(
                             flex: 1,
                             child: FormBuilderDropdown(
+                                dropdownColor: BC.white,
+                                style: BS.med14.apply(color: BC.black),
                                 enabled: state.categories.isNotEmpty,
                                 name: state.categories.isNotEmpty
                                     ? 'Select categories'

@@ -69,6 +69,7 @@ class CustomBottomSheetTextField {
                           bottomRight: Radius.circular(6),
                           bottomLeft: Radius.circular(6))),
                   child: FormBuilderTextField(
+                    style: BS.med14.apply(color: BC.black),
                     onChanged: (value) =>
                         js.context.callMethod('enableSpellCheck'),
                     expands: true,
@@ -78,7 +79,6 @@ class CustomBottomSheetTextField {
                     enabled: field?.enable ?? true,
                     name: field?.title ?? '',
                     textAlign: TextAlign.start,
-                    style: TextStyle(color: BC.black),
                     textAlignVertical: TextAlignVertical.top,
                     cursorColor: BC.black,
                     decoration: InputDecoration(

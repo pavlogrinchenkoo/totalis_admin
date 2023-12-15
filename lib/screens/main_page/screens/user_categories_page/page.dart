@@ -86,9 +86,9 @@ class _UserCategoriesPageState extends State<UserCategoriesPage> {
                       Expanded(
                         flex: 1,
                         child: FormBuilderDropdown(
+                            dropdownColor: BC.white,
                             name: 'Select field',
                             style: BS.sb14.apply(color: BC.black),
-                            dropdownColor: BC.white,
                             decoration: const InputDecoration(
                               labelText: 'Select field',
                               border: OutlineInputBorder(),
@@ -110,6 +110,7 @@ class _UserCategoriesPageState extends State<UserCategoriesPage> {
                               value == '' ? _bloc.onSearch(null) : null,
                           controller: controller,
                           name: 'Message search',
+                          style: BS.med14.apply(color: BC.black),
                           decoration: const InputDecoration(
                             labelText: 'Message search',
                             hintText: 'Message search',

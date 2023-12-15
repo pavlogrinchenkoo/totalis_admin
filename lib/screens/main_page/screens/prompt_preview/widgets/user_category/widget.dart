@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:totalis_admin/api/categories/dto.dart';
-import 'package:totalis_admin/api/filters/dto.dart';
 import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user/bloc.dart'
     as ub;
-import 'package:totalis_admin/theme/theme_extensions/app_button_theme.dart';
+import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
-import 'package:totalis_admin/utils/spaces.dart';
 
-import '../check_items.dart';
 import 'bloc.dart';
 
 class UserCategorySearchWidget extends StatefulWidget {
@@ -62,7 +59,8 @@ class _UserCategorySearchWidgetState extends State<UserCategorySearchWidget> {
               bloc: widget.bloc,
               builder: (context, ScreenState state) {
                 if (state.selectedUser?.id != ubState.selectedUser?.id) {
-                  widget.bloc.setUser(ubState.selectedUser, onClear: widget.onClear);
+                  widget.bloc
+                      .setUser(ubState.selectedUser, onClear: widget.onClear);
                 }
                 return Expanded(
                   child: Column(
@@ -72,6 +70,8 @@ class _UserCategorySearchWidgetState extends State<UserCategorySearchWidget> {
                           Expanded(
                             flex: 1,
                             child: FormBuilderDropdown(
+                                dropdownColor: BC.white,
+                                style: BS.med14.apply(color: BC.black),
                                 enabled: state.categories.isNotEmpty,
                                 name: state.categories.isNotEmpty
                                     ? 'Select categories'

@@ -55,7 +55,7 @@ class _AdminsPageState extends State<AdminsPage> {
                   CustomSheetHeaderWidget(
                       title: 'Admins',
                       onSave: () => _bloc.openChange(context, AdminModel())),
-                  Space.h18,
+                  Space.h16,
                   Expanded(
                     child: ListView(
                       controller: _scrollController,

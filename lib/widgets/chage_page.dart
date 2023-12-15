@@ -354,6 +354,8 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
       );
     } else if (widget.field?.type == FieldType.dropdown) {
       return FormBuilderDropdown(
+        dropdownColor: BC.white,
+        style: BS.med14.apply(color: BC.black),
         name: widget.field?.title ?? '',
         decoration: InputDecoration(
           labelText: widget.field?.title ?? '',
@@ -371,6 +373,8 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
       );
     } else if (widget.field?.type == FieldType.enums) {
       return FormBuilderDropdown(
+        dropdownColor: BC.white,
+        style: BS.med14.apply(color: BC.black),
         name: widget.field?.title ?? '',
         decoration: InputDecoration(
           labelText: widget.field?.title ?? '',

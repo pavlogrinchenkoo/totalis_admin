@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:totalis_admin/api/filters/dto.dart';
+import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/debouncer.dart';
 import 'package:totalis_admin/utils/spaces.dart';
@@ -58,6 +59,7 @@ class _UserSearchWidgetState extends State<UserSearchWidget> {
                     Expanded(
                       flex: 2,
                       child: FormBuilderTextField(
+                        style: BS.med14.apply(color: BC.black),
                         onChanged: (value) => _debouncer.run(() {
                           widget.bloc.searchUser(Filters(
                             field: 'id',
@@ -76,13 +78,15 @@ class _UserSearchWidgetState extends State<UserSearchWidget> {
                     if (state.nothingFound == true ||
                         state.selectedUser != null)
                       Space.w16,
-                      if (state.nothingFound)
-                        const Text('Nothing found')
-                      else
-                        state.selectedUser != null
-                            ? Text(
-                                '${state.selectedUser?.id}: ${state.selectedUser?.first_name ?? ''} ${state.selectedUser?.last_name ?? ''}')
-                            : const SizedBox(),
+                    if (state.nothingFound)
+                      Text('Nothing found',
+                          style: BS.med14.apply(color: BC.black))
+                    else
+                      state.selectedUser != null
+                          ? Text(
+                              '${state.selectedUser?.id}: ${state.selectedUser?.first_name ?? ''} ${state.selectedUser?.last_name ?? ''}',
+                              style: BS.med14.apply(color: BC.black))
+                          : const SizedBox(),
                     // ElevatedButton(
                     //     style: themeData
                     //         .extension<AppButtonTheme>()!

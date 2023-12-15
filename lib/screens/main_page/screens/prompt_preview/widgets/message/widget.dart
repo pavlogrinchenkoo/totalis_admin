@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:totalis_admin/api/filters/dto.dart';
+import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/theme/theme_extensions/app_button_theme.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
@@ -54,6 +55,7 @@ class _MessagesSearchWidgetState extends State<MessagesSearchWidget> {
                       flex: 1,
                       child: FormBuilderDropdown(
                           name: 'Select field',
+                          dropdownColor: BC.white,
                           decoration: const InputDecoration(
                             labelText: 'Select field',
                             border: OutlineInputBorder(),
@@ -75,6 +77,7 @@ class _MessagesSearchWidgetState extends State<MessagesSearchWidget> {
                             value == '' ? widget.bloc.searchUser(null) : null,
                         controller: controller,
                         name: 'User search',
+                        style: BS.med14.apply(color: BC.black),
                         decoration: const InputDecoration(
                           labelText: 'User search',
                           hintText: 'User search',
