@@ -199,7 +199,7 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
         icon_id: newModel.icon_id,
         sort_order: newModel.sort_order,
         description: newModel.description,
-        is_home: newModel.is_home ?? false,
+        isHome: newModel.is_home ?? false,
         subcategories_title: newModel.subcategories_title,
         show_checkin_history: newModel.show_checkin_history,
         checkin_enabled: newModel.checkin_enabled,

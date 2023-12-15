@@ -12,7 +12,8 @@ class CategoryModelRequest {
   int? icon_id;
   int? sort_order;
   String? description;
-  bool? is_home;
+  @JsonKey(name: "is_home")
+  bool? isHome;
   String? subcategories_title;
   bool? show_checkin_history;
   bool? checkin_enabled;
@@ -31,7 +32,7 @@ class CategoryModelRequest {
     this.icon_id,
     this.sort_order,
     this.description,
-    this.is_home,
+    this.isHome,
     this.subcategories_title,
     this.show_checkin_history,
     this.checkin_enabled,
