@@ -32,7 +32,7 @@ class AppThemeData {
         backgroundColor: kPrimaryColor,
         foregroundColor: Colors.white,
       ),
-      scaffoldBackgroundColor: kScreenBackgroundColor,
+      scaffoldBackgroundColor: BC.white,
       drawerTheme:
           const DrawerThemeData(backgroundColor: kScreenBackgroundColor),
       colorScheme: const ColorScheme(
@@ -95,6 +95,7 @@ class AppThemeData {
 
     return themeData.copyWith(
       textTheme: themeData.textTheme.apply(
+
         bodyColor: kTextColor,
         displayColor: kTextColor,
       ),
@@ -108,47 +109,69 @@ class AppThemeData {
   }
 
   final inputDecorationTheme = InputDecorationTheme(
+      hintStyle: MaterialStateTextStyle.resolveWith((states) {
+        if (states.contains(MaterialState.focused)) {
+          return BS.med14.apply(color: BC.black);
+        } else {
+          return BS.med14.apply(color: BC.black.withOpacity(0.8));
+        }
+      }),
+
       labelStyle: MaterialStateTextStyle.resolveWith((states) {
         if (states.contains(MaterialState.error)) {
           return TextStyle(color: BC.red);
         } else if (states.contains(MaterialState.focused)) {
-          return TextStyle(color: BC.white);
+          return TextStyle(color: BC.black);
         } else {
-          return TextStyle(color: BC.white.withOpacity(0.8));
+          return TextStyle(color: BC.black.withOpacity(0.8));
         }
       }),
       floatingLabelStyle: MaterialStateTextStyle.resolveWith((states) {
         if (states.contains(MaterialState.error)) {
           return TextStyle(color: BC.red);
         } else if (states.contains(MaterialState.focused)) {
-          return TextStyle(color: BC.white);
+          return TextStyle(color: BC.black);
         } else {
-          return TextStyle(color: BC.white.withOpacity(0.8));
+          return TextStyle(color: BC.black.withOpacity(0.8));
         }
       }),
       // labelStyle: TextStyle(color: BC.white),
       enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: BC.white.withOpacity(0.8), width: 1),
+        borderSide: BorderSide(color: BC.black.withOpacity(0.8), width: 1),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: BC.white, width: 1),
+        borderSide: BorderSide(color: BC.black, width: 1),
       ),
       errorBorder: OutlineInputBorder(
         borderSide: BorderSide(color: BC.red, width: 1),
       ),
       border: OutlineInputBorder(
-        borderSide: BorderSide(color: BC.white.withOpacity(0.8), width: 4),
+        borderSide: BorderSide(color: BC.black.withOpacity(0.8), width: 4),
       ));
 
   ThemeData dark() {
     final themeData = ThemeData.dark().copyWith(
+      switchTheme: SwitchThemeData(
+          splashRadius: 0.0,
+          thumbColor: MaterialStateProperty.resolveWith((states) {
+            if (states.contains(MaterialState.selected)) {
+              return BC.green;
+            } else if (states.contains(MaterialState.hovered)) {
+              return BC.darkGray.withOpacity(0.3);
+            } else if (states.contains(MaterialState.focused)) {
+              return BC.darkGray.withOpacity(0.5);
+            } else if (states.contains(MaterialState.disabled)) {
+              return BC.darkGray.withOpacity(0.5);
+            }
+          })),
       drawerTheme:
           const DrawerThemeData(backgroundColor: kScreenBackgroundColor),
       appBarTheme: const AppBarTheme(
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Colors.black),
         backgroundColor: kPrimaryColor,
         foregroundColor: Colors.white,
       ),
+      scaffoldBackgroundColor: BC.white,
       textSelectionTheme: TextSelectionThemeData(
         cursorColor: BC.green,
         selectionColor: BC.green.withOpacity(0.2),

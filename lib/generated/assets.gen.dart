@@ -40,6 +40,7 @@ class Assets {
   static const SvgGenImage fd = SvgGenImage('assets/fd.svg');
   static const $AssetsImagesGen images = $AssetsImagesGen();
   static const SvgGenImage messages = SvgGenImage('assets/messages.svg');
+  static const SvgGenImage models = SvgGenImage('assets/models.svg');
   static const SvgGenImage onCompress = SvgGenImage('assets/onCompress.svg');
   static const SvgGenImage onExpand = SvgGenImage('assets/onExpand.svg');
   static const SvgGenImage open = SvgGenImage('assets/open.svg');
@@ -48,6 +49,7 @@ class Assets {
   static const SvgGenImage points = SvgGenImage('assets/points.svg');
   static const SvgGenImage rec = SvgGenImage('assets/rec.svg');
   static const SvgGenImage send = SvgGenImage('assets/send.svg');
+  static const SvgGenImage settings = SvgGenImage('assets/settings.svg');
   static const SvgGenImage share = SvgGenImage('assets/share.svg');
   static const SvgGenImage userCategory =
       SvgGenImage('assets/user_category.svg');
@@ -65,6 +67,7 @@ class Assets {
         coaches,
         fd,
         messages,
+        models,
         onCompress,
         onExpand,
         open,
@@ -72,6 +75,7 @@ class Assets {
         points,
         rec,
         send,
+        settings,
         share,
         userCategory,
         users,

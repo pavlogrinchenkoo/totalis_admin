@@ -12,7 +12,7 @@ class AppBarBackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(children: [
       Material(
-        color: color ?? BC.white,
+        color: color ?? BC.green.withOpacity(0.1),
         borderRadius: BRadius.r12,
         child: InkWell(
           borderRadius: BRadius.r12,

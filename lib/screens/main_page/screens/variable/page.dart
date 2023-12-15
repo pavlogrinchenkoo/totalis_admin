@@ -42,14 +42,14 @@ class _VariablePageState extends State<VariablePage> {
           } else {
             return Scaffold(
                 body: Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomSheetHeaderWidget(
                       title: 'Variables',
                       onSave: () => _bloc.openChange(context, VariableModel())),
-                  Space.h24,
+                  Space.h18,
                   Expanded(
                     child: ListView(
                       scrollDirection: Axis.horizontal,

@@ -1,7 +1,6 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:totalis_admin/api/system/dto.dart';
-import 'package:totalis_admin/api/variable/dto.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
 import 'package:totalis_admin/widgets/custom_progress_indicator.dart';
@@ -42,7 +41,7 @@ class _SystemPageState extends State<SystemPage> {
           } else {
             return Scaffold(
                 body: Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -50,7 +49,7 @@ class _SystemPageState extends State<SystemPage> {
                       title: 'Systems',
                       onSave: () => _bloc.openChange(context, state.system),
                       customText: 'Change'),
-                  Space.h24,
+                  Space.h18,
                   Expanded(
                     child: ListView(
                       children: [
@@ -66,9 +65,10 @@ class _SystemPageState extends State<SystemPage> {
                                   ),
                               ],
                               rows: <DataRow>[
-                                for (final item in (state.system ?? SystemModel())
-                                    .toJson()
-                                    .keys)
+                                for (final item
+                                    in (state.system ?? SystemModel())
+                                        .toJson()
+                                        .keys)
                                   DataRow(
                                     cells: <DataCell>[
                                       DataCell(SheetText(text: item)),

@@ -55,14 +55,14 @@ class _CategoriesPageState extends State<CategoriesPage> {
           } else {
             return Scaffold(
                 body: Container(
-              padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomSheetHeaderWidget(
                       title: 'Categories',
                       onSave: () => _bloc.openChange(context, CategoryModel())),
-                  Space.h24,
+                  Space.h18,
                   Expanded(
                     child: ListView(
                       controller: _scrollController,

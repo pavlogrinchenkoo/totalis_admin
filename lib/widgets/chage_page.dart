@@ -17,7 +17,6 @@ import 'package:totalis_admin/api/images/request.dart';
 import 'package:totalis_admin/generated/assets.gen.dart';
 import 'package:totalis_admin/screens/main_page/screens/prompt_preview/page.dart';
 import 'package:totalis_admin/style.dart';
-import 'package:totalis_admin/theme/theme_extensions/app_button_theme.dart';
 import 'package:totalis_admin/utils/spaces.dart';
 import 'package:totalis_admin/widgets/app_bar_back_button.dart';
 import 'package:totalis_admin/widgets/card_elements.dart';
@@ -68,7 +67,7 @@ class ChangePage extends StatelessWidget {
                 if (title != null)
                   Text(
                     title ?? '',
-                    style: BS.reg16.apply(color: BC.white),
+                    style: BS.sb20.apply(color: BC.black),
                   ),
               ],
             ),
@@ -98,27 +97,27 @@ class ChangePage extends StatelessWidget {
                             child: Row(
                               children: [
                                 if (onSave != null)
-                                ElevatedButton(
-                                  style: themeData
-                                      .extension<AppButtonTheme>()!
-                                      .primaryElevated,
-                                  onPressed: () {
-                                    if (_formKey.currentState?.validate() ??
-                                        false) {
-                                      // Validation passed.
-                                      onSave?.call();
-                                    } else {
-                                      // Validation failed.
-                                    }
-                                  },
-                                  child: const Text('Save'),
-                                ),
+                                  FilledButton(
+                                    style: FilledButton.styleFrom(
+                                      backgroundColor: BC.green,
+                                    ),
+                                    onPressed: () {
+                                      if (_formKey.currentState?.validate() ??
+                                          false) {
+                                        // Validation passed.
+                                        onSave?.call();
+                                      } else {
+                                        // Validation failed.
+                                      }
+                                    },
+                                    child: const Text('Save'),
+                                  ),
                                 Space.w16,
                                 if (onDelete != null)
-                                  ElevatedButton(
-                                    style: themeData
-                                        .extension<AppButtonTheme>()!
-                                        .errorElevated,
+                                  FilledButton(
+                                    style: FilledButton.styleFrom(
+                                      backgroundColor: BC.green,
+                                    ),
                                     onPressed: () {
                                       if (_formKey.currentState?.validate() ??
                                           false) {
@@ -170,14 +169,13 @@ class CustomFieldWidget extends StatefulWidget {
 class _CustomFieldWidgetState extends State<CustomFieldWidget> {
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
-
     if (widget.field?.type == FieldType.text) {
       return FormBuilderTextField(
         onChanged: (value) => js.context.callMethod('enableSpellCheck'),
         controller: widget.field?.controller,
         enabled: widget.field?.enable ?? true,
         name: widget.field?.title ?? '',
+        style: BS.med14.apply(color: BC.black),
         decoration: InputDecoration(
           labelText: widget.field?.title ?? '',
           hintText: widget.field?.title ?? '',
@@ -199,6 +197,7 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
                 controller: widget.field?.controller,
                 enabled: widget.field?.enable ?? true,
                 name: widget.field?.title ?? '',
+                style: BS.med14.apply(color: BC.black),
                 decoration: InputDecoration(
                   labelText: widget.field?.title ?? '',
                   hintText: widget.field?.title ?? '',
@@ -226,8 +225,10 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
             Column(
               children: [
                 Space.h16,
-                ElevatedButton(
-                  style: themeData.extension<AppButtonTheme>()!.primaryElevated,
+                FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: BC.green,
+                  ),
                   onPressed: () {
                     if (widget.formKey?.currentState?.validate() ?? false) {
                       // Validation passed.
@@ -247,8 +248,10 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
             Column(
               children: [
                 Space.h16,
-                ElevatedButton(
-                  style: themeData.extension<AppButtonTheme>()!.primaryElevated,
+                FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: BC.green,
+                  ),
                   onPressed: () {
                     if (widget.formKey?.currentState?.validate() ?? false) {
                       // Validation passed.
@@ -268,8 +271,10 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
             Column(
               children: [
                 Space.h16,
-                ElevatedButton(
-                  style: themeData.extension<AppButtonTheme>()!.primaryElevated,
+                FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: BC.green,
+                  ),
                   onPressed: () {
                     if (widget.formKey?.currentState?.validate() ?? false) {
                       // Validation passed.
@@ -294,7 +299,8 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
         enabled: widget.field?.enable ?? true,
         initialValue: widget.field?.value ?? false,
         onChanged: (value) => onChanged(value ?? false),
-        title: Text(widget.field?.title ?? ''),
+        title: Text(widget.field?.title ?? '',
+            style: BS.med14.apply(color: BC.black)),
         validator: FormBuilderValidators.required(),
       );
     } else if (widget.field?.type == FieldType.email) {
@@ -303,6 +309,7 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
         controller: widget.field?.controller,
         enabled: widget.field?.enable ?? true,
         name: widget.field?.title ?? '',
+        style: BS.med14.apply(color: BC.black),
         decoration: InputDecoration(
           labelText: widget.field?.title ?? '',
           hintText: widget.field?.title ?? '',

@@ -16,7 +16,6 @@ import 'package:totalis_admin/widgets/custom_sheet_header_widget.dart';
 import 'package:totalis_admin/widgets/custom_sheet_widget.dart';
 import 'package:totalis_admin/widgets/sheets_text.dart';
 
-import '../../../../theme/theme_extensions/app_button_theme.dart';
 import 'bloc.dart';
 import 'widgets/check_in_widget.dart';
 import 'widgets/user/page.dart';
@@ -72,7 +71,7 @@ class _UserCategoriesPageState extends State<UserCategoriesPage> {
           } else {
             return Scaffold(
                 body: Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               child: ListView(
                 controller: _scrollController,
                 shrinkWrap: true,
@@ -88,6 +87,8 @@ class _UserCategoriesPageState extends State<UserCategoriesPage> {
                         flex: 1,
                         child: FormBuilderDropdown(
                             name: 'Select field',
+                            style: BS.sb14.apply(color: BC.black),
+                            dropdownColor: BC.white,
                             decoration: const InputDecoration(
                               labelText: 'Select field',
                               border: OutlineInputBorder(),
@@ -117,10 +118,10 @@ class _UserCategoriesPageState extends State<UserCategoriesPage> {
                         ),
                       ),
                       Space.w16,
-                      ElevatedButton(
-                          style: themeData
-                              .extension<AppButtonTheme>()!
-                              .primaryElevated,
+                      FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: BC.green,
+                          ),
                           onPressed: () => controller.text != ''
                               ? _bloc.onSearch(
                                   Filters(
@@ -132,7 +133,7 @@ class _UserCategoriesPageState extends State<UserCategoriesPage> {
                           child: const Text('Search')),
                     ],
                   ),
-                  Space.h24,
+                  Space.h18,
                   Row(
                     children: [
                       CustomSheetWidget(

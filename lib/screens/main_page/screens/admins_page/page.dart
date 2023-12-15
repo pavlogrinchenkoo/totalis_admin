@@ -22,6 +22,7 @@ class AdminsPage extends StatefulWidget {
 class _AdminsPageState extends State<AdminsPage> {
   final AdminsBloc _bloc = AdminsBloc();
   final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     _bloc.init();
@@ -47,14 +48,14 @@ class _AdminsPageState extends State<AdminsPage> {
           } else {
             return Scaffold(
                 body: Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomSheetHeaderWidget(
                       title: 'Admins',
                       onSave: () => _bloc.openChange(context, AdminModel())),
-                  Space.h24,
+                  Space.h18,
                   Expanded(
                     child: ListView(
                       controller: _scrollController,
@@ -91,8 +92,9 @@ class _AdminsPageState extends State<AdminsPage> {
                                       DataCell(SheetText(text: item?.mail)),
                                       DataCell(CustomCheckbox(
                                           value: item?.enabled,
-                                          onChanged: (enabled) => _bloc
-                                              .changeAdminEnabled(item, enabled))),
+                                          onChanged: (enabled) =>
+                                              _bloc.changeAdminEnabled(
+                                                  item, enabled))),
                                       DataCell(CustomCheckbox(
                                           value: item?.super_admin,
                                           onChanged: (enabled) =>

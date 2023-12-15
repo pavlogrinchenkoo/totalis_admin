@@ -2,14 +2,14 @@ import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:totalis_admin/generated/assets.gen.dart';
-import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user/bloc.dart'
-    as ub;
-import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user_category/bloc.dart'
-    as ucb;
 import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/message/bloc.dart'
     as mb;
 import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/new_checkin/bloc.dart'
     as ckb;
+import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user/bloc.dart'
+    as ub;
+import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user_category/bloc.dart'
+    as ucb;
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/theme/theme_extensions/app_button_theme.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
@@ -21,7 +21,6 @@ import 'package:totalis_admin/widgets/custom_progress_indicator.dart';
 
 import 'bloc.dart';
 import 'widgets/user/widget.dart';
-import 'widgets/user_category/widget.dart';
 
 @RoutePage()
 class PromptPreviewPage extends StatefulWidget {
@@ -66,7 +65,7 @@ class _PromptPreviewPageState extends State<PromptPreviewPage> {
           } else {
             return Scaffold(
                 body: Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               child: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -102,7 +101,7 @@ class _PromptPreviewPageState extends State<PromptPreviewPage> {
                       //   CheckinsSearchWidget(
                       //       bloc: checkinsBloc, userBloc: userBloc),
                     ]),
-                    Space.h24,
+                    Space.h18,
                     Stack(
                       children: [
                         FormBuilderTextField(
@@ -111,6 +110,7 @@ class _PromptPreviewPageState extends State<PromptPreviewPage> {
                           maxLines: 10,
                           controller: widget.field?.controller,
                           name: widget.field?.title ?? '',
+                          style: BS.med14.apply(color: BC.black),
                           decoration: InputDecoration(
                             labelText: widget.field?.title ?? '',
                             hintText: widget.field?.title ?? '',
@@ -169,6 +169,7 @@ class _PromptPreviewPageState extends State<PromptPreviewPage> {
                           maxLines: 10,
                           controller: _bloc.controller,
                           name: 'Response',
+                          style: BS.med14.apply(color: BC.black),
                           decoration: const InputDecoration(
                             labelText: 'Response',
                             hintText: 'Response',
@@ -204,6 +205,7 @@ class _PromptPreviewPageState extends State<PromptPreviewPage> {
                       maxLines: 10,
                       controller: _bloc.controllerMessage,
                       name: 'Message',
+                      style: BS.med14.apply(color: BC.black),
                       decoration: const InputDecoration(
                         labelText: 'Message',
                         hintText: 'Message',
@@ -228,6 +230,7 @@ class _PromptPreviewPageState extends State<PromptPreviewPage> {
                       maxLines: 10,
                       controller: _bloc.controllerLlm,
                       name: 'Response LLM',
+                      style: BS.med14.apply(color: BC.black),
                       decoration: const InputDecoration(
                         labelText: 'Response LLM',
                         hintText: 'Response LLM',

@@ -5,7 +5,7 @@ class ThemeColors {
   static const Color white = Color(0xffffffff);
   static const Color black = Color(0xff000000);
   static const Color gray = Color(0xffE3E3E3);
-  static const Color darkGray = Color(0xff363636);
+  static const Color darkGray = Color(0xff5F6368);
   static const Color boxShadow = Color(0x33000000);
   static const Color boxShadowLight = Color(0x1A000000);
   static const Color green = Color(0xff547D53);
@@ -52,8 +52,14 @@ abstract class BS {
   static TextStyle get sb20 => GoogleFonts.openSans(
       color: BC.black, fontSize: 20, fontWeight: FontWeight.w600);
 
+  static TextStyle get sb14 => GoogleFonts.openSans(
+      color: BC.black, fontSize: 14, fontWeight: FontWeight.w600);
+
   static TextStyle get med20 => GoogleFonts.openSans(
       color: BC.black, fontSize: 20, fontWeight: FontWeight.w500);
+
+  static TextStyle get med14 => GoogleFonts.openSans(
+      color: BC.black, fontSize: 14, fontWeight: FontWeight.w500);
 
   static TextStyle get reg16 => GoogleFonts.openSans(
       color: BC.black, fontSize: 16, fontWeight: FontWeight.w400);

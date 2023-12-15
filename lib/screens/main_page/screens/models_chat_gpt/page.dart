@@ -1,19 +1,14 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:totalis_admin/api/models_chat_gpt/dto.dart';
-import 'package:totalis_admin/theme/theme_extensions/app_button_theme.dart';
-import 'package:totalis_admin/api/filters/dto.dart';
 import 'package:totalis_admin/api/messages/dto.dart';
+import 'package:totalis_admin/api/models_chat_gpt/dto.dart';
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/custom_stream_builder.dart';
 import 'package:totalis_admin/utils/spaces.dart';
-import 'package:totalis_admin/widgets/check_in_data_cell_widget.dart';
 import 'package:totalis_admin/widgets/custom_progress_indicator.dart';
 import 'package:totalis_admin/widgets/custom_sheet_header_widget.dart';
 import 'package:totalis_admin/widgets/custom_sheet_widget.dart';
 import 'package:totalis_admin/widgets/sheets_text.dart';
-import 'package:totalis_admin/widgets/user_category_data_cell_widget.dart';
 
 import 'bloc.dart';
 
@@ -64,7 +59,7 @@ class _ModelsChatGptPageState extends State<ModelsChatGptPage> {
           } else {
             return Scaffold(
                 body: Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               child: ListView(
                 controller: _scrollController,
                 shrinkWrap: true,
@@ -124,7 +119,7 @@ class _ModelsChatGptPageState extends State<ModelsChatGptPage> {
                       //       child: const Text('Search')),
                     ],
                   ),
-                  Space.h24,
+                  Space.h18,
                   Row(
                     children: [
                       CustomSheetWidget(

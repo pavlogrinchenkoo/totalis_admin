@@ -58,14 +58,14 @@ class _CheckInsPageState extends State<CheckInsPage> {
           } else {
             return Scaffold(
                 body: Container(
-              padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomSheetHeaderWidget(
                       title: 'Check-ins',
                       onSave: () => _bloc.openChange(context, CheckInModel())),
-                  Space.h24,
+                  Space.h18,
                   Expanded(
                     child: ListView(
                       controller: _scrollController,

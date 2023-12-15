@@ -17,8 +17,12 @@ class AppDataTableTheme extends ThemeExtension<AppDataTableTheme> {
         elevation: 0.0,
       ),
       dataTableThemeData: themeData.dataTableTheme.copyWith(
-        headingRowColor: MaterialStateProperty.all(BC.green),
-        headingTextStyle: TextStyle(color: themeData.colorScheme.onPrimary),
+        decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            border: Border.all(color: Colors.transparent, width: 1)),
+        headingRowColor: MaterialStateProperty.all(Colors.transparent),
+        headingTextStyle: TextStyle(color: BC.black),
+        dataTextStyle: TextStyle(color: BC.black),
       ),
     );
   }
@@ -35,7 +39,8 @@ class AppDataTableTheme extends ThemeExtension<AppDataTableTheme> {
   }
 
   @override
-  ThemeExtension<AppDataTableTheme> lerp(ThemeExtension<AppDataTableTheme>? other, double t) {
+  ThemeExtension<AppDataTableTheme> lerp(
+      ThemeExtension<AppDataTableTheme>? other, double t) {
     if (other is! AppDataTableTheme) {
       return this;
     }

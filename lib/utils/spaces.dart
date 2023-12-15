@@ -23,6 +23,9 @@ class Space {
 
   static Widget get h24 => const _SpaceWidget(height: 24);
 
+  static Widget get h20 => const _SpaceWidget(height: 20);
+
+  static Widget get h18 => const _SpaceWidget(height: 18);
   static Widget get h16 => const _SpaceWidget(height: 16);
 
   static Widget get h8 => const _SpaceWidget(height: 8);

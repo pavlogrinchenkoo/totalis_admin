@@ -59,7 +59,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
           } else {
             return Scaffold(
                 body: Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -67,7 +67,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
                       title: 'Recommendations',
                       onSave: () =>
                           _bloc.openChange(context, RecommendationModel())),
-                  Space.h24,
+                  Space.h18,
                   Expanded(
                     child: ListView(
                       controller: _scrollController,
