@@ -64,8 +64,8 @@ class FilterRequest {
   }
 
   Future<List<CoachesModel>?> coachesFilters(QueryModel? queryModel) async {
-    final res = await _request.post(
-        'api/admin/category/get/query', queryModel?.toJson());
+    final res =
+        await _request.post('api/admin/coach/get/query', queryModel?.toJson());
     if (res == null) return null;
     return (res as List).map((e) => CoachesModel.fromJson(e)).toList();
   }

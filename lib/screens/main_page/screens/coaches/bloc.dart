@@ -130,18 +130,8 @@ class CoachesBloc extends BlocBaseWithState<ScreenState> {
         filters: filters ?? currentState.filters,
         orders: [Orders(field: 'id', desc: true)]));
     if (items != null) {
-      final List<CoachesModel?> newItems = page == 0
-          ? [...items]
-          : [
-              ...currentState.coaches,
-              ...items,
-              ...items,
-              ...items,
-              ...items,
-              ...items,
-              ...items,
-              ...items
-            ];
+      final List<CoachesModel?> newItems =
+          page == 0 ? [...items] : [...currentState.coaches, ...items];
       final newIsAll = (items.length) < 20;
       setState(currentState.copyWith(
           coaches: newItems,
