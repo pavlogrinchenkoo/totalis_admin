@@ -74,7 +74,7 @@ class CheckInsBloc extends BlocBaseWithState<ScreenState> {
                     ?.text ??
                 '') ??
             0,
-        level: int.tryParse(
+        level: double.tryParse(
                 fields.firstWhere((i) => i.title == 'Level').controller?.text ??
                     '') ??
             0,

@@ -330,6 +330,7 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
             widget.field?.controller?.text = (value).toIso8601String();
           }
         },
+        style: BS.med14.apply(color: BC.black),
         inputType: InputType.date,
         decoration: InputDecoration(
           labelText: widget.field?.title ?? '',

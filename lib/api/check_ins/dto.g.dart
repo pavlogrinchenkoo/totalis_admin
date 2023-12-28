@@ -10,7 +10,7 @@ CheckInRequestModel _$CheckInRequestModelFromJson(Map<String, dynamic> json) =>
     CheckInRequestModel(
       user_category_id: json['user_category_id'] as int?,
       date: json['date'] as String?,
-      level: json['level'] as int?,
+      level: (json['level'] as num?)?.toDouble(),
       summary: json['summary'] as String?,
       full_text: json['full_text'] as String?,
     );
@@ -28,7 +28,7 @@ Map<String, dynamic> _$CheckInRequestModelToJson(
 CheckInModel _$CheckInModelFromJson(Map<String, dynamic> json) => CheckInModel(
       user_category_id: json['user_category_id'] as int?,
       date: json['date'] as String?,
-      level: json['level'] as int?,
+      level: (json['level'] as num?)?.toDouble(),
       summary: json['summary'] as String?,
       full_text: json['full_text'] as String?,
       id: json['id'] as int?,

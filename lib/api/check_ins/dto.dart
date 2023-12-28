@@ -8,7 +8,7 @@ part 'dto.g.dart';
 class CheckInRequestModel {
   int? user_category_id;
   String? date;
-  int? level;
+  double? level;
   String? summary;
   String? full_text;
 
@@ -30,7 +30,7 @@ class CheckInRequestModel {
 class CheckInModel {
   int? user_category_id;
   String? date;
-  int? level;
+  double? level;
   String? summary;
   String? full_text;
   int? id;
