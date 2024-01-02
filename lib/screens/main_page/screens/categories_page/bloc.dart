@@ -231,6 +231,8 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
       final List<CategoryModel?> newItems =
           page == 0 ? [...items] : [...currentState.categories, ...items];
       final newIsAll = (items.length) < 20;
+      newItems
+          .sort((a, b) => a?.sort_order?.compareTo(b?.sort_order ?? 0) ?? 0);
       setState(currentState.copyWith(
           categories: newItems,
           filters: filters ?? currentState.filters,
@@ -245,6 +247,14 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
   Future<CategoryModel?> getCategory(int? id) async {
     final res = await _categoriesRequest.get(id);
     return res;
+  }
+
+  reorder(int oldIndex, int newIndex) {
+    final List<CategoryModel?> items = [...currentState.categories];
+    final CategoryModel? item = items.removeAt(oldIndex);
+    items.insert(newIndex, item);
+
+    setState(currentState.copyWith(categories: items));
   }
 }
 

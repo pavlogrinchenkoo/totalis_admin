@@ -4,10 +4,14 @@ import 'package:totalis_admin/theme/theme_extensions/app_data_table_theme.dart';
 
 class CustomSheetWidget extends StatefulWidget {
   const CustomSheetWidget(
-      {super.key, required this.columns, required this.rows});
+      {super.key,
+      required this.columns,
+      required this.rows,
+      this.dataRowHeight = 60});
 
   final List<DataColumn> columns;
   final List<DataRow> rows;
+  final dataRowHeight;
 
   @override
   State<CustomSheetWidget> createState() => _CustomSheetWidgetState();

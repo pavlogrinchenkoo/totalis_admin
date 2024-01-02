@@ -164,6 +164,11 @@ class AppThemeData {
               return BC.darkGray.withOpacity(0.5);
             }
           })),
+      listTileTheme: ListTileThemeData(
+        iconColor: BC.black,
+        selectedTileColor: BC.red,selectedColor: BC.red,
+        textColor: BC.black,
+      ),
       drawerTheme:
           const DrawerThemeData(backgroundColor: kScreenBackgroundColor),
       appBarTheme: const AppBarTheme(

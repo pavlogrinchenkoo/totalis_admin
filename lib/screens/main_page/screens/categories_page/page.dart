@@ -55,7 +55,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
           } else {
             return Scaffold(
                 body: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -78,38 +78,115 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                     ),
                                   ),
                               ],
-                              rows: <DataRow>[
-                                for (final CategoryModel? item in state.categories)
-                                  DataRow(
-                                    cells: <DataCell>[
-                                      DataCell(InkWell(
-                                          borderRadius: BRadius.r6,
-                                          onTap: () =>
-                                              _bloc.openChange(context, item),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              SheetText(text: item?.id),
-                                            ],
-                                          ))),
-                                      DataCell(SheetText(text: item?.parent_id)),
-                                      DataCell(SheetText(text: item?.sort_order)),
-                                      DataCell(SheetText(text: item?.name)),
-                                      // DataCell(SheetText(text: item?.description)),
-                                      // DataCell(CustomCheckbox(
-                                      //   value: item?.is_home,
-                                      //   onChanged: (value) =>
-                                      //       _bloc.changeIsHome(item, value),
-                                      // )),
-                                      // DataCell(
-                                      //     SheetText(text: item?.subcategories_title)),
-                                    ],
-                                  ),
-                              ],
+                              dataRowHeight: 0,
+                              rows: [],
+                              // rows: <DataRow>[
+                              //   for (final CategoryModel? item
+                              //       in state.categories)
+                              //     DataRow(
+                              //       cells: <DataCell>[
+                              //         DataCell(InkWell(
+                              //             borderRadius: BRadius.r6,
+                              //             onTap: () =>
+                              //                 _bloc.openChange(context, item),
+                              //             child: Row(
+                              //               mainAxisAlignment:
+                              //                   MainAxisAlignment.center,
+                              //               children: [
+                              //                 SheetText(text: item?.id),
+                              //               ],
+                              //             ))),
+                              //         DataCell(
+                              //             SheetText(text: item?.parent_id)),
+                              //         DataCell(
+                              //             SheetText(text: item?.sort_order)),
+                              //         DataCell(SheetText(text: item?.name)),
+                              //         // DataCell(SheetText(text: item?.description)),
+                              //         // DataCell(CustomCheckbox(
+                              //         //   value: item?.is_home,
+                              //         //   onChanged: (value) =>
+                              //         //       _bloc.changeIsHome(item, value),
+                              //         // )),
+                              //         // DataCell(
+                              //         //     SheetText(text: item?.subcategories_title)),
+                              //       ],
+                              //     ),
+                              // ],
                             ),
                           ],
                         ),
+                        ReorderableListView(
+                            shrinkWrap: true,
+                            children: [
+                              // for (final CategoryModel? item
+                              //     in state.categories)
+                              for (int index = 0;
+                                  index < state.categories.length;
+                                  index += 1)
+                                Container(
+                                  key: ValueKey(state.categories[index]?.id),
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            width: 1, color: BC.gray)),
+                                  ),
+                                  child: ListTile(
+                                    textColor: BC.black,
+                                    focusColor: BC.lightGreen,
+                                    selectedColor: BC.white,
+                                    selectedTileColor: BC.lightGreen,
+                                    dense: false,
+                                    title: Container(
+                                      child: Row(
+                                        children: [
+                                          InkWell(
+                                              borderRadius: BRadius.r6,
+                                              onTap: () => _bloc.openChange(
+                                                  context,
+                                                  state.categories[index]),
+                                              child: SizedBox(
+                                                width: 20,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    SheetText(
+                                                        text: state
+                                                            .categories[index]
+                                                            ?.id),
+                                                  ],
+                                                ),
+                                              )),
+                                          Space.w8,
+                                          SizedBox(
+                                            width: 54,
+                                            child: Center(
+                                              child: SheetText(
+                                                  text: state.categories[index]
+                                                      ?.parent_id),
+                                            ),
+                                          ),
+                                          Space.w16,
+                                          SizedBox(
+                                            width: 64,
+                                            child: Center(
+                                              child: SheetText(
+                                                  text: state.categories[index]
+                                                      ?.sort_order),
+                                            ),
+                                          ),
+                                          Space.w16,
+                                          SheetText(
+                                              text:
+                                                  state.categories[index]?.name)
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                )
+                            ],
+                            onReorder: (int oldIndex, int newIndex) =>
+                                _bloc.reorder(oldIndex, newIndex)),
                       ],
                     ),
                   )
