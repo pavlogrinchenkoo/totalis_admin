@@ -7,9 +7,6 @@ import 'package:totalis_admin/api/prompt/request.dart';
 import 'package:totalis_admin/api/user/dto.dart';
 import 'package:totalis_admin/api/user/request.dart';
 import 'package:totalis_admin/utils/bloc_base.dart';
-import 'package:collection/collection.dart';
-import 'package:totalis_admin/utils/custom_function.dart';
-import 'package:totalis_admin/widgets/chage_page.dart';
 
 class UserSearchBloc extends BlocBaseWithState<ScreenState> {
   @override
@@ -58,13 +55,23 @@ class UserSearchBloc extends BlocBaseWithState<ScreenState> {
     setState(currentState.copyWith(selectedCategory: category));
   }
 
-  searchUser(Filters? filters) async {
+  searchUser(Filters? filters,
+      {void Function()? clearFilters, void Function()? onSearch}) async {
+    if (filters?.value == null) {
+      setState(currentState.clearUser());
+      if (clearFilters != null) clearFilters.call();
+      return;
+    }
     if (filters != null || filters?.value != null) {
       final user = await _usersRequest.get(filters?.value);
       // final user = await _filterRequest
       //     .userFilters(QueryModel(page: 0, count: 20, filters: [filters]));
+
       setState(currentState.copyWith(
           nothingFound: user?.id == null, selectedUser: user ?? UserModel()));
+      if (user != null) {
+        onSearch?.call();
+      }
     } else {
       setState(
           currentState.copyWith(nothingFound: true, selectedUser: UserModel()));
@@ -130,5 +137,19 @@ class ScreenState {
         page: page ?? this.page,
         selectedCategory: selectedCategory ?? this.selectedCategory,
         selectedUser: selectedUser ?? this.selectedUser);
+  }
+
+  clearUser() {
+    return ScreenState(
+        loading: loading,
+        users: users,
+        userFilters: userFilters,
+        categories: categories,
+        titles: titles,
+        isAll: isAll,
+        nothingFound: nothingFound,
+        page: page,
+        selectedCategory: selectedCategory,
+        selectedUser: null);
   }
 }

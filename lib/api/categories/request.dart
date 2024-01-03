@@ -27,4 +27,10 @@ class CategoriesRequest {
     if (res == null) return null;
     return CategoryModel.fromJson(res);
   }
+
+  Future<CategoryModel?> delete(int? id) async {
+    final res = await _request.get('api/admin/category/remove/id/$id');
+    if (res == null) return null;
+    return CategoryModel.fromJson(res);
+  }
 }

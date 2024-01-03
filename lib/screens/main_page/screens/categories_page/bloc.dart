@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:totalis_admin/api/categories/dto.dart';
@@ -7,6 +8,7 @@ import 'package:totalis_admin/api/filters/dto.dart';
 import 'package:totalis_admin/api/filters/request.dart';
 import 'package:totalis_admin/routers/routes.dart';
 import 'package:totalis_admin/utils/bloc_base.dart';
+import 'package:totalis_admin/utils/custom_function.dart';
 import 'package:totalis_admin/widgets/chage_page.dart';
 
 class CategoriesBloc extends BlocBaseWithState<ScreenState> {
@@ -36,92 +38,118 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
   // }
 
   openChange(BuildContext context, CategoryModel? item) {
-    final fields = [
-      FieldModel(
-          title: 'Parent id',
-          controller: TextEditingController(
-              text: ((item?.parent_id) ?? "").toString())),
-      FieldModel(
-          title: 'Name', controller: TextEditingController(text: item?.name)),
-      FieldModel(
-          title: 'Name long',
+    final fieldsInGroup = [
+      [
+        FieldModel(
+            title: 'Parent id',
+            controller: TextEditingController(
+                text: ((item?.parent_id) ?? "").toString())),
+        FieldModel(
+            title: 'Sorted order',
+            controller: TextEditingController(
+                text: (item?.sort_order ?? 0).toString())),
+        FieldModel(
+            title: 'Description',
+            type: FieldType.bigText,
+            controller: TextEditingController(text: item?.description)),
+        // FieldModel(
+        //     enable: false,
+        //     title: 'Is home',
+        //     type: FieldType.checkbox,
+        //     value: item?.is_home),
+        FieldModel(
+          title: 'Subcategories title',
+          type: FieldType.text,
+          controller: TextEditingController(text: item?.subcategories_title),
+        ),
+        FieldModel(
+          title: 'Guidelines file link',
+          type: FieldType.text,
+          controller: TextEditingController(text: item?.guidelines_file_link),
+        ),
+        FieldModel(
+          title: 'Prompt',
           type: FieldType.bigText,
-          controller: TextEditingController(text: item?.name_long)),
-      FieldModel(
-          title: 'Image', type: FieldType.avatar, imageId: item?.icon_id),
-      FieldModel(
-          title: 'Sorted order',
+          controller: TextEditingController(text: item?.prompt),
+        ),
+        FieldModel(
+            title: 'Image', type: FieldType.avatar, imageId: item?.icon_id),
+      ],
+      [
+        FieldModel(
+            title: 'Name', controller: TextEditingController(text: item?.name)),
+        FieldModel(
+            title: 'Name long',
+            type: FieldType.text,
+            controller: TextEditingController(text: item?.name_long)),
+      ],
+      [
+        FieldModel(
+            title: 'Show checkin history',
+            type: FieldType.checkbox,
+            value: item?.show_checkin_history),
+        FieldModel(
+            title: 'Checkin enabled',
+            type: FieldType.checkbox,
+            value: item?.checkin_enabled),
+        FieldModel(
+          title: 'Prompt checkin',
+          type: FieldType.bigText,
+          controller: TextEditingController(text: item?.prompt_checkin),
+        ),
+        FieldModel(
+          title: 'Prompt checkin proposal',
+          type: FieldType.bigText,
           controller:
-              TextEditingController(text: (item?.sort_order ?? 0).toString())),
-      FieldModel(
-          title: 'Description',
+              TextEditingController(text: item?.prompt_checkin_proposal),
+        ),
+      ],
+      [
+        FieldModel(
+          title: 'Followup timer',
+          controller: TextEditingController(
+              text: (item?.followup_timer ?? 30).toString()),
+        ),
+        FieldModel(
+          title: 'Followup chat enabled',
+          type: FieldType.checkbox,
+          value: item?.followup_chat_enabled,
+        ),
+        FieldModel(
+          title: 'Prompt followup',
           type: FieldType.bigText,
-          controller: TextEditingController(text: item?.description)),
-      FieldModel(
-          enable: false,
-          title: 'Is home',
-          type: FieldType.checkbox,
-          value: item?.is_home),
-      FieldModel(
-        title: 'Subcategories title',
-        type: FieldType.text,
-        controller: TextEditingController(text: item?.subcategories_title),
-      ),
-      FieldModel(
-          title: 'Show checkin history',
-          type: FieldType.checkbox,
-          value: item?.show_checkin_history),
-      FieldModel(
-          title: 'Checkin enabled',
-          type: FieldType.checkbox,
-          value: item?.checkin_enabled),
-      FieldModel(
-        title: 'Guidelines file link',
-        type: FieldType.text,
-        controller: TextEditingController(text: item?.guidelines_file_link),
-      ),
-      FieldModel(
-        title: 'Prompt',
-        type: FieldType.bigText,
-        controller: TextEditingController(text: item?.prompt),
-      ),
-      FieldModel(
-        title: 'Prompt checkin',
-        type: FieldType.bigText,
-        controller: TextEditingController(text: item?.prompt_checkin),
-      ),
-      FieldModel(
-        title: 'Prompt checkin proposal',
-        type: FieldType.bigText,
-        controller: TextEditingController(text: item?.prompt_checkin_proposal),
-      ),
-      FieldModel(
-        title: 'Prompt followup',
-        type: FieldType.bigText,
-        controller: TextEditingController(text: item?.prompt_followup),
-      ),
-      FieldModel(
-        title: 'Followup chat enabled',
-        type: FieldType.checkbox,
-        value: item?.followup_chat_enabled,
-      ),
-      FieldModel(
-        title: 'Followup timer',
-        controller:
-            TextEditingController(text: (item?.followup_timer ?? 30).toString()),
-      )
+          controller: TextEditingController(text: item?.prompt_followup),
+        ),
+      ],
     ];
 
+    final fields = <FieldModel>[];
+
+    for (var i = 0; i < fieldsInGroup.length; i++) {
+      for (var j = 0; j < fieldsInGroup[i].length; j++) {
+        fields.add(fieldsInGroup[i][j]);
+      }
+    }
+
     context.router.push(ChangeRoute(
-        fields: fields,
+        fieldsInGroups: fieldsInGroup,
         title: 'Category',
         category: item,
+        onDelete: () => onDelete(context, item),
         onSave: () =>
             {onSave(context, fields, item, isCreate: item?.id == null)},
         onSavePrompt: () => {
               onSave(context, fields, item,
                   isCreate: item?.id == null, needPop: false)
             }));
+  }
+
+  onDelete(BuildContext context, CategoryModel? item) async {
+    showCustomDialog(context, DialogType.error, () async {
+      final res = await _categoriesRequest.delete(item?.id);
+      if (context.mounted && res != null) context.router.pop();
+      replaceItem(null, item);
+    }, () => context.router.pop());
   }
 
   onSave(BuildContext context, List<FieldModel> fields, CategoryModel? item,
@@ -136,14 +164,12 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
         name_long:
             fields.firstWhere((i) => i.title == 'Name long').controller?.text,
         icon_id: fields.firstWhere((i) => i.title == 'Image').imageId,
-        sort_order: int.parse(fields
-                .firstWhere((i) => i.title == 'Sorted order')
-                .controller
-                ?.text ??
-            '0'),
+        sort_order: int.tryParse(
+            fields.firstWhere((i) => i.title == 'Sorted order').controller?.text ??
+                '0'),
         description:
             fields.firstWhere((i) => i.title == 'Description').controller?.text,
-        is_home: fields.firstWhere((i) => i.title == 'Is home').value,
+        is_home: item?.is_home,
         subcategories_title: fields
             .firstWhere((i) => i.title == 'Subcategories title')
             .controller
@@ -176,18 +202,22 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
   }
 
   void replaceItem(CategoryModel? changed, CategoryModel? newUser) {
-    if (changed?.id == null) return;
-    final admins = [...currentState.categories];
-    final index = admins.indexWhere((users) => users?.id == newUser?.id);
+    // if (changed?.id == null) return;
+    final categories = [...currentState.categories];
+    final index = categories.indexWhere((users) => users?.id == newUser?.id);
     if (index == -1) {
       newUser
         ?..id = changed?.id
         ..time_create = changed?.time_create;
-      admins.add(newUser);
+      categories.add(newUser);
     } else {
-      admins.replaceRange(index, index + 1, [changed]);
+      if (changed == null) {
+        categories.removeAt(index);
+      } else {
+        categories.replaceRange(index, index + 1, [changed]);
+      }
     }
-    setState(currentState.copyWith(categories: admins));
+    setState(currentState.copyWith(categories: categories));
   }
 
   Future<void> onCreate(BuildContext context, CategoryModel newModel) async {

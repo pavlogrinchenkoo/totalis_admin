@@ -26,6 +26,7 @@ import 'package:totalis_admin/widgets/custom_bottom_sheet_text_field.dart';
 class ChangePage extends StatelessWidget {
   ChangePage(
       {this.fields,
+      this.fieldsInGroups,
       this.title,
       this.onSave,
       this.onSavePrompt,
@@ -35,6 +36,7 @@ class ChangePage extends StatelessWidget {
       super.key});
 
   final List<FieldModel>? fields;
+  final List<List<FieldModel>>? fieldsInGroups;
   final String? title;
   final void Function()? onSave;
   final void Function()? onSavePrompt;
@@ -48,11 +50,12 @@ class ChangePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
 
-    fields?.sort((a, b) => a.type == FieldType.checkbox ? 1 : -1);
-    fields?.sort((a, b) => a.type == FieldType.bigText ? 1 : -1);
-
-    if ((fields ?? []).any((field) => field.type == FieldType.avatar)) {
-      fields?.sort((a, b) => a.type == FieldType.avatar ? 1 : -1);
+    if (fieldsInGroups == null) {
+      fields?.sort((a, b) => a.type == FieldType.checkbox ? 1 : -1);
+      fields?.sort((a, b) => a.type == FieldType.bigText ? 1 : -1);
+      if ((fields ?? []).any((field) => field.type == FieldType.avatar)) {
+        fields?.sort((a, b) => a.type == FieldType.avatar ? 1 : -1);
+      }
     }
 
     return Scaffold(
@@ -69,6 +72,45 @@ class ChangePage extends StatelessWidget {
                     title ?? '',
                     style: BS.sb20.apply(color: BC.black),
                   ),
+                const Expanded(child: SizedBox()),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    children: [
+                      if (onSave != null)
+                        FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: BC.green,
+                          ),
+                          onPressed: () {
+                            if (_formKey.currentState?.validate() ?? false) {
+                              // Validation passed.
+                              onSave?.call();
+                            } else {
+                              // Validation failed.
+                            }
+                          },
+                          child: const Text('Save'),
+                        ),
+                      Space.w16,
+                      if (onDelete != null)
+                        FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: BC.green,
+                          ),
+                          onPressed: () {
+                            if (_formKey.currentState?.validate() ?? false) {
+                              // Validation passed.
+                              onDelete?.call();
+                            } else {
+                              // Validation failed.
+                            }
+                          },
+                          child: const Text('Delete'),
+                        ),
+                    ],
+                  ),
+                ),
               ],
             ),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -78,62 +120,39 @@ class ChangePage extends StatelessWidget {
                   child: FormBuilder(
                       key: _formKey,
                       autovalidateMode: AutovalidateMode.disabled,
-                      child: Wrap(spacing: 16, children: [
-                        for (final field in fields ?? [])
-                          Container(
-                            width: 400,
-                            padding: const EdgeInsets.only(top: 24),
-                            child: CustomFieldWidget(
-                                field: field,
-                                formKey: _formKey,
-                                category: category,
-                                onSavePrompt: onSavePrompt),
-                          ),
-                        widget ?? const SizedBox(),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 36),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Row(
-                              children: [
-                                if (onSave != null)
-                                  FilledButton(
-                                    style: FilledButton.styleFrom(
-                                      backgroundColor: BC.green,
-                                    ),
-                                    onPressed: () {
-                                      if (_formKey.currentState?.validate() ??
-                                          false) {
-                                        // Validation passed.
-                                        onSave?.call();
-                                      } else {
-                                        // Validation failed.
-                                      }
-                                    },
-                                    child: const Text('Save'),
-                                  ),
-                                Space.w16,
-                                if (onDelete != null)
-                                  FilledButton(
-                                    style: FilledButton.styleFrom(
-                                      backgroundColor: BC.green,
-                                    ),
-                                    onPressed: () {
-                                      if (_formKey.currentState?.validate() ??
-                                          false) {
-                                        // Validation passed.
-                                        onDelete?.call();
-                                      } else {
-                                        // Validation failed.
-                                      }
-                                    },
-                                    child: const Text('Delete'),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ]))),
+                      child: Wrap(
+                          spacing: fieldsInGroups == null ? 16 : 0,
+                          children: [
+                            if (fieldsInGroups == null)
+                              for (final field in fields ?? [])
+                                Container(
+                                  width: 400,
+                                  padding: const EdgeInsets.only(top: 24),
+                                  child: CustomFieldWidget(
+                                      field: field,
+                                      formKey: _formKey,
+                                      category: category,
+                                      onSavePrompt: onSavePrompt),
+                                )
+                            else
+                              for (final group in fieldsInGroups ?? [])
+                                Wrap(
+                                  spacing: 16,
+                                  children: [
+                                    for (final field in group)
+                                      Container(
+                                        width: 380,
+                                        padding: const EdgeInsets.only(top: 24),
+                                        child: CustomFieldWidget(
+                                            field: field,
+                                            formKey: _formKey,
+                                            category: category,
+                                            onSavePrompt: onSavePrompt),
+                                      )
+                                  ],
+                                ),
+                            widget ?? const SizedBox(),
+                          ]))),
               // Space.h24,
             ]),
             // Center(

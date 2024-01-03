@@ -1,10 +1,15 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:totalis_admin/api/filters/dto.dart';
 import 'package:totalis_admin/api/user_categories/dto.dart';
 import 'package:totalis_admin/screens/main_page/screens/categories_page/bloc.dart'
     as cb;
+import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user/bloc.dart'
+    as usb;
+import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user/widget.dart';
+import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user_category/bloc.dart'
+    as ucb;
+import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user_category/widget.dart';
 import 'package:totalis_admin/screens/main_page/screens/user_categories_page/widgets/category/page.dart';
 import 'package:totalis_admin/screens/main_page/screens/users_page/bloc.dart'
     as ub;
@@ -32,6 +37,10 @@ class _UserCategoriesPageState extends State<UserCategoriesPage> {
   final UserCategoriesBloc _bloc = UserCategoriesBloc();
   final cb.CategoriesBloc _blocCategories = cb.CategoriesBloc();
   final ub.UsersBloc _blocUsers = ub.UsersBloc();
+  final usb.UserSearchBloc userSearchBloc = usb.UserSearchBloc();
+  final ucb.UserCategorySearchBloc userCategoryBloc =
+      ucb.UserCategorySearchBloc();
+
   List<DropdownMenuItem<String>> fields =
       ['id', 'category_id', 'user_id'].map((e) {
     return DropdownMenuItem(
@@ -76,64 +85,29 @@ class _UserCategoriesPageState extends State<UserCategoriesPage> {
                 controller: _scrollController,
                 shrinkWrap: true,
                 children: [
-                  Row(
-                    children: [
-                      CustomSheetHeaderWidget(
-                          title: 'User categories',
-                          onSave: () =>
-                              _bloc.openChange(context, UserCategoryModel())),
-                      Space.w20,
-                      Expanded(
-                        flex: 1,
-                        child: FormBuilderDropdown(
-                            dropdownColor: BC.white,
-                            name: 'Select field',
-                            style: BS.sb14.apply(color: BC.black),
-                            decoration: const InputDecoration(
-                              labelText: 'Select field',
-                              border: OutlineInputBorder(),
-                              hoverColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                            ),
-                            focusColor: Colors.transparent,
-                            initialValue: fields.first.value,
-                            onChanged: (String? value) => setState(() {
-                                  field = value;
-                                }),
-                            items: fields),
-                      ),
-                      Space.w16,
-                      Expanded(
-                        flex: 2,
-                        child: FormBuilderTextField(
-                          onChanged: (value) =>
-                              value == '' ? _bloc.onSearch(null) : null,
-                          controller: controller,
-                          name: 'Message search',
-                          style: BS.med14.apply(color: BC.black),
-                          decoration: const InputDecoration(
-                            labelText: 'Message search',
-                            hintText: 'Message search',
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                        ),
-                      ),
-                      Space.w16,
-                      FilledButton(
-                          style: FilledButton.styleFrom(
-                            backgroundColor: BC.green,
-                          ),
-                          onPressed: () => controller.text != ''
-                              ? _bloc.onSearch(
-                                  Filters(
-                                      field:
-                                          field ?? fields.first.value ?? 'id',
-                                      value: controller.text),
-                                )
-                              : null,
-                          child: const Text('Search')),
-                    ],
-                  ),
+                  Row(children: [
+                    CustomSheetHeaderWidget(
+                        title: 'User categories',
+                        onSave: () =>
+                            _bloc.openChange(context, UserCategoryModel())),
+                    Space.w20,
+                    UserSearchWidget(bloc: userSearchBloc),
+                    Space.w20,
+                    UserCategorySearchWidget(
+                        bloc: userCategoryBloc,
+                        userBloc: userSearchBloc,
+                        onChange: () => _bloc.onSearch([
+                              Filters(
+                                  field: 'category_id',
+                                  value: userCategoryBloc
+                                      .currentState.selectedCategory?.id),
+                              Filters(
+                                  field: 'user_id',
+                                  value: userSearchBloc
+                                      .currentState.selectedUser?.id)
+                            ]),
+                        onClear: () => _bloc.onSearch(null)),
+                  ]),
                   Space.h18,
                   Row(
                     children: [

@@ -1,9 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:totalis_admin/api/categories/dto.dart';
 import 'package:totalis_admin/api/categories/request.dart';
 import 'package:totalis_admin/api/filters/dto.dart';
 import 'package:totalis_admin/api/filters/request.dart';
-import 'package:collection/collection.dart';
 import 'package:totalis_admin/api/user/dto.dart';
 import 'package:totalis_admin/api/user_categories/dto.dart';
 import 'package:totalis_admin/utils/bloc_base.dart';
@@ -100,7 +100,8 @@ class UserCategorySearchBloc extends BlocBaseWithState<ScreenState> {
     final userCategory =
         userCategories.firstWhereOrNull((uc) => uc?.category_id == value?.id);
     if (userCategory != null) {
-      setState(currentState.copyWith(selectedItem: userCategory));
+      setState(currentState.copyWith(
+          selectedItem: userCategory, selectedCategory: value));
     }
   }
 }
@@ -115,6 +116,7 @@ class ScreenState {
   final int page;
   final UserModel? selectedUser;
   final UserCategoryModel? selectedItem;
+  final CategoryModel? selectedCategory;
 
   ScreenState(
       {this.loading = false,
@@ -125,7 +127,8 @@ class ScreenState {
       this.isAll = false,
       this.page = 0,
       this.selectedUser,
-      this.selectedItem});
+      this.selectedItem,
+      this.selectedCategory});
 
   ScreenState copyWith(
       {bool? loading,
@@ -136,7 +139,8 @@ class ScreenState {
       bool? isAll,
       int? page,
       UserModel? selectedUser,
-      UserCategoryModel? selectedItem}) {
+      UserCategoryModel? selectedItem,
+      CategoryModel? selectedCategory}) {
     return ScreenState(
         loading: loading ?? this.loading,
         items: items ?? this.items,
@@ -146,6 +150,7 @@ class ScreenState {
         isAll: isAll ?? this.isAll,
         page: page ?? this.page,
         selectedUser: selectedUser ?? this.selectedUser,
-        selectedItem: selectedItem ?? this.selectedItem);
+        selectedItem: selectedItem ?? this.selectedItem,
+        selectedCategory: selectedCategory ?? this.selectedCategory);
   }
 }

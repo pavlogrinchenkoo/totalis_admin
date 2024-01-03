@@ -1,12 +1,12 @@
 import 'dart:convert';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:build_context_provider/build_context_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:totalis_admin/main.dart';
 import 'package:totalis_admin/routers/routes.dart';
 
 class Request {
@@ -30,24 +30,28 @@ class Request {
     // dio.options.headers = headers;
 
     // try {
-    http.Response response =
-        await http.get(Uri.parse(baseUrl + url), headers: headers);
+    try {
+      http.Response response =
+          await http.get(Uri.parse(baseUrl + url), headers: headers);
 
-    final res = const JsonDecoder()
-        .convert(const Utf8Decoder().convert(response.body.codeUnits));
-    // alice.onHttpResponse(response);
-    if (response.statusCode == 500) {
+      final res = const JsonDecoder()
+          .convert(const Utf8Decoder().convert(response.body.codeUnits));
+      // alice.onHttpResponse(response);
+      if (response.statusCode == 500) {
+        return null;
+      }
+      // alice.showInspector();
+      if (response.statusCode == 401) {
+        logout();
+        return null;
+      }
+      if (res.runtimeType == List<dynamic>) {
+        return res.map((e) => e).toList();
+      } else {
+        return res;
+      }
+    } catch (e) {
       return null;
-    }
-    // alice.showInspector();
-    if (response.statusCode == 401) {
-      logout();
-      return null;
-    }
-    if (res.runtimeType == List<dynamic>) {
-      return res.map((e) => e).toList();
-    } else {
-      return res;
     }
 
     // } on Error catch (e) {
@@ -63,24 +67,28 @@ class Request {
     };
     // dio.options.headers = headers;
 
-    http.Response response = await http.post(Uri.parse(baseUrl + url),
-        body: jsonEncode(body), headers: headers);
-    final res = const JsonDecoder()
-        .convert(const Utf8Decoder().convert(response.body.codeUnits));
-    if (response.statusCode == 500) {
-      return null;
-    }
+    try {
+      http.Response response = await http.post(Uri.parse(baseUrl + url),
+          body: jsonEncode(body), headers: headers);
+      final res = const JsonDecoder()
+          .convert(const Utf8Decoder().convert(response.body.codeUnits));
+      if (response.statusCode == 500) {
+        return null;
+      }
 
-    // alice.onHttpResponse(response);
-    if (response.statusCode == 401) {
-      logout();
-      return null;
-    }
+      // alice.onHttpResponse(response);
+      if (response.statusCode == 401) {
+        logout();
+        return null;
+      }
 
-    if (res.runtimeType == List<dynamic>) {
-      return res.map((e) => e).toList();
-    } else {
-      return res;
+      if (res.runtimeType == List<dynamic>) {
+        return res.map((e) => e).toList();
+      } else {
+        return res;
+      }
+    } catch (e) {
+      return null;
     }
     // return null;
   }

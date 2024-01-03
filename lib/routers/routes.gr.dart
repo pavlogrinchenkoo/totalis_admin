@@ -34,6 +34,7 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: ChangePage(
           fields: args.fields,
+          fieldsInGroups: args.fieldsInGroups,
           title: args.title,
           onSave: args.onSave,
           onSavePrompt: args.onSavePrompt,
@@ -164,6 +165,7 @@ class CategoriesRoute extends PageRouteInfo<void> {
 class ChangeRoute extends PageRouteInfo<ChangeRouteArgs> {
   ChangeRoute({
     List<FieldModel>? fields,
+    List<List<FieldModel>>? fieldsInGroups,
     String? title,
     void Function()? onSave,
     void Function()? onSavePrompt,
@@ -176,6 +178,7 @@ class ChangeRoute extends PageRouteInfo<ChangeRouteArgs> {
           ChangeRoute.name,
           args: ChangeRouteArgs(
             fields: fields,
+            fieldsInGroups: fieldsInGroups,
             title: title,
             onSave: onSave,
             onSavePrompt: onSavePrompt,
@@ -195,6 +198,7 @@ class ChangeRoute extends PageRouteInfo<ChangeRouteArgs> {
 class ChangeRouteArgs {
   const ChangeRouteArgs({
     this.fields,
+    this.fieldsInGroups,
     this.title,
     this.onSave,
     this.onSavePrompt,
@@ -205,6 +209,8 @@ class ChangeRouteArgs {
   });
 
   final List<FieldModel>? fields;
+
+  final List<List<FieldModel>>? fieldsInGroups;
 
   final String? title;
 
@@ -222,7 +228,7 @@ class ChangeRouteArgs {
 
   @override
   String toString() {
-    return 'ChangeRouteArgs{fields: $fields, title: $title, onSave: $onSave, onSavePrompt: $onSavePrompt, onDelete: $onDelete, widget: $widget, category: $category, key: $key}';
+    return 'ChangeRouteArgs{fields: $fields, fieldsInGroups: $fieldsInGroups, title: $title, onSave: $onSave, onSavePrompt: $onSavePrompt, onDelete: $onDelete, widget: $widget, category: $category, key: $key}';
   }
 }
 

@@ -9,9 +9,12 @@ import 'package:totalis_admin/utils/spaces.dart';
 import 'bloc.dart';
 
 class UserSearchWidget extends StatefulWidget {
-  const UserSearchWidget({required this.bloc, super.key});
+  const UserSearchWidget(
+      {required this.bloc, this.onSearch, this.clearFilters, super.key});
 
   final UserSearchBloc bloc;
+  final void Function()? clearFilters;
+  final void Function()? onSearch;
 
   @override
   State<UserSearchWidget> createState() => _UserSearchWidgetState();
@@ -61,10 +64,13 @@ class _UserSearchWidgetState extends State<UserSearchWidget> {
                       child: FormBuilderTextField(
                         style: BS.med14.apply(color: BC.black),
                         onChanged: (value) => _debouncer.run(() {
-                          widget.bloc.searchUser(Filters(
-                            field: 'id',
-                            value: int.tryParse(value ?? ''),
-                          ));
+                          widget.bloc.searchUser(
+                              Filters(
+                                field: 'id',
+                                value: int.tryParse(value ?? ''),
+                              ),
+                              clearFilters: widget.clearFilters,
+                              onSearch: widget.onSearch);
                         }),
                         controller: controller,
                         name: 'User id',
