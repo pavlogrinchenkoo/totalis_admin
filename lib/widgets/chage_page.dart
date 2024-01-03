@@ -288,6 +288,50 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
                   child: const Text('Prompt preview'),
                 ),
               ],
+            ),
+          if (widget.field?.title == 'Prompt how')
+            Column(
+              children: [
+                Space.h16,
+                FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: BC.green,
+                  ),
+                  onPressed: () {
+                    if (widget.formKey?.currentState?.validate() ?? false) {
+                      // Validation passed.
+                      widget.onSave?.call();
+                      PromptPreviewBottomSheet().show(context, widget.field,
+                          widget.category?.id ?? 9, widget.onSavePrompt);
+                    } else {
+                      // Validation failed.
+                    }
+                  },
+                  child: const Text('Prompt preview'),
+                ),
+              ],
+            ),
+          if (widget.field?.title == 'Prompt why')
+            Column(
+              children: [
+                Space.h16,
+                FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: BC.green,
+                  ),
+                  onPressed: () {
+                    if (widget.formKey?.currentState?.validate() ?? false) {
+                      // Validation passed.
+                      widget.onSave?.call();
+                      PromptPreviewBottomSheet().show(context, widget.field,
+                          widget.category?.id ?? 9, widget.onSavePrompt);
+                    } else {
+                      // Validation failed.
+                    }
+                  },
+                  child: const Text('Prompt preview'),
+                ),
+              ],
             )
         ],
       );

@@ -27,6 +27,30 @@ class PromptRequest {
     return res;
   }
 
+  Future<String?> promptWhy(String? prompt, int? userId, int? categoryId,
+      String? recommendation) async {
+    final res = await _request.post('api/admin/prompt/recommendation_why', {
+      "prompt": prompt,
+      "user_id": userId,
+      "category_id": categoryId,
+      "recommendation": recommendation
+    });
+    if (res == null) return null;
+    return res;
+  }
+
+  Future<String?> promptHow(String? prompt, int? userId, int? categoryId,
+      String? recommendation) async {
+    final res = await _request.post('api/admin/prompt/recommendation_how', {
+      "prompt": prompt,
+      "user_id": userId,
+      "category_id": categoryId,
+      "recommendation": recommendation
+    });
+    if (res == null) return null;
+    return res;
+  }
+
   Future<String?> promptLLM(
     String text,
     String? message,

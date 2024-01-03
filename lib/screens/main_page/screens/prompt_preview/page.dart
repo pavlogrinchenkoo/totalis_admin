@@ -81,7 +81,9 @@ class _PromptPreviewPageState extends State<PromptPreviewPage> {
                     Row(children: [
                       if (widget.field?.title == 'Prompt' ||
                           widget.field?.title == 'Prompt checkin proposal' ||
-                          widget.field?.title == 'Prompt checkin')
+                          widget.field?.title == 'Prompt checkin' ||
+                          widget.field?.title == 'Prompt how' ||
+                          widget.field?.title == 'Prompt why')
                         UserSearchWidget(bloc: userBloc),
                       // if (widget.field?.title == 'Prompt' ||
                       //     widget.field?.title == 'Prompt checkin proposal')
@@ -135,6 +137,30 @@ class _PromptPreviewPageState extends State<PromptPreviewPage> {
                             )),
                       ],
                     ),
+                    if (widget.field?.title == 'Prompt how' ||
+                        widget.field?.title == 'Prompt why')
+                      Column(
+                        children: [
+                          Space.h24,
+                          FormBuilderTextField(
+                            // onChanged: (value) => js.context.callMethod('enableSpellCheck'),
+                            minLines: 10,
+                            maxLines: 10,
+                            controller: _bloc.recommendationController,
+                            name: 'Recommendation',
+                            style: BS.med14.apply(color: BC.black),
+                            decoration: const InputDecoration(
+                              labelText: 'Recommendation',
+                              hintText: 'Recommendation',
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.always,
+                            ),
+                            // validator: (widget.field?.required ?? false)
+                            //     ? FormBuilderValidators.required()
+                            //     : null,
+                          ),
+                        ],
+                      ),
                     Space.h24,
                     Row(
                       children: [

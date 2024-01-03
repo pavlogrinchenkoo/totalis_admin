@@ -107,9 +107,8 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
       ),
       FieldModel(
         title: 'Followup timer',
-        type: FieldType.text,
         controller:
-            TextEditingController(text: item?.followup_timer.toString()),
+            TextEditingController(text: (item?.followup_timer ?? 30).toString()),
       )
     ];
 
@@ -165,7 +164,7 @@ class CategoriesBloc extends BlocBaseWithState<ScreenState> {
         prompt_checkin_proposal: fields.firstWhere((i) => i.title == 'Prompt checkin proposal').controller?.text ?? '',
         prompt_followup: fields.firstWhere((i) => i.title == 'Prompt followup').controller?.text ?? '',
         followup_chat_enabled: fields.firstWhere((i) => i.title == 'Followup chat enabled').value,
-        followup_timer: int.tryParse(fields.firstWhere((i) => i.title == 'Followup timer').controller?.text ?? '0'));
+        followup_timer: int.tryParse(fields.firstWhere((i) => i.title == 'Followup timer').controller?.text ?? '30'));
 
     if (isCreate) {
       onCreate(context, newModel);

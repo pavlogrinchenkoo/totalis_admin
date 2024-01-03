@@ -5,12 +5,7 @@ import 'package:totalis_admin/api/filters/dto.dart';
 import 'package:totalis_admin/api/filters/request.dart';
 import 'package:totalis_admin/api/prompt/request.dart';
 import 'package:totalis_admin/api/user/dto.dart';
-import 'package:totalis_admin/api/user/request.dart';
-import 'package:totalis_admin/screens/main_page/screens/prompt_preview/page.dart';
-import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/message/bloc.dart';
-import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/new_checkin/bloc.dart';
 import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user/bloc.dart';
-import 'package:totalis_admin/screens/main_page/screens/prompt_preview/widgets/user_category/bloc.dart';
 import 'package:totalis_admin/style.dart';
 import 'package:totalis_admin/utils/bloc_base.dart';
 import 'package:totalis_admin/widgets/chage_page.dart';
@@ -22,6 +17,8 @@ class PromptPreviewBloc extends BlocBaseWithState<ScreenState> {
   final PromptRequest _promptRequest = PromptRequest();
   final FilterRequest _filterRequest = FilterRequest();
   final TextEditingController controller = TextEditingController();
+  final TextEditingController recommendationController =
+      TextEditingController();
   final TextEditingController controllerLlm = TextEditingController();
   final TextEditingController controllerMessage = TextEditingController();
 
@@ -90,6 +87,20 @@ class PromptPreviewBloc extends BlocBaseWithState<ScreenState> {
           field?.controller?.text,
           userBloc.currentState.selectedUser?.id,
           categoryId);
+      controller.text = string ?? '';
+    } else if (field?.title == 'Prompt how') {
+      final string = await _promptRequest.promptHow(
+          field?.controller?.text,
+          userBloc.currentState.selectedUser?.id,
+          categoryId,
+          recommendationController.text);
+      controller.text = string ?? '';
+    } else if (field?.title == 'Prompt why') {
+      final string = await _promptRequest.promptWhy(
+          field?.controller?.text,
+          userBloc.currentState.selectedUser?.id,
+          categoryId,
+          recommendationController.text);
       controller.text = string ?? '';
     }
     setState(currentState.copyWith(loadingPreview: false));
